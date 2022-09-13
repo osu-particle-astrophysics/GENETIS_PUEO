@@ -30,7 +30,7 @@ chmod -R 777 $IceMCDir/outputs/
 #input is stored in $IceMCExec/setup.conf
 #IceMCExec isn't defined in this file => fix it
 #might need to get the num neutrino and energy exponent into the call
-./IceMC -i $IceMCExec/setup.conf -o outputs/ -r $gen -t 3.2
+./IceMC -i $IceMCExec/setup.conf -o outputs/ -r $gen
 
 cd $TMPDIR
 echo "Let's see what's in TMPDIE:"
@@ -53,9 +53,8 @@ ls -alrt
 
 # we need to go fix the file names from the jobs
 cd $WorkingDir/Antenna_Performance_Metric
-'''
-change these
-'''
+
+#ask about this
 ## The below commands are only relevant when using pbsdcp
 ## They'll print an error to the error file, but they shouldn't really cause a problem
 cp AraOut_${gen}_${num}_${Seeds}.txt.* AraOut_${gen}_${num}_${Seeds}.txt
@@ -66,6 +65,4 @@ cd $WorkingDir/Run_Outputs/$RunName/AraSimFlags
 
 cp ${num}_${Seeds}.txt.* ${num}_${Seeds}.txt
 rm ${num}_${Seeds}.txt.*
-
-
 

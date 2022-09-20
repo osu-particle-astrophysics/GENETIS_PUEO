@@ -8,7 +8,7 @@
 
 ### II: Get the Anita.sh file onto your user.
   
-   Should be part of the repository
+   Copy the file from this repository
   
    Then source the file
 
@@ -88,6 +88,8 @@
    Default is 20   
    
    #Select energy (just enter the exponent) or (30) for baseline ES&S (1) for E^-1 (2) for E^-2 (3) for E^-3 (4) for E^-4 (5) for ES&S flux with cosmological constant (6) for neutrino GZK flux from Iron nuclei (16-22)not using spectrum but just for a single energy (101-114)use all kinds of theoretical flux models  
+   
+   Note: Input and output are the only required parameters to run icemc (others take their value from the input config file)   
 
 ## Outputs:
    Running ./icemc outputs veff+runNumber+.txt   
@@ -96,9 +98,11 @@
    
    veff_out << spec_string << "\t" << km3sr << "\t" << km3sr_e << "\t" << km3sr_mu << "\t" << km3sr_tau << "\t" << settings1->SIGMA_FACTOR << endl;  
    
-   Input and output are the only required parameters (others take their value from the input config file)
+   We want to retreive the second column of veff
+   
    
    Output files creation is in ../anitaBuildTool/components/icemc/icemc.cc  , look there for more details
+   
    
 ## Inputs:
    Data is in  
@@ -127,7 +131,7 @@ Gain Files are formatted:
 
 First Column Frequency, Second Column Gain (in decibels)   
 
-More gain files from function SetGains in components/icemc/anita.cc
+More gain files from function SetGains in components/icemc/anita.cc  
 ```
     vv_az
     anglefile.open((ICEMC_DATA_DIR+"/vv_az").c_str()); // v polarization, a angle
@@ -139,106 +143,42 @@ More gain files from function SetGains in components/icemc/anita.cc
     anglefile.open((ICEMC_DATA_DIR+"/vv_el").c_str()); // v polarization, e angle
 ```
 These have the same format as vv_0 and hh_0, except the frequencies go from 2.00e08 to 1.50e09 6 times instead of 1.  
+```
 for(jjj = 1; jjj < 7; jjj++)  
     for(iii = 0; iii < 131; iii++) {  
       anglefile >> sfrequency >> gain_angle[0][iii][jjj];  
+```
+From SetGain in components/icemc/anita.cc  
 
-SetGains loops through these 6 frequency lists, (1 to 6, 131 lines each)
-What are the angles of these?
-F
-Setgain angle
-Reference angles:
-0
-5
-10
-20
-30
-45
-90
+Reference angles:  
+0  
+5  
+10  
+20  
+30  
+45  
+90  
 
+IceMC will interpolate gains between these frequencies, see Set_Gain_angle in components/icemc/anita.cc for more information
 
-double relativegains[4]; // fill this for each frequency bin for each antenna.  It's the gain of the antenna given the angle that the signal hits the balloon, for vv, vh, hv, hh, relative to the gain at boresight
-Maybe icemc interpolates for gains at different thetas and phis?
-// reads in the effect of a signal not hitting the antenna straight on
-// also reads in gainxx_measured and sets xxgaintoheight
-Set_gain_angle
-
-  for(jjj = 0; jjj < 6; jjj++) inv_angle_bin_size[jjj] = 1. /
-                                 (reference_angle[jjj+1] - reference_angle[jjj]); // this is used for interpolating gains at angles between reference angles
- 
-  double gainhv, gainhh, gainvh, gainvv;
-  double gain_step = frequency_forgain_measured[1]-frequency_forgain_measured[0]; // how wide are the steps in frequency;
- 
-  cout << "GAINS is " << GAINS << "\n";
-  for (int k = 0; k < NFREQ; ++k) {
-    whichbin[k] = int((freq[k] - frequency_forgain_measured[0]) / gain_step); // finds the gains that were measured for the frequencies closest to the frequency being considered here
-    if((whichbin[k] >= NPOINTS_GAIN || whichbin[k] < 0) && !settings1->FORSECKEL) {
-      cout << "Set_gain_angle out of range, freq = " << freq[k] << endl;
-      exit(1);
-    }
- 
-    //now a linear interpolation for the frequency
-    scalef2[k] = (freq[k] - frequency_forgain_measured[whichbin[k]]) / gain_step;
-    // how far from the lower frequency
-    scalef1[k] = 1. - scalef2[k]; // how far from the higher frequency
- 
-Seems to interpolate for other gains. Only reads in those 8 files. That's weird, but ok?
-
-Outputs:
-IceMC outputs file veff+runNum+.txt in outputDirectory
-We want the veff found in the second column
-
-Ara Input/Output:
-
-Input:
-XF .uan outputs have Code Headers
-Theta, Phi, Gain Theta (dB), Gain Phi (db), Phase Theta, Phase Phi
-Ara input files have format:
-Theta, Phi, Gain (db, theta), Gain (theta), Phase (Theta)
-.txt
-
-Output:
-Veff can be found at the bottom of the AraOut.txt file
+## Comparing Ara and IceMC Input/Output:
 
 
+### Comparing Inputs:
+   Frequency Lists:  
+   Ara - 83.33MHz - 1066.70 MHz, step = 13.33MHz  
+   IceMC - 200MHz - 1500MHz, step = 10MHz  
+   Number of files read in:  
+   Ara - 1  
+   IceMC - 8  
+   Formating of files:  
+   Ara - Theta, Phi, Gain (dB, thetra), Gain (theta), Phase (theta)   
+   IceMc - Frequency, Gain (dB)  (Different files cover different thetas and phis)  
+   File Type:  
+   Ara - .txt  
+   IceMC - no suffix (file is just 2 columns of text)  
+  
 
-
-Comparing Inputs:
-Frequency Lists:
-Ara - 83.33MHz - 1066.70 MHz, step = 13.33MHz
-IceMC - 200MHz - 1500MHz, step = 10MHz
-Number of files read in:
-Ara - 1
-IceMC - 8
-Formating of files:
-Ara - Theta, Phi, Gain (dB, thetra), Gain (theta), Phase (theta) 
-IceMc - Frequency, Gain (dB)  (Different files cover different thetas and phis)
-File Type:
-Ara - .txt
-IceMC - no suffix (file is just 2 columns of text)
-
-Other notes for IceMC inputs:
-IceMC reads in 8 different files for gain.
-vv_0  hh_0  vh_0  hv_0  vv_el  vv_az  hh_el  hh_az
-Found in ../anitaBuiltTool/components/icemc/data
-vv_0 = gains for vertical polarization
-hh_0 = gains for horizontal polarization
-vh_0 = gains for v → h cross polarization
-hv_0 = gains for h → v cross polarization
-vv_el = v polarization, e angle
-vv_az = v polarization, a angle
-hh_el = h polarization, e angle
-hh_az = h polarization a angle
-for e angle and a angle  in 
-      0.   0
-5
-10
-20
-30
-45
-90
-(runs 1 to 6)
-
-Comparing Outputs:
-IceMC - veff is in second column in veff+runName+.txt file (in the outputDirectory directory)
-Ara - veff is at the bottom of the AraOut.txt file
+### Comparing Outputs:
+   IceMC - veff is in second column in veff+runName+.txt file (in the outputDirectory directory)  
+   Ara - veff is at the bottom of the AraOut.txt file  

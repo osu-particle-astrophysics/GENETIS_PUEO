@@ -2,204 +2,150 @@
 ## Installing IceMC:
 
 ### I: Getting anitaBuildTool
-    Clone the anitaBuildTool repository (https://github.com/anitaNeutrino/anitaBuildTool) to your user.
+   Clone the anitaBuildTool repository (https://github.com/anitaNeutrino/anitaBuildTool) to your user.
 
     git clone https://github.com/anitaNeutrino/anitaBuildTool
 
 ### II: Get the Anita.sh file onto your user.
   
-    Should be part of the repository
+   Should be part of the repository
   
-    Then source the file
+   Then source the file
 
     source Anita.sh
 
-    Note: You will need access to PAS0654 for this or you will get a permissions error.
+   Note: You will need access to PAS0654 for this or you will get a permissions error.
 
 
 ### III: Running the build tool.
-    Go into the anitaBuildTool directory
+   Go into the anitaBuildTool directory
 
     cd anitaBuildTool
 
-    And run the building script
+   And run the building script
 
     ./buildAnita.sh
 
-    Note: There will be an error if you source files for running Ara in your .bashrc
-    Comment these out and restart your terminal before running the build. (remember to source Anita.sh, either in the terminal or in your .bashrc)
+   Note: There will be an error if you source files for running Ara in your .bashrc  
+   Comment these out and restart your terminal before running the build. (remember to source Anita.sh, either in the terminal or in your .bashrc)
 
-
-    CMake Error at components/libRootFftwWrapper/cmake_install.cmake:238 (file):
+```
+   CMake Error at components/libRootFftwWrapper/cmake_install.cmake:238 (file):
       file INSTALL cannot copy file
       "/users/PAS1960/dylanwells1629/anitaBuildTool/components/libRootFftwWrapper/include/AnalyticSignal.h"
       to
       "/cvmfs/ara.opensciencegrid.org/v2.0.0/centos7/ara_build/include/AnalyticSignal.h":
       Read-only file system.
-    Call Stack (most recent call first):
-
+   Call Stack (most recent call first):
+```
 
 ## Running IceMC:
 
-    Go into the directory ../anitaBuildTool/build/components/icemc/
-    And run the command
+   Go into the directory ../anitaBuildTool/build/components/icemc/
+   
+   And run the command  
+   
     ./icemc -i {inputFile} -o {outputDirectory} -r {runNumber} -n {numberOfNeutrinos} -t {triggerThreshold} -e {energyExponent}
-    *May need to chmod -R 775 ../anitaBuildTool/comonents/icemc/ if you get a permissions error
+   *May need to chmod -R 775 ../anitaBuildTool/comonents/icemc/ if you get a permissions error  
 
 ### inputFile:
-    Must be the full path to the file
-    Config files are found in ../anitaBuildTool/components/icemc
-    Ex: /users/PAS1960/dylanwells1629/anitaBuildTool/components/icemc/inputs.anita4.conf
-    Config files are found in ../anitaBuildTool/components/icemc
+   Must be the full path to the file  
+   
+   Config files are found in ../anitaBuildTool/components/icemc  
+    
+   Ex: /users/PAS1960/dylanwells1629/anitaBuildTool/components/icemc/inputs.anita4.conf  
+    
+   Config files are found in ../anitaBuildTool/components/icemc  
 
 ### outputDirectory:
-    Will be made in ../anitaBuildTool/build/components/icemc/ by default, specify full path otherwise.
+   Will be made in ../anitaBuildTool/build/components/icemc/ by default, specify full path otherwise.  
 
 ### runNumber: 
-    The run number.
+   The run number.  
 
 ### numberOfNeutrinos:
-    The number of neutrinos generated in the simulation. 
-    Can be found in inputs.conf
-    Default is 2,000,000.
-    How many neutrinos to generate
+   The number of neutrinos generated in the simulation.   
+   
+   Can be found in inputs.conf  
+   
+   Default is 2,000,000.  
+   
+   How many neutrinos to generate  
 
 
 ### triggerThreshold:
-    Threshold for each band for the frequency domain voltage trigger. 
-    Default is 2.3
-    #thresholds for each band- this is only for the frequency domain voltage trigger.  If using a different trigger scheme then keep these at the default values of 2.3 because the max among them is used for the chance in hell cuts
+   Threshold for each band for the frequency domain voltage trigger.  
+   
+   Default is 2.3  
+   
+   #thresholds for each band- this is only for the frequency domain voltage trigger.  If using a different trigger scheme then keep these at the default values of 2.3 because the max among them is used for the chance in hell cuts  
 
 ### energyExponent:
-      The exponent of the energy for the neutrinos
-      Can be found in input.conf 
-      Default is 1020
-    #Select energy (just enter the exponent) or (30) for baseline ES&S (1) for E^-1 (2) for E^-2 (3) for E^-3 (4) for E^-4 (5) for ES&S flux with cosmological constant (6) for neutrino GZK flux from Iron nuclei (16-22)not using spectrum but just for a single energy (101-114)use all kinds of theoretical flux models
+   The exponent of the energy for the neutrinos  
+   
+   Can be found in input.conf   
+   
+   Default is 20   
+   
+   #Select energy (just enter the exponent) or (30) for baseline ES&S (1) for E^-1 (2) for E^-2 (3) for E^-3 (4) for E^-4 (5) for ES&S flux with cosmological constant (6) for neutrino GZK flux from Iron nuclei (16-22)not using spectrum but just for a single energy (101-114)use all kinds of theoretical flux models  
 
-### Outputs:
-    Running ./icemc outputs veff+runNumber+.txt
-    File contains 
-    veff_out << spec_string << "\t" << km3sr << "\t" << km3sr_e << "\t" << km3sr_mu << "\t" << km3sr_tau << "\t" << settings1->SIGMA_FACTOR << endl;
+## Outputs:
+   Running ./icemc outputs veff+runNumber+.txt   
+   
+   File contains  
+   
+   veff_out << spec_string << "\t" << km3sr << "\t" << km3sr_e << "\t" << km3sr_mu << "\t" << km3sr_tau << "\t" << settings1->SIGMA_FACTOR << endl;  
+   
+   Input and output are the only required parameters (others take their value from the input config file)
+   
+   Output files creation is in ../anitaBuildTool/components/icemc/icemc.cc  , look there for more details
+   
+## Inputs:
+   Data is in  
+   
+   ICEMC_DATA_DIR = ~anitaBuildTool/components/icemc/data/
 
-Input and output are the only required parameters (others take their value from the input config file)
+### Reading Gains
+   The function ReadGains is defined in components/icemc/anita.cc. 
+   From Read Gains:
+```   
+    hh_0 
+    gainsfile.open((ICEMC_DATA_DIR+"/hh_0").c_str()); // gains for horizontal polarization
+    vv_0
+     gainsfile.open((ICEMC_DATA_DIR+"/vv_0").c_str()); // gains for vertical polarization
+    hv_0
+    gainsfile.open((ICEMC_DATA_DIR+"/hv_0").c_str()); // gains for h-->v cross polarization
+    vh_0
+    gainsfile.open((ICEMC_DATA_DIR+"/vh_0").c_str()); // gains for v-->h cross polarization
+```
 
-
-Spec_string: (energy exponent)
-std::string spec_string = src_model ? settings1->SOURCE : std::to_string( settings1->EXPONENT); 
-km3sr:
-components/icemc/icemc.cc:double km3sr = 0;                      // total km3sr
-km3sr_e:
-components/icemc/icemc.cc:double km3sr_e=0;                       // to calculate km3sr for electrons
-ks3sr_mu:
-components/icemc/icemc.cc:double km3sr_mu=0;                       // to calculate km3sr for muons
-km3sr_tau:
-components/icemc/icemc.cc:double km3sr_tau=0;                       // to calculate km3sr for taus
-SIGMA_FACTOR:
-components/icemc/Settings.cc:  SIGMA_FACTOR=1;
-
-Example veff:
-20.000000       2867.34 2939.88 958.921 4715.61 1
-We want second column 
-
-Inputs:
-Where are the gain files inputted and what format are they in?
-ICEMC_DATA_DIR = ~anitaBuildTool/components/icemc/data/
-
-From Ryan:
-
-Read gains is then referenced in the following places:
-Settings.cc line 419
-References GetBeamWidths or ReadGains. Might not read from one file...
-// whether to use constant gains as entered in GetBeamWidths (0) or to use Ped's measurements as entered in ReadGains (1)
-
-
-Anita.cc line 1462
-Right under this is a function AntennaGain
-void Anita::ReadGains(void) {
-
-Anita.hh 
-Line 470
-int GAINS;// whether to use constant gains as entered in GetBeamWidths (0) or to use Ped's measurements as entered in ReadGains (1)
-
-Line 494
-void ReadGains();
-
-
-Icemc line 1531
-anita1->ReadGains(); // this is used if GAINS set to 1
-
-testEAS.cc line 361
-anita1->ReadGains(); // this is used if GAINS set to 1
-
-testInputAfterAntenna.cc line 915
-anita1->ReadGains(); // this is used if GAINS set to 1
-
-testWAIS.cc 414
-anita1->ReadGains(); // this is used if GAINS set to 1
-
-
-
-components/icemc/anita.cc
-From ReadGains:
-hh_0 
-gainsfile.open((ICEMC_DATA_DIR+"/hh_0").c_str()); // gains for horizontal polarization
-vv_0
- gainsfile.open((ICEMC_DATA_DIR+"/vv_0").c_str()); // gains for vertical polarization
-hv_0
-gainsfile.open((ICEMC_DATA_DIR+"/hv_0").c_str()); // gains for h-->v cross polarization
-vh_0
-gainsfile.open((ICEMC_DATA_DIR+"/vh_0").c_str()); // gains for v-->h cross polarization
-
-Input files have
-Gain setting: 1 # Constant gains (0) or Ped's measured gains (1)
-
-Example hh_0 gain file: (Horizontal polarization)
-2.00e+08  2.4970223
-2.10e+08  4.8348445
-2.20e+08  8.5237535
-2.30e+08  9.2147996
-2.40e+08  9.3251375
-2.50e+08  9.7325936
-2.60e+08  8.9513643
-2.70e+08  8.3256983
-2.80e+08  8.5562499
-2.90e+08  7.8265333
-3.00e+08  8.6382142
-3.10e+08  8.1658195
-3.20e+08  8.4233328
-3.30e+08  8.8481824
-3.40e+08  9.086128
-3.50e+08  9.445199
-3.60e+08  9.1032247
-3.70e+08  8.7167229
-3.80e+08  8.9695517
-3.90e+08  8.8473866
-4.00e+08  9.208967
-Continuing to 1.50e+09
+Gain files have gains for frequency range:  
 
 200 Mhz - 1500 Mhz
-First Column Frequency, Second Column Gain (in decibels?)
 
-Files for Horizontal Polarization, Vertical Polarization, h → v cross polarization, v → h cross polarization
+Gain Files are formatted:  
 
-SetGains:
-vv_az
-anglefile.open((ICEMC_DATA_DIR+"/vv_az").c_str()); // v polarization, a angle
-hh_az
-anglefile.open((ICEMC_DATA_DIR+"/hh_az").c_str()); // h polarization, a angle
-hh_el
-anglefile.open((ICEMC_DATA_DIR+"/hh_el").c_str()); // h polarization, e angle
-vv_el
-anglefile.open((ICEMC_DATA_DIR+"/vv_el").c_str()); // v polarization, e angle
+First Column Frequency, Second Column Gain (in decibels)   
 
-These have the same format as vv_0 and hh_0, except the frequencies go from 2.00e08 to 1.50e09 6 times instead of 1.
-for(jjj = 1; jjj < 7; jjj++)
-    for(iii = 0; iii < 131; iii++) {
-      anglefile >> sfrequency >> gain_angle[0][iii][jjj];
+More gain files from function SetGains in components/icemc/anita.cc
+```
+    vv_az
+    anglefile.open((ICEMC_DATA_DIR+"/vv_az").c_str()); // v polarization, a angle
+    hh_az
+    anglefile.open((ICEMC_DATA_DIR+"/hh_az").c_str()); // h polarization, a angle
+    hh_el
+    anglefile.open((ICEMC_DATA_DIR+"/hh_el").c_str()); // h polarization, e angle
+    vv_el
+    anglefile.open((ICEMC_DATA_DIR+"/vv_el").c_str()); // v polarization, e angle
+```
+These have the same format as vv_0 and hh_0, except the frequencies go from 2.00e08 to 1.50e09 6 times instead of 1.  
+for(jjj = 1; jjj < 7; jjj++)  
+    for(iii = 0; iii < 131; iii++) {  
+      anglefile >> sfrequency >> gain_angle[0][iii][jjj];  
 
 SetGains loops through these 6 frequency lists, (1 to 6, 131 lines each)
 What are the angles of these?
-From Ryan:
+F
 Setgain angle
 Reference angles:
 0
@@ -209,12 +155,6 @@ Reference angles:
 30
 45
 90
-For gain_angle:
-[0] = vv_az
-[1] = hh_az
-[2] = hh_el
-[3] = vv_el
-
 
 
 double relativegains[4]; // fill this for each frequency bin for each antenna.  It's the gain of the antenna given the angle that the signal hits the balloon, for vv, vh, hv, hh, relative to the gain at boresight

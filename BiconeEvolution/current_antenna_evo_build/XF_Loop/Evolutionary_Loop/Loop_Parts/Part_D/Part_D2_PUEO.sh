@@ -6,9 +6,9 @@ NPOP=$2
 WorkingDir=$3
 RunName=$4
 Seeds=$5
-ArasimExec=$6
+IceMCExec=$6
 
-cd $WorkingDir/RunOutputs/$RunName/AraSimFlags/
+cd $WorkingDir/RunOutputs/$RunName/IceMCFlags/
 nFiles=0
 
 totPop=$( expr $NPOP \* $Seeds )
@@ -19,7 +19,7 @@ do
 	sleep 20
 	# we need to base the counter off of the new flags
 	# these are in the AraSimConfirmed directory
-	nFiles=$(ls -1 --file-type ../AraSimConfirmed | grep -v '/$' | wc -l) # update nFiles 
+	nFiles=$(ls -1 --file-type ../IceMCConfirmed | grep -v '/$' | wc -l) # update nFiles 
 	
 	# I'm adding a second set of flags
 	# The first set of flags indicates that the job finished

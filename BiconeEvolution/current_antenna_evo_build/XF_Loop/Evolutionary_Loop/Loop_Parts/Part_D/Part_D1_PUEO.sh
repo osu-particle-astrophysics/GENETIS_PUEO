@@ -31,25 +31,31 @@ fi
 
 
 cd Antenna_Performance_Metric
+'''
+Will need to change this to move the output of the python script into $IceMCExec/components/icemc/data/
+
 for i in `seq 1 $NPOP`
 do
 	mv evol_antenna_model_${i}.dat $IceMCExec/a_${i}.txt
 done
 
+'''
 echo "Resuming..."
 cd "$IceMCExec"
 
+
 #Let's make sure we're sourcing the correct files
 source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
-#ask about this source. source Anita?
-#source /cvmfs/ara.opensciencegrid.org/trunk/centos7/setup.sh
+#put a copy of this in the repository
+#Probably change this in the future
+source $IceMCExec/../../Anita.sh
 
-#If we;re doing a real run, we only need to change the setup.txt file once
+#If we're doing a real run, we only need to change the setup.txt file once
 #Although we need to be careful, since maybe eventually we'll want to run multiple times at once?
 if [ $DEBUG_MODE -eq 0 ]
 then
 
-	sed -e "s/Number of neutrinos: 2000000/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" -e "s/Random seed: 65546/Random seed: $SpecificSeed/" ${IceMCExec}/inputs.conf > ${IceMCExec}/setup.conf
+	sed -e "s/Number of neutrinos: 2000000/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" -e "s/Random seed: 65546/Random seed: $SpecificSeed/" ${IceMCExec}/components/icemc/inputs.conf > ${IceMCExec}/components/icemc/setup.conf
 	
 	# Now we just need to run IceMC from the setup file
 	# Instead of a for loop, we can use a single command
@@ -59,13 +65,11 @@ then
 	cd $WorkingDir
 	maxJobs=$((NPOP*Seeds))
 	maxJobs=252 #for now, maybe make this a variable in the main script
-	sbatch --array=1-${numJobs}%${maxJobs} --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,IceMCDir=$IceMCDir --job-name=${RunName} Batch_Jobs/IceMCCall_Array.sh
+	sbatch --array=1-${numJobs}%${maxJobs} --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,IceMCDir=$IceMCExec --job-name=${RunName} Batch_Jobs/IceMCCall_Array.sh
 	cd $IceMCExec
 
 # If we're testing with the seed, use DEBUG_MODE=1
-# Then, we'll change the setup file for each job
-# If we're using the DEBUG mode, we'll do it the original way
-# This should be ok, since we'll be using few jobs in such instances
+#For now DEBUG mode doesn't work for PUEO
 else
 	for i in `seq 1 $NPOP`
 	do
@@ -96,11 +100,11 @@ else
 fi
 
 #ask about this
-#This submits the job for the actual ARA bicone. Veff depends on Energy and we need this to run once per run to compare it to. 
+#This submits the job for the actual PUEO antenna. Veff depends on ENergy and we need this to run once per run to compare it.
 if [ $gen -eq 10000 ]
 then
 	#sed -e "s/num_nnu/100000" /fs/ess/PAS1960/BiconeEvolutionOSC/AraSim/setup_dummy_araseed.txt > /fs/ess/PAS1960/BiconeEvolutionOSC/AraSim/setup.txt
-	sbatch --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,AraSimDir=$AraSimExec Batch_Jobs/AraSimBiconeActual_Prototype.sh
+	sbatch --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,IceMCDir=$IceMCExec Batch_Jobs/IceMCActual.sh
 
 fi
 ## Let's move the uan files to a directory

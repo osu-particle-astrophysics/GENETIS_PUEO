@@ -89,7 +89,7 @@ cd "$WorkingDir"/Antenna_Performnance_Metric
 
 if [$gen -eq 10000 ]
 then
-	#cp $WorkingDir/Antenna_Performance_Metric/AraOut_ActualBicone.txt $WorkingDir/Run_Outputs/$RunName/AraOut_ActualBicone.txt
-	#ask about this
+	#Will need to change this
+	#cp $WorkingDir/Antenna_Performance_Metric/IceMCActual/ $WorkingDir/Run_Outputs/$RunName/IceMCActual/
 fi
 

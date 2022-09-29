@@ -55,7 +55,7 @@ source $IceMCExec/../../Anita.sh
 if [ $DEBUG_MODE -eq 0 ]
 then
 
-	sed -e "s/Number of neutrinos: 2000000/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" -e "s/Random seed: 65546/Random seed: $SpecificSeed/" ${IceMCExec}/components/icemc/inputs.conf > ${IceMCExec}/components/icemc/setup.conf
+	sed -e "s/Number of neutrinos: 2000000/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" -e "s/Random seed: 65546/Random seed: $SpecificSeed/" ${IceMCExec}/components/icemc/inputs.anita4.conf > ${IceMCExec}/components/icemc/setup.conf
 	
 	# Now we just need to run IceMC from the setup file
 	# Instead of a for loop, we can use a single command

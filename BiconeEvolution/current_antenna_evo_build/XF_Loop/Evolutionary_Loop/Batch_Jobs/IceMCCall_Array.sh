@@ -26,15 +26,16 @@ num=$(($((${SLURM_ARRAY_TASK_ID}-1))/${Seeds}+1))
 seed=$(($((${SLURM_ARRAY_TASK_ID}-1))%${Seeds}+1))
 
 echo a_${num}_${seed}.txt
-chmod -R 777 $IceMCDir/outputs/
-#input is stored in $IceMCExec/setup.conf
-./IceMC -i $IceMCDir/setup.conf -o outputs/ -r $gen
+chmod -R 777 $IceMCDir/build/components/icemc/outputs/
+#input is stored in $IceMCExec/components/icemc/setup.conf
+cd build/components/icemc
+./icemc -i $IceMCDir/components/icemc/setup.conf -o outputs/ -r "_${gen}_${num}_${seed}" > $TMPDIR/
 
 
 cd outputs/
-mv veff${gen}.txt $WorkingDir/Antenna_Performance_Metric
+mv veff_${gen}_${num}_${seed}.txt $WorkingDir/Antenna_Performance_Metric
 
-cd ../$TMPDIR
+cd $TMPDIR
 mv * $WorkingDir/Run_Outputs/$RunName/IceMcFlags
 #cd $WorkingDir/Run_Outputs/$RunName/AraSimFlags
 #echo ${num}_${Seeds} > ${num}_${Seeds}.txt
@@ -45,6 +46,8 @@ echo $seed >> $TMPDIR/${num}_${seed}.txt
 
 # we need to go fix the file names from the jobs
 cd $WorkingDir/Antenna_Performance_Metric
+
+cp veff_${gen}_${num}_${seed}.txt.* veff_${gen}_${num}_${seed}.txt
 
 # now do the flag files
 cd $WorkingDir/Run_Outputs/$RunName/IceMCFlags

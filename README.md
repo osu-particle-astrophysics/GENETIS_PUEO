@@ -182,3 +182,37 @@ IceMC will interpolate gains between these frequencies, see Set_Gain_angle in co
 ### Comparing Outputs:
    IceMC - veff is in second column in veff+runName+.txt file (in the outputDirectory directory)  
    Ara - veff is at the bottom of the AraOut.txt file  
+
+## Variables of Evolved Antennas
+
+### Antenna Walls 
+   
+   S is half the side length of the bottom wall    
+   m is the slope of the outer wall    
+   H is the max height of the outer wall     
+      
+   Current Constraints:    
+         
+   S < 50cm    
+   H < 50cm    
+   m = 1    
+         
+### Antenna Ridges   
+   
+   x_0, y_0, z_0 are the innitial points of the inner most part of the ridge  
+   x_f, y_f, z_f are the final points of the inner most part of the ridge  
+   tau is the parametric time range 
+   beta is the slope of the curve of the ridge  
+      
+   Current Constraints: 
+      
+   tau = 0.26  
+   x_f = S  
+   0 < x_0 <= x_f 
+   0 < y_0 <= x_0 
+   0 < y_f < z_f  
+   z_0 = 0  
+   0 < z_f <= H   
+   (4/30) * z_f < beta < 5 * z_f (for z_f in meters) 
+   
+ 

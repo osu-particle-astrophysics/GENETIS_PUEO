@@ -213,6 +213,6 @@ IceMC will interpolate gains between these frequencies, see Set_Gain_angle in co
    0 < y_f < z_f     
    z_0 = 0     
    0 < z_f <= H   
-   (4/30) * z_f < beta < 5 * z_f (for z_f in meters) 
+   (4/30) * z_f < beta < 7 * z_f (for z_f in meters) 
    
  

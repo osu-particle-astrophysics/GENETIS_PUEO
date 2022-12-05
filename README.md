@@ -206,12 +206,12 @@ IceMC will interpolate gains between these frequencies, see Set_Gain_angle in co
       
    Current Constraints: 
       
-   tau = 0.26  
-   x_f = S  
-   0 < x_0 <= x_f 
-   0 < y_0 <= x_0 
-   0 < y_f < z_f  
-   z_0 = 0  
+   tau = 0.26     
+   x_f = S     
+   0 < x_0 <= x_f    
+   0 < y_0 <= x_0    
+   0 < y_f < z_f     
+   z_0 = 0     
    0 < z_f <= H   
    (4/30) * z_f < beta < 5 * z_f (for z_f in meters) 
    

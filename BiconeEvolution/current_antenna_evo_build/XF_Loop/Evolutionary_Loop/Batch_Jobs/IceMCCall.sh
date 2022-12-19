@@ -35,7 +35,7 @@ chmod -R 777 $IceMCDir/outputs/
 #./icemc -i {inputFile} -o {outputDirectory} -r {runNumber} -n {numberOfNeutrinos} -t {triggerThreshold} -e {energyExponent}
 ./icemc -i setup.conf -o /outputs -r $3 -n ${num} 
 
-./AraSim setup.txt $SLURM_ARRAY_TASK_ID outputs/ a_${num}.txt > $TMPDIR/AraOut_${gen}_${num}_${seed}.txt 
+./AraSim setup.txt $SLURM_ARRAY_TASK_ID outputs/ a_${num}.txt > $TMPDIR/AraOut_${gen}_${num}.txt 
 cd $TMPDIR
 echo "Let's see what's in TMPDIR:"
 ls -alrt 

@@ -22,34 +22,33 @@ fitnessScores = []
 #fitnessScores = [NPOP, 0.0]
 print(g.NPOP, g.NSEEDS, g.antennaFile)
 #Reads the veff output file for the antenna, returns the average veff
-def ReadVeff(NSEEDS, antenna_file):
+def read_veff(NSEEDS, antenna_file):
 	veff_list = []
 	out_list = []
-	with open(antenna_file, newline = '') as out_file:
+	with open(antenna_file, newline='') as out_file:
 		out_reader = csv.reader(out_file, delimiter='\t')
-		for output in out_reader:
-			out_list.append(str(output))
-	chunks = [[0 for x in range(6)] for y in range(len(out_list))]
-	for i in range(len(out_list)):
-		chunks[i] = re.split(' +', out_list[i])
-	for i in range(len(out_list)):
-		veff_list.append(float(chunks[i][1]))
+		out_list = list(out_reader)
+	chunks = []
+	for line in out_list:
+		chunks.append(line.split())
+	for line in out_list:
+		veff_list.append(float(line[1]))
 	veff_sum = sum(veff_list)
 	veff = veff_sum/NSEEDS
 	return veff
 
-#Writes the fitnessScores data into a csv file
-def WriteFitness(f_scores):
+def write_fitness(f_scores):
+    """Write the fitness scores data into a csv file."""
 	with open('fitnessScores.csv', 'w') as csv_file:
 		csv_file.write("The Ohio State University GENETIS Data.\n")
 		csv_file.write("Current generation's fitness scores:\n")
 		for i in range(g.NPOP):
-			csv_file.write(str(f_scores[i])+"\n")
+			csv_file.write(f'{f_scores[i]}\n')
 def main(): #Loops through the antennas,calculates their fitness, and writes them to a csv
 	for i in range(g.NPOP):
-		fitness = ReadVeff(g.NSEEDS, g.antennaFile+"_"+str(i+1)+".txt")
+		fitness = read_veff(g.NSEEDS, f'{g.antennaFile}_{i+1}.txt')
 		fitnessScores.append(fitness)
 	print(fitnessScores)
-	WriteFitness(fitnessScores)
+	write_fitness(fitnessScores)
 #calls the main function
 main()

@@ -1,0 +1,16 @@
+var path = "fileDirectory/generationDNA.csv";
+
+for(var j = 1;j<=NPOP;j++){
+var m = j;
+
+//131 for PUEO?
+var freqCoefficients = 60 // This stores how many frequencies we're working with.
+var headerLines = 7 // This is how many lines come before the frequency data
+var antennaLines = 9 // This is how many lines come before the antenna data
+var file = new File(path);
+file.open(1);
+var generationDNA = file.readAll();
+var units = " cm";
+var sepDist = 3.0;
+
+//Write the read in data after the GA is finished!!

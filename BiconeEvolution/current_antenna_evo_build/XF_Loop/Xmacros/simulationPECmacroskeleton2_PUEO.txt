@@ -4,14 +4,14 @@ for(var i = 0;i < NPOP;i++)
 {
 	if(i==m-1){
 		//maybe hardcode Z0 = 0, XF = S, ?
-		var antennaS = sidelengths[i];
+		var antennaS = S[i];
 		var antennaM = 1;
-		var antennaH = heights[i];
+		var antennaH = H[i];
 		var antennaTau = 0.26;
-		var antennaX0 = X0[i];
-		var antennaY0 = Y0[i];
-		var antennaZ0 = Z0[i];
-		var antennaXF = XF[i];
+		var antennaX0 = XO[i];
+		var antennaY0 = YO[i];
+		var antennaZ0 = 0;
+		var antennaXF = S[i];
 		var antennaYF = YF[i];
 		var antennaZF = ZF[i];
 		var antennaBeta = betas[i];

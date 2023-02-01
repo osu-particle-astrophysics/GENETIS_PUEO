@@ -3,8 +3,8 @@ var path = "fileDirectory/generationDNA.csv";
 for(var j = 1;j<=NPOP;j++){
 var m = j;
 
-//131 for PUEO?
-var freqCoefficients = 60 // This stores how many frequencies we're working with.
+//131 for PUEO
+var freqCoefficients = 131 // This stores how many frequencies we're working with.
 var headerLines = 7 // This is how many lines come before the frequency data
 var antennaLines = 9 // This is how many lines come before the antenna data
 var file = new File(path);
@@ -13,4 +13,44 @@ var generationDNA = file.readAll();
 var units = " cm";
 var sepDist = 3.0;
 
-//Write the read in data after the GA is finished!!
+//Write the read in data after the GA is finished!
+var S=[];
+var H=[];
+var XO=[];
+var YO=[];
+//var ZO=[]; not evolving
+//var XF=[]; not evolving
+var YF=[];
+var ZF=[];
+var beta=[];
+//var tau=[]; not evolving
+//var m=[]; not evolving
+
+// This macro imports data from generationDNA.csv to XF.
+// It then generates simulations.
+//Only take the lines with functions
+//The following loop should iterate by NSECTIONS(currently 2)
+//(i-antennaLines)/2 -> (i-antennaLines)/NSECTIONS
+
+var lines = generationDNA.split('\n');
+for(var i = 0;i < lines.length;i++){
+	if(i==headerLines)
+	{
+		var frequencies = lines[i].split(",");
+	}
+	if(i>=antennaLines)
+	{
+	var params = lines[i].split(",");
+	S[i-antennaLines]=params[0];
+	H[i-antennaLines]=params[1];
+	XO[i-antennaLines]=params[2];
+	YO[i-antennaLines]=params[3];
+	YF[i-antennaLines]=params[4];
+	ZF[i-antennaLines]=params[5];
+	beta[i-antennaLines]=params[6];
+	
+
+
+	}
+}
+file.close();

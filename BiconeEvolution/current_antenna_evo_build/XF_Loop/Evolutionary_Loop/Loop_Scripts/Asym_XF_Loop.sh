@@ -54,7 +54,7 @@ ELITE=0				## Elite function on/off (1/0)
 
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-BEOSC=/users/PAS1960/dylanwells1629/GENETIS_PUEO/
+BEOSC=/users/PAS1960/dylanwells1629/PUEO/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
 XmacrosDir=$WorkingDir/../Xmacros 

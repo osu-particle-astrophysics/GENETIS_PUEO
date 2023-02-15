@@ -14,25 +14,18 @@ gen=$1
 NPOP=$2
 WorkingDir=$3
 RunName=$4
-GeoGactor=$5
+GeoFactor=$5
 
 cd $WorkingDir
-if [ $gen -eq 0 ]
-then
-	#run initial GA
 
-else
-	#run continuous GA
+g++ -std=c++11 GA/SourceFiles/New_GA.cpp -o GA/Executables/New_GA.exe
+./GA/Executables/New_GA.exe "PUEO" $gen $NPOP 60 20 20 10 90 10 7
 
-fi
+cp generationDNA.csv Run_Outputs/$RunName/${gen}_generationDNA.csv
+mv generators.csv Run_Outputs/$RunName/${gen}_generators.csv
 
-cp Generation_Data/generationDNA.csv Run_Outputs/$RunName/${gen}_generationDNA.csv
-mv Generation_Data/generators.csv Run_Outputs/$RunName/${gen}_generators.csv
 if [ $gen -gt 0 ]
 then
-	mv Generation_Data/parents.csv Run_Outputs/$RunName/${gen}_parents.csv
-	mv Generation_Data/genes.csv Run_Outputs/$RunName/${gen}_genes.csv
-	mv Generation_Data/mutations.csv Run_Outputs/$RunName/${gen}_mutations.csv
+	mv parents.csv Run_Outputs/$RunName/${gen}_parents.csv
 fi
-
 

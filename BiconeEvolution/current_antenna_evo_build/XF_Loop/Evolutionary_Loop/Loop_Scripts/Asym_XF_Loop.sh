@@ -31,6 +31,7 @@ GeoFactor=1			## This is the number by which we are scaling DOWN our antennas. T
 num_keys=4			## how many XF keys we are letting this run use
 database_flag=0			## 0 if not using the database, 1 if using the database
 				## These next 3 define the symmetry of the cones.
+PUEO=1				## IF 1, we evolve the PUEO quad-ridged horn antenna, if 0, we evolve the Bicone
 RADIUS=1			## If 1, radius is asymmetric. If 0, radius is symmetric		
 LENGTH=1			## If 1, length is asymmetric. If 0, length is symmetric
 ANGLE=1				## If 1, angle is asymmetric. If 0, angle is symmetric
@@ -156,6 +157,7 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Antenna_Images
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraOut
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Generation_Data
+		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 		head -n 53 Loop_Scripts/Asym_XF_Loop.sh | tail -n 33 > $WorkingDir/Run_Outputs/$RunName/run_details.txt
 		# Create the run's date and save it in the run's directory
 		python Data_Generators/dateMaker.py
@@ -168,13 +170,17 @@ do
 	##Here, we are running the genetic algorithm and moving the outputs to csv files 
 	if [ $state -eq 1 ]
 	then
+		if [ $PUEO -eq 1]
+		then
+			./Loop_Parts/Part_A/Part_A_PUEO.sh $gen $NPOP $WorkingDir $RunName $GeoFactor $RANK $ROULETTE $TOURNAMENT $REPRODUCTION $CROSSOVER $MUTATION $SIGMA
+		else
 		if [ $CURVED -eq 0 ] #Evolve straight sides
 		then
 			./Loop_Parts/Part_A/Part_A_With_Switches.sh $gen $NPOP $NSECTIONS $WorkingDir $RunName $GeoFactor $RADIUS $LENGTH $ANGLE $SEPARATION $NSECTIONS
 		else #Evolve curved sides
 			./Loop_Parts/Part_A/Part_A_Curved.sh $gen $NPOP $NSECTIONS $WorkingDir $RunName $GeoFactor $RADIUS $LENGTH $A $B $SEPARATION $NSECTIONS $REPRODUCTION $CROSSOVER $MUTATION $SIGMA $ROULETTE $TOURNAMENT $RANK $ELITE
 		fi
-	 	
+		
 		state=2
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 
@@ -184,6 +190,10 @@ do
 	## Part B1 ##
 	if [ $state -eq 2 ]
 	then
+		if [ $PUEO -eq 1 ]
+		then
+			./Loop_Parts/Part_B/Part_B_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+		else
 		if [ $CURVED -eq 0 ]
 		then
 			if [ $NSECTIONS -eq 1 ]
@@ -219,7 +229,10 @@ do
 	## Part B2 ##
 	if [ $state -eq 3 ]
 	then
-
+		if [ $PUEO -eq 1]
+		then
+			./Loop_Parts/Part_B/Part_B_PUEO_2.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+		else
 		if [ $database_flag -eq 0 ]
 		then
 		#./Loop_Parts/Part_B/Part_B_GPU_job2_asym.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS
@@ -237,9 +250,13 @@ do
 	if [ $state -eq 4 ]
 	then
 	  indiv=1
+	  if [ $PUEO -eq 1 ]
+	  then
+	    ./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv
+	  else
 	  ./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
 		state=5
-
+	  fi
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 
 	fi

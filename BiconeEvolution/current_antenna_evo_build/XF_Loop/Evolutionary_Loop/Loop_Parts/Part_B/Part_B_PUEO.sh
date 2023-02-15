@@ -4,11 +4,11 @@
 #
 #      1. Prepare output.xmacro with genetic parameters such as:
 #      		I. Antenna Type
-#		II. Population number
-#		II. Grid size
+#			II. Population number
+#			II. Grid size
 #
 #	2. Prepares simulation_PEC.xmacro with information such as:
-#		I. Each generation antenna parameters
+#			I. Each generation antenna parameters
 #
 #	3. Runs XF and loads XF with both xmacros.
 #

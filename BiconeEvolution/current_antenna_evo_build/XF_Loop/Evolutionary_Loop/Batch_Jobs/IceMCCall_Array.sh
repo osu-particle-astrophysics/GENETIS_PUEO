@@ -29,11 +29,11 @@ echo a_${num}_${seed}.txt
 chmod -R 777 $IceMCDir/build/components/icemc/outputs/
 #input is stored in $IceMCExec/components/icemc/setup.conf
 cd build/components/icemc
-./icemc -i $IceMCDir/components/icemc/setup.conf -o outputs/ -r "_${gen}_${num}_${seed}" > $TMPDIR/
+./icemc -i $IceMCDir/components/icemc/setup.conf -o outputs/ -r "_${gen}_${num}" > $TMPDIR/
 
 
 cd outputs/
-mv veff_${gen}_${num}_${seed}.txt $WorkingDir/Antenna_Performance_Metric
+mv veff_${gen}_${num}.txt $WorkingDir/Run_Outputs
 
 cd $TMPDIR
 mv * $WorkingDir/Run_Outputs/$RunName/IceMcFlags
@@ -47,7 +47,7 @@ echo $seed >> $TMPDIR/${num}_${seed}.txt
 # we need to go fix the file names from the jobs
 cd $WorkingDir/Antenna_Performance_Metric
 
-cp veff_${gen}_${num}_${seed}.txt.* veff_${gen}_${num}_${seed}.txt
+cp veff_${gen}_${num}.txt.* veff_${gen}_${num}.txt
 
 # now do the flag files
 cd $WorkingDir/Run_Outputs/$RunName/IceMCFlags

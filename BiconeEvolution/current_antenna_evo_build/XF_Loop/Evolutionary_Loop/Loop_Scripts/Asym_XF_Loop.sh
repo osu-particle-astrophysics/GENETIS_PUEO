@@ -232,7 +232,7 @@ do
 	then
 		if [ $PUEO -eq 1]
 		then
-			./Loop_Parts/Part_B/Part_B_PUEO_2.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
 		else
 			if [ $database_flag -eq 0 ]
 			then

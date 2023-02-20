@@ -99,7 +99,7 @@ else
 
 fi
 
-#ask about this
+
 #This submits the job for the actual PUEO antenna. Veff depends on ENergy and we need this to run once per run to compare it.
 if [ $gen -eq 10000 ]
 then

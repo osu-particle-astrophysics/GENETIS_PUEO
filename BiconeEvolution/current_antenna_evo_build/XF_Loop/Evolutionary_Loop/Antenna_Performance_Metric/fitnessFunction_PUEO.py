@@ -8,7 +8,6 @@
 ## Imports
 import argparse
 import csv
-import re
 ## Arguments
 #scaleFactor and GeoScaleFactor are used in the AraSim Loop, not currently utilized for PUEO.
 parser = argparse.ArgumentParser()

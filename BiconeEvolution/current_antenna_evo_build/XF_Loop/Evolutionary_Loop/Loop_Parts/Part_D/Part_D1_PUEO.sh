@@ -22,6 +22,10 @@ DEBUG_MODE=$9
 SpecificSeed=32000
 
 cd $WorkingDir
+#move the test_outputs into the icemc data folder
+mv Test_Outputs/* $IceMCExec/components/icemc/data/
+
+
 
 if [ ${gen} -eq 0 ]
 then
@@ -31,6 +35,8 @@ fi
 
 
 cd Antenna_Performance_Metric
+
+
 '''
 Will need to change this to move the output of the python script into $IceMCExec/components/icemc/data/
 
@@ -41,7 +47,7 @@ done
 
 '''
 echo "Resuming..."
-cd "$IceMCExec"
+cd $IceMCExec
 
 
 #Let's make sure we're sourcing the correct files

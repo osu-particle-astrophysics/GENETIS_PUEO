@@ -106,7 +106,7 @@ echo 'Congrats on getting a fitness score!'
 
 cd $WorkingDir/Run_Outputs/$RunName
 
-mkdir -m777 AraOut_$gen
+mkdir -m777 PueoOut_$gen
 cd Antenna_Performance_Metric
 for i in `seq 1 $NPOP`
 do

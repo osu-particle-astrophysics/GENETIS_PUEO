@@ -40,6 +40,7 @@ mv *.root "$WorkingDir/Run_Outputs/$RunName/RootFilesGen${gen}/"
 
 python fitnessFunction_PUEO.py $NPOP $Seeds "$WorkingDir/Run_Outputs/veff_${gen}" 
 cp fitnessScores.csv "$WorkingDir"/Run_Outputs/$RunName/${gen}_fitnessScores.csv
+cp fitnessScores.csv "$WorkingDir"/Run_Outputs/$RunName/${gen}_vEffectives.csv
 mv fitnessScores.csv $WorkingDir/Generation_Data/
 
 #./fitnessFunction.exe $NPOP $Seeds $ScaleFactor $WorkingDir/Generation_Data/generationDNA.csv $GeoFactor $InputFiles #Here's where we add the flags for the generation
@@ -85,15 +86,6 @@ python 3DLength.py "$WorkingDir" "$WorkingDir"/Run_Outputs/$RunName $next_gen $N
 python 3DRadius.py "$WorkingDir" "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor $NSECTIONS
 python 3DTheta.py "$WorkingDir" "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor $NSECTIONS
 
-cd ..
-
-
-#we want to record the gain data each time
-cd $AraSimExec
-for i in `seq 1 $NPOP`
-do
-	mv a_${i}.txt $XFProj/XF_model_${gen}_${i}.txt
-done
 
 cd $WorkingDir/Antenna_Performance_Metric
 
@@ -103,21 +95,6 @@ cd $XFProj
 mv gain_vs_freq.png gain_vs_freq_gen_$gen.png
 
 echo 'Congrats on getting a fitness score!'
-
-cd $WorkingDir/Run_Outputs/$RunName
-
-mkdir -m777 PueoOut_$gen
-cd Antenna_Performance_Metric
-for i in `seq 1 $NPOP`
-do
-    for j in `seq 1 $Seeds`
-    do
-
-	cp AraOut_${gen}_${i}_${j}.txt $WorkingDir/Run_Outputs/$RunName/AraOut_${gen}/AraOut_${gen}_${i}_${j}.txt
-	
-	done
-
-done 
 
 cd $WorkingDir
 

@@ -90,6 +90,6 @@ cd "$WorkingDir"/Antenna_Performnance_Metric
 if [$gen -eq 10000 ]
 then
 	#Will need to change this
-	#cp $WorkingDir/Antenna_Performance_Metric/IceMCActual/ $WorkingDir/Run_Outputs/$RunName/IceMCActual/
+	cp $WorkingDir/Antenna_Performance_Metric/IceMCActual/ $WorkingDir/Run_Outputs/$RunName/IceMCActual/
 fi
 

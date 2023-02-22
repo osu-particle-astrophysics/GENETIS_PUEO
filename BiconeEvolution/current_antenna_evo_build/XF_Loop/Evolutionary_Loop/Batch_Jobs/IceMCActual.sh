@@ -18,7 +18,7 @@ mkdir 775 outputs_Actual_Antena/
 ./icemc -i $IceMCDir/components/icemc/inputs.anita4.conf -o outputs_Actual_Antenna/ -r "Actual" > $TMPDIR/IceMCActual
 
 cd outputs_Actual_Antenna/
-mv veffActual.txt $WorkingDir/Antenna_Performance_Metric/
+mv veffActual.txt $WorkingDir/Antenna_Performance_Metric/IceMCActual
 
 cd $TMPDIR
 

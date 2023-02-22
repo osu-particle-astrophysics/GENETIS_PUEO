@@ -17,6 +17,11 @@
 source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
 
 cd $IceMCDir
+'''
+
+Need to change IceMC to read in the correct gain files for each run 
+
+'''
 
 #this is the command in the XF script although I don't know if we can pass in variables from that script
 #into this one like i and WorkingDir
@@ -34,6 +39,7 @@ cd build/components/icemc
 
 cd outputs/
 mv veff_${gen}_${num}.txt $WorkingDir/Run_Outputs
+mv output_${gen}_${num}.txt $WorkingDir/Run_Outputs
 
 cd $TMPDIR
 mv * $WorkingDir/Run_Outputs/$RunName/IceMcFlags

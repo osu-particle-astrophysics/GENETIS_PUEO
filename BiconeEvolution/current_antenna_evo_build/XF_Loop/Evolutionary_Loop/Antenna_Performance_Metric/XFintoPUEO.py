@@ -47,8 +47,8 @@ for q in range(numFreq):
 
 # For vv_0
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"vv_0_"+str(antenna+1), "w+") as PUEO_v0:
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vv_0_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"vv_0_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_v0:
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vv_0_"+{g.gen}+" "+str(antenna+1), 0o777)
         
         uanMaxG = []
         for freq in range(numFreq):
@@ -65,8 +65,8 @@ for antenna in range(g.NPOP):
 
 # For hh_0
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"hh_0_"+str(antenna+1), "w+") as PUEO_h0:
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hh_0_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"hh_0_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_h0:
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hh_0_"+{g.gen}+" "+str(antenna+1), 0o777)
 
         uanMaxG = []
         for freq in range(numFreq):
@@ -83,8 +83,8 @@ for antenna in range(g.NPOP):
 
 # For vh_0: 
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"vh_0_"+str(antenna+1), "w+") as PUEO_vh0:
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vh_0_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"vh_0_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_vh0:
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vh_0_"+{g.gen}+" "+str(antenna+1), 0o777)
         uanMaxG = []
         for freq in range(numFreq):
             uanDatG = readFile(antenna+1, freq+1) #Gives Gain Column           
@@ -100,8 +100,8 @@ for antenna in range(g.NPOP):
 
 # for hv_0:
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"hv_0_"+str(antenna+1), "w+") as PUEO_hv0:
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hv_0_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"hv_0_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_hv0:
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hv_0_"+{g.gen}+" "+str(antenna+1), 0o777)
         uanMaxG = []
         for freq in range(numFreq):
             uanDatG = readFile(antenna+1, freq+1) #Gives Gain Column           
@@ -129,8 +129,8 @@ numBIGarray = 360
 # for vv_el: (theta)
 
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"vv_el_"+str(antenna+1), "w+") as PUEO_vve: 
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vv_el_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"vv_el_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_vve: 
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vv_el_"+{g.gen}+" "+str(antenna+1), 0o777)
         uanAngG = []
         #print("Gain for 5")
         for freq in range(numFreq):
@@ -180,8 +180,8 @@ for antenna in range(g.NPOP):
 # For phi. 5:[1], 10:[2], 20:[4], 30:[6], 45:[9], 90:[18] 
 
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"vv_az_"+str(antenna+1), "w+") as PUEO_vva:
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vv_az_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"vv_az_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_vva:
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"vv_az_"+{g.gen}+" "+str(antenna+1), 0o777)
         uanAngG = []
         #print("Gain for 5")                                                                                                                                                                                                                                  
         for freq in range(numFreq):
@@ -230,8 +230,8 @@ for antenna in range(g.NPOP):
 # For hh_el:
 
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"hh_el_"+str(antenna+1), "w+") as PUEO_hhe:
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hh_el_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"hh_el_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_hhe:
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hh_el_"+{g.gen}+" "+str(antenna+1), 0o777)
         uanAngG = []
         #print("Gain for 5")                                                                                                        
         for freq in range(numFreq):
@@ -281,8 +281,8 @@ for antenna in range(g.NPOP):
 # For hh_az:
 
 for antenna in range(g.NPOP):
-    with open(f'{g.WorkingDir}/Test_Outputs/'+"hh_az_"+str(antenna+1), "w+") as PUEO_hha:
-        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hh_az_"+str(antenna+1), 0o777)
+    with open(f'{g.WorkingDir}/Test_Outputs/'+"hh_az_"+{g.gen}+" "+str(antenna+1), "w+") as PUEO_hha:
+        os.chmod(f'{g.WorkingDir}/Test_Outputs/'+"hh_az_"+{g.gen}+" "+str(antenna+1), 0o777)
         uanAngG = []
         #print("Gain for 5")                                                                                                       \
                                                                                                                                     

@@ -79,12 +79,6 @@ fi
 python Data_Generators/gensData.py $gen Generation_Data 
 cd Antenna_Performance_Metric
 next_gen=$(($gen+1))
-python LRTPlot.py "$WorkingDir" "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor
-
-# Run 3D Plots of L,R,T vs Fitness
-python 3DLength.py "$WorkingDir" "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor $NSECTIONS
-python 3DRadius.py "$WorkingDir" "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor $NSECTIONS
-python 3DTheta.py "$WorkingDir" "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor $NSECTIONS
 
 
 cd $WorkingDir/Antenna_Performance_Metric

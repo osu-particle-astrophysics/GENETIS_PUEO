@@ -20,10 +20,9 @@ do
 	# we need to base the counter off of the new flags
 	'''
 	Change this for PUEO 
-
-
+	
 	# these are in the AraSimConfirmed directory
-	nFiles=$(ls -1 --file-type ../IceMCConfirmed | grep -v '/$' | wc -l) # update nFiles 
+	nFiles=$(ls -1 --file-type ../AraSimConfirmed | grep -v '/$' | wc -l) # update nFiles 
 	
 	'''
 	# I'm adding a second set of flags

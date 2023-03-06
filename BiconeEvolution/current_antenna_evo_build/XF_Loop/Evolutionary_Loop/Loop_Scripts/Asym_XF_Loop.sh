@@ -62,7 +62,9 @@ XmacrosDir=$WorkingDir/../Xmacros
 XFProj=$WorkingDir/Run_Outputs/${RunName}/${RunName}.xf  ## Provide path to the project directory in the 'single quotes'
 echo $XFProj
 #AraSimExec="/fs/ess/PAS1960/BiconeEvolutionOSC/AraSim"  ##Location of AraSim.exe
-AraSimExec="${WorkingDir}/../../../../AraSim" #$BEOSC/AraSim ## Location of AraSim directory
+AraSimExec="${WorkingDir}/../../../../AraSim"
+#$BEOSC/AraSim ## Location of AraSim directory
+IceMCExec="${WorkingDir}/../../../../anitaBuildTool" 
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 source $WorkingDir/../../../../araenv.sh
@@ -322,12 +324,15 @@ do
 	## Part F ##
 	if [ $state -eq 8 ]
 	then
-		if [ $CURVED -eq 0 ]
-		then
-			./Loop_Parts/Part_F/Part_F_asym.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
+		if [PEUO -eq 0]
+			if [ $CURVED -eq 0 ]
+			then
+				./Loop_Parts/Part_F/Part_F_asym.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
+			else
+				./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
+			fi
 		else
-			./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
-		fi
+			./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
 		state=1
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 

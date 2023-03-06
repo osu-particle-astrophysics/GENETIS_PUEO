@@ -94,7 +94,7 @@ cd $WorkingDir/Antenna_Performance_Metric
 for i in `seq $(($gen*$NPOP + $indiv)) $(($gen*$NPOP+$NPOP))`
 do
 	pop_ind_num=$(($i - $gen*$NPOP))
-	for freq in `seq 1 60`
+	for freq in `seq 1 131`
 	do
 		mv ${i}_${freq}.uan "$WorkingDir"/Run_Outputs/$RunName/${gen}_${pop_ind_num}_${freq}.uan
 	done

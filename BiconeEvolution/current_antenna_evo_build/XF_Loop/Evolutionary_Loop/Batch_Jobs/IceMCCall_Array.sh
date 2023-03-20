@@ -35,8 +35,8 @@ cd build/components/icemc
 
 
 cd outputs/
-mv veff_${gen}_${num}.txt $WorkingDir/Run_Outputs
-mv output_${gen}_${num}.txt $WorkingDir/Run_Outputs
+mv veff_${gen}_${num}.txt $WorkingDir/Run_Outputs/$RunName
+mv output_${gen}_${num}.txt $WorkingDir/Run_Outputs/$RunName
 
 cd $TMPDIR
 mv * $WorkingDir/Run_Outputs/$RunName/IceMcFlags
@@ -48,7 +48,7 @@ echo $seed >> $TMPDIR/${num}_${seed}.txt
 
 
 # we need to go fix the file names from the jobs
-cd $WorkingDir/Run_Outputs
+cd $WorkingDir/Run_Outputs/$RunName
 
 cp veff_${gen}_${num}.txt.* veff_${gen}_${num}.txt
 

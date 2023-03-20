@@ -48,7 +48,7 @@ echo $seed >> $TMPDIR/${num}_${seed}.txt
 
 
 # we need to go fix the file names from the jobs
-cd $WorkingDir/Antenna_Performance_Metric
+cd $WorkingDir/Run_Outputs
 
 cp veff_${gen}_${num}.txt.* veff_${gen}_${num}.txt
 

@@ -1,20 +1,35 @@
-#pragma once
-
+#include <time.h>
+#include <math.h>
+#include <random>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
 #include <vector>
-extern int seed;
-extern int generation;
-extern int population;
-extern int sections;
-extern int genes;
-extern int reproduction_no;
-extern int crossover_no;
-extern int mutation_rate;
-extern int sigma; 
-extern int rank_no; 
-extern int roulette_no;
-extern int tournament_no;
+#include <chrono>
+#include <thread>
+#include <math.h>
+#include <ctime>
 
-void DataWrite(std::vector<std::vector<std::vector<float> > >& varVector, std::vector<int> selected)
+// User functions
+#include "../HeaderFiles/ConstraintARA.h"
+#include "../HeaderFiles/ConstraintPUEO.h"
+#include "../HeaderFiles/Crossover.h"
+#include "../HeaderFiles/DataRead.h"
+#include "../HeaderFiles/DataWrite.h"
+#include "../HeaderFiles/GenerateARA.h"
+#include "../HeaderFiles/GeneratePUEO.h"
+#include "../HeaderFiles/Immigration.h"
+#include "../HeaderFiles/Initialize.h"
+#include "../HeaderFiles/Mutation.h"
+#include "../HeaderFiles/Rank.h"
+#include "../HeaderFiles/Reproduction.h"
+#include "../HeaderFiles/Roulette.h"
+#include "../HeaderFiles/Selection.h"
+#include "../HeaderFiles/Sort.h"
+#include "../HeaderFiles/Tournament.h"
+
+void DataWrite( vector<vector<vector<float> > >& varVector, vector<int> selected)
 {
   ofstream generationDNA;
   generationDNA.open("generationDNA.csv");
@@ -61,8 +76,7 @@ void DataWrite(std::vector<std::vector<std::vector<float> > >& varVector, std::v
   
   
   // PARENT LOCATION FILE
- 
-  if (generation != 0)
+  if (generation == 0)
     {
       ofstream Parents;
       Parents.open("parents.csv");
@@ -97,5 +111,4 @@ void DataWrite(std::vector<std::vector<std::vector<float> > >& varVector, std::v
 	}
       Parents.close();
     }
-    
 }

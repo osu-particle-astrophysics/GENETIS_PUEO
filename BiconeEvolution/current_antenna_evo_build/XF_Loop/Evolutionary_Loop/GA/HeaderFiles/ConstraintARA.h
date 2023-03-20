@@ -1,5 +1,4 @@
 #pragma once
-
 bool ConstraintARA(float R, float L, float A, float B)
 {
   bool intersect = true;

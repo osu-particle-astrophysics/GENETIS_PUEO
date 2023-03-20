@@ -13,6 +13,7 @@ extern int rank_no;
 extern int roulette_no;
 extern int tournament_no;
 
+
 void DataRead(vector<vector<vector<float> > >& varInput, vector<float>& fitness)
 {
   int DNA_GARBAGE_END = 9;

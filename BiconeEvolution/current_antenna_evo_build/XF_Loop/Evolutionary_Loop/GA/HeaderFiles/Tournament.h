@@ -17,6 +17,7 @@ extern int rank_no;
 extern int roulette_no;
 extern int tournament_no;
 
+
 int Tournament(vector<float> fitness)
 {
   // Define starting parameters

@@ -14,14 +14,14 @@ cd $WorkingDir/Run_Outputs/$RunName
 
 nFiles=0
 
-totPop=$( expr $NPOP * 2 )
+totPop=$( expr $NPOP \* 2 )
 
 while [ "$nFiles" != "$totPop" ]
 do
 	echo "Waiting for IceMC jobs to finish..."
 	sleep 20
 	nFiles=$(ls -1 --file-type | grep ".txt" | wc -l) # update nFiles
-	
+
 done
 
 

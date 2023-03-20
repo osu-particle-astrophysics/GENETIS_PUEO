@@ -20,6 +20,7 @@ cd $IceMCDir
 
 # Need to change IceMC to read in the correct gain files for each run 
 
+
 #this is the command in the XF script although I don't know if we can pass in variables from that script
 #into this one like i and WorkingDir
 #if in the job call we have 

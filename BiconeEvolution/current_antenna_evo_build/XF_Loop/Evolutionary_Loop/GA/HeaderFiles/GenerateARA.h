@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <random>
 extern int genes;

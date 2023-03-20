@@ -1,5 +1,6 @@
 #pragma once
 
+
 // User Functions
 #include "Rank.h"
 #include "Roulette.h"

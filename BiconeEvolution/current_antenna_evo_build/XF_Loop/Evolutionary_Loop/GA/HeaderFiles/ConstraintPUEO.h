@@ -1,4 +1,5 @@
 #pragma once
+
 extern float max_S;
 extern float max_H;
 

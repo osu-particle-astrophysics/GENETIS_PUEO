@@ -18,9 +18,13 @@ do
 	echo "Waiting for IceMC jobs to finish..."
 	sleep 20
 	# we need to base the counter off of the new flags
-	# these are in the AraSimConfirmed directory
-	nFiles=$(ls -1 --file-type ../IceMCConfirmed | grep -v '/$' | wc -l) # update nFiles 
+	'''
+	Change this for PUEO 
 	
+	# these are in the AraSimConfirmed directory
+	nFiles=$(ls -1 --file-type ../AraSimConfirmed | grep -v '/$' | wc -l) # update nFiles 
+	
+	'''
 	# I'm adding a second set of flags
 	# The first set of flags indicates that the job finished
 	# The second set indicates that the job was successful
@@ -90,6 +94,6 @@ cd "$WorkingDir"/Antenna_Performnance_Metric
 if [$gen -eq 10000 ]
 then
 	#Will need to change this
-	#cp $WorkingDir/Antenna_Performance_Metric/IceMCActual/ $WorkingDir/Run_Outputs/$RunName/IceMCActual/
+	cp $WorkingDir/Antenna_Performance_Metric/IceMCActual/ $WorkingDir/Run_Outputs/$RunName/IceMCActual/
 fi
 

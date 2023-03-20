@@ -19,29 +19,28 @@ NNT=$6
 RunName=$7
 Seeds=$8
 DEBUG_MODE=$9
+XFProj=${10}
 SpecificSeed=32000
 
 cd $WorkingDir
 
+#move the test_outputs into the icemc data folder
+cp Test_Outputs/* $IceMCExec/components/icemc/data/
+#record the gain data
+mv Test_Outputs/* XFProj/XF_model_${gen}
+
+
 if [ ${gen} -eq 0 ]
 then
-	mkdir -m775 Run_Outputs/${RunName}/IceMC_Outputs
-	mkdir -m775 Run_Outputs/${RunName}/IceMC_Errors
+	mkdir -m775 Run_Outputs/${RunName}/PUEO_Outputs
+	mkdir -m775 Run_Outputs/${RunName}/PUEO_Errors
 fi
 
 
 cd Antenna_Performance_Metric
-'''
-Will need to change this to move the output of the python script into $IceMCExec/components/icemc/data/
 
-for i in `seq 1 $NPOP`
-do
-	mv evol_antenna_model_${i}.dat $IceMCExec/a_${i}.txt
-done
-
-'''
 echo "Resuming..."
-cd "$IceMCExec"
+cd $IceMCExec
 
 
 #Let's make sure we're sourcing the correct files
@@ -99,7 +98,7 @@ else
 
 fi
 
-#ask about this
+
 #This submits the job for the actual PUEO antenna. Veff depends on ENergy and we need this to run once per run to compare it.
 if [ $gen -eq 10000 ]
 then

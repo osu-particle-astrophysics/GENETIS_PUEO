@@ -1,5 +1,6 @@
 #pragma once
 
+
 extern int seed;
 extern int generation;
 extern int population;
@@ -12,6 +13,7 @@ extern int sigma;
 extern int rank_no; 
 extern int roulette_no;
 extern int tournament_no;
+
 
 void Sort(vector<float> & fitness, vector<vector<vector<float> > > & varInput, vector<int> & P_loc)
 {
@@ -58,4 +60,5 @@ void Sort(vector<float> & fitness, vector<vector<vector<float> > > & varInput, v
                 }
 	}
 }
+
 

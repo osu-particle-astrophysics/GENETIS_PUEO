@@ -1,4 +1,5 @@
 #pragma once
+
 extern int population;
 extern string design;
 
@@ -22,3 +23,4 @@ void Initialize(std::vector<std::vector<std::vector<float> > > & varOutput)
     }
   }
 }
+

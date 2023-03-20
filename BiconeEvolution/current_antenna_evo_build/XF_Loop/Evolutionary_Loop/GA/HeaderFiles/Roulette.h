@@ -1,5 +1,6 @@
 #pragma once
 
+
 // Global Variables
 extern int seed;
 extern std::default_random_engine generator;
@@ -14,6 +15,7 @@ extern int sigma;
 extern int rank_no; 
 extern int roulette_no;
 extern int tournament_no;
+
 
 int Roulette(vector<float> fitness)
 {

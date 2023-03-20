@@ -1,5 +1,6 @@
 #pragma once
 
+
 // Global Variables
 extern int seed;
 extern std::default_random_engine generator;

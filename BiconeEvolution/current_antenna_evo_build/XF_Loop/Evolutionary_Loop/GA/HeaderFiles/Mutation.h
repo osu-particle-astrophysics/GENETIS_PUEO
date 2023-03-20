@@ -1,5 +1,6 @@
 #pragma once
 
+
 // User Functions
 #include "ConstraintARA.h"
 #include "ConstraintPUEO.h"
@@ -8,6 +9,7 @@
 extern int seed;
 extern std::default_random_engine generator;
 extern string design;
+
 extern int generation;
 extern int population;
 extern int sections;

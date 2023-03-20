@@ -14,7 +14,7 @@ indiv=$5
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 
-cd "$WorkingDir"
+cd $WorkingDir
 cd Antenna_Performance_Metric
 
  
@@ -23,3 +23,5 @@ chmod -R 777 $WorkingDir/Antenna_Performance_Metric
 python XFintoPUEO.py $NPOP $WorkingDir $RunName $gen $indiv
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
+
+

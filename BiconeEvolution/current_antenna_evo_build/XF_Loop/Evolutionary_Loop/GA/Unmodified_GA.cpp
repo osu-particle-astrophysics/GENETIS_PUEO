@@ -125,7 +125,7 @@ float min_seperation = 2.5;
 int main(int argc, char const *argv[])
 {
 
-  cout << seed << endl;
+  //  cout << seed << endl;
   // EDIT 8/8/20: we need to only instantiate the generator (and seed) once
   // needs to not be seeded Ryan and Kai 10/27/2020
   default_random_engine generator;
@@ -136,7 +136,7 @@ int main(int argc, char const *argv[])
   // I'm going to try recording all of the generator values from these runs to look for patterns
   // First, I need to make a file to write to
   ofstream generator_file;
-	generator_file.open("Generation_Data/generators.csv");
+	generator_file.open("generators.csv");
 	generator_file << "First generator: " << endl << generator << endl;	
 
 
@@ -234,7 +234,7 @@ int main(int argc, char const *argv[])
 						{
 							float l = distribution_length(generator);
 							generator_file << generator << endl;
-							while(l<37.5) // now we don't accept below 37.5 cm
+							while(l<10.0) // now we don't accept below 37.5 cm
 							{
 								l = distribution_length(generator);
 								generator_file << generator << endl;
@@ -292,7 +292,7 @@ int main(int argc, char const *argv[])
 				}
 			float meanForGridSize = meanTotal / NPOP;
 			ofstream datasize;
-			datasize.open("Generation_Data/datasize.txt");
+			datasize.open("datasize.txt");
 			datasize << meanForGridSize/50.0 << ";";
 			datasize.close();	
 		}
@@ -308,7 +308,7 @@ int main(int argc, char const *argv[])
 			  reproduction(varInput, varOutput, fitness, P_loc, selected, ROULETTE_PROPORTION, TOURNEY_PROPORTION, RANK_PROPORTION, reproduction_no, pool_size, elite);
 			  crossover(varInput, varOutput, fitness, P_loc, selected, ROULETTE_PROPORTION, TOURNEY_PROPORTION, RANK_PROPORTION, crossover_no, pool_size, reproduction_no, M_rate, sigma);
 			  immigration(varOutput, reproduction_no, crossover_no, max_length, max_radius, max_seperation, max_outer_radius, max_A, max_B);
-			  cout << selected.size() << endl;
+			  // cout << selected.size() << endl;
 			  // for(int e=0; e < selected.size(); e++) {
 			  //   cout << selected[e] << endl;
 			  // }
@@ -321,19 +321,20 @@ int main(int argc, char const *argv[])
 			     }
 			  float meanForGridSize = meanTotal / NPOP;
 			  ofstream datasize;
-			  datasize.open("Generation_Data/datasize.txt");
+			  datasize.open("datasize.txt");
 			  datasize << meanForGridSize/50.0 << ";";
 			  datasize.close();
 		}
 	}
 	generator_file.close();
+	cout << "Bicone algorithm complete" << endl;
 	return (0);
 }
 	
 void dataWrite(int numChildren, vector<vector<vector<float> > >& varVector, int freq_coeffs, vector<double> freqVector,int reproduction_no, int crossover_no, vector<int> selected, string gen)
 {
   ofstream generationDNA;
-  generationDNA.open("Generation_Data/generationDNA.csv");
+  generationDNA.open("generationDNA.csv");
   generationDNA << "Hybrid of Roulette and Tournament -- Thanks to Cal Poly / Jordan Potter" << "\n";
   generationDNA << "Author was David Liu" << "\n";
   generationDNA << "Notable contributors: Julie Rolla, Hannah Hasan, and Adam Blenk" << "\n";
@@ -377,7 +378,7 @@ void dataWrite(int numChildren, vector<vector<vector<float> > >& varVector, int 
   if (gen == "cont")
     {
       ofstream Parents;
-      Parents.open("Generation_Data/Parents.csv");
+      Parents.open("parents.csv");
       Parents << "Location of individuals used to make this generation:" << endl;
       Parents << "Seed: " << seed << endl;
       Parents << "\n" << endl;
@@ -414,7 +415,7 @@ void dataWrite(int numChildren, vector<vector<vector<float> > >& varVector, int 
 void dataRead(vector<vector<vector<float> > >& varInput, vector<float>& fitness)
 {
   ifstream generationDNA;
-  generationDNA.open("Generation_Data/generationDNA.csv");
+  generationDNA.open("generationDNA.csv");
   int csv_file_size = DNA_GARBAGE_END + (NPOP * NSECTIONS);
   string csvContent[csv_file_size]; //contain each line of csv
   string strToDbl; //data change from string to float, then written to varInput or fitness.
@@ -449,7 +450,7 @@ void dataRead(vector<vector<vector<float> > >& varInput, vector<float>& fitness)
   // Now we need to read the fitness scores:
   
   ifstream fitnessScores;
-  fitnessScores.open("Generation_Data/fitnessScores.csv");
+  fitnessScores.open("fitnessScores.csv");
   string fitnessRead[NPOP+2];
   
   for(int i=0;i<(NPOP+2);i++)
@@ -652,7 +653,7 @@ void reproduction(vector<vector<vector<float> > > & varInput, vector<vector<vect
     {
       reproduction_no = reproduction_no+elite; 
     }
-  cout << "Roulette Finished" << endl;
+  //cout << "Roulette Finished" << endl;
 }
 void crossover(vector<vector<vector<float> > > & varInput, vector<vector<vector<float> > > & varOutput, vector<float> fitness, vector<int> P_loc, vector<int> & selected, float roul_percentage, float tour_percentage, float rank_percentage, int crossover_no, int pool_size, int reproduction_no, float M_rate, float sigma)
 {
@@ -752,7 +753,7 @@ for(int i=0; i<parents_loc.size(); i=i+2)
     selected.push_back(P_loc[parents_loc[1+i]]);
   }
  mutation(varOutput, M_rate, sigma, reproduction_no, crossover_no);
- cout << "Crossover Finished" << endl;
+ //cout << "Crossover Finished" << endl;
 }
 
 void mutation(vector<vector<vector<float> > > & varOutput, float M_rate, float sigma, int reproduction_no, int crossover_no)
@@ -771,7 +772,8 @@ void mutation(vector<vector<vector<float> > > & varOutput, float M_rate, float s
 		  normal_distribution<float> mutate(varOutput[i][j][k], sigma*varOutput[i][j][k]);
 		  varOutput[i][j][k] = mutate(generator);
 		  int intersect = 0;
-		  while(intersect == 0)
+		  int constrained = 0;
+		  while(intersect == 0 || constrained == 0)
 		    {
 		      float r = varOutput[i][j][0];
 		      float l = varOutput[i][j][1];
@@ -782,10 +784,28 @@ void mutation(vector<vector<vector<float> > > & varOutput, float M_rate, float s
 	
 		      if(a == 0.0 && max_outer_radius > end_point && end_point >= 0.0)
 			{
+			  if(r<0 || l<min_length || l>max_length || a<min_A || a>max_A || b<min_B || b>max_B)
+			    {
+			      constrained = 0;
+			      varOutput[i][j][k] = mutate(generator);
+			    }
+			  else
+			    {
+			      constrained = 1;
+			    }
 			  intersect = 1;
 			}
 		      else if(a != 0.0 && max_outer_radius > end_point && end_point >= 0.0 && max_outer_radius > vertex && vertex >= 0.0)
 			{
+			  if(r<0 || l<min_length || l>max_length || a<min_A || a>max_A || b<min_B || b>max_B)
+                            {
+                              constrained = 0;
+                              varOutput[i][j][k] = mutate(generator);
+                            }
+                          else
+                            {
+                              constrained = 1;
+                            }
 			  intersect = 1;
 			}
 		      else
@@ -799,7 +819,7 @@ void mutation(vector<vector<vector<float> > > & varOutput, float M_rate, float s
 	}
     }
 
-  cout << "Mutation complete" << endl;
+  //  cout << "Mutation complete" << endl;
 }
 					      
 void immigration(vector<vector<vector<float> > > & varOutput, int reproduction_no, int crossover_no, float max_length, float max_radius, float max_seperation, float max_outer_radius, float max_A, float max_B)
@@ -845,7 +865,7 @@ void immigration(vector<vector<vector<float> > > & varOutput, int reproduction_n
 	  
 	}
     }
-  cout << "Immigration finished" << endl;
+  //cout << "Immigration finished" << endl;
 }
 
 void insertionSort(vector<float> & fitness, vector<vector<vector<float> > > & varInput, vector<int> & P_loc)

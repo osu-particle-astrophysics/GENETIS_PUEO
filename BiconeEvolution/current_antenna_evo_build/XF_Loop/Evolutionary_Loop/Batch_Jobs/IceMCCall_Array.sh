@@ -18,6 +18,8 @@ source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
 
 cd $IceMCDir
 
+# Need to change IceMC to read in the correct gain files for each run 
+
 #this is the command in the XF script although I don't know if we can pass in variables from that script
 #into this one like i and WorkingDir
 #if in the job call we have 
@@ -29,11 +31,12 @@ echo a_${num}_${seed}.txt
 chmod -R 777 $IceMCDir/build/components/icemc/outputs/
 #input is stored in $IceMCExec/components/icemc/setup.conf
 cd build/components/icemc
-./icemc -i $IceMCDir/components/icemc/setup.conf -o outputs/ -r "_${gen}_${num}_${seed}" > $TMPDIR/
+./icemc -i $IceMCDir/components/icemc/setup.conf -o outputs/ -r "_${gen}_${num}" > $TMPDIR/
 
 
 cd outputs/
-mv veff_${gen}_${num}_${seed}.txt $WorkingDir/Antenna_Performance_Metric
+mv veff_${gen}_${num}.txt $WorkingDir/Run_Outputs
+mv output_${gen}_${num}.txt $WorkingDir/Run_Outputs
 
 cd $TMPDIR
 mv * $WorkingDir/Run_Outputs/$RunName/IceMcFlags
@@ -47,7 +50,7 @@ echo $seed >> $TMPDIR/${num}_${seed}.txt
 # we need to go fix the file names from the jobs
 cd $WorkingDir/Antenna_Performance_Metric
 
-cp veff_${gen}_${num}_${seed}.txt.* veff_${gen}_${num}_${seed}.txt
+cp veff_${gen}_${num}.txt.* veff_${gen}_${num}.txt
 
 # now do the flag files
 cd $WorkingDir/Run_Outputs/$RunName/IceMCFlags

@@ -19,52 +19,49 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2022_07_15_Test_5'	## This is the name of the run. You need to make a unique name each time you run.
-TotalGens=5			## number of generations (after initial) to run through
-NPOP=5				## number of individuals per generation; please keep this value below 99
-Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
+RunName='2023_02_20_Symmetric_Run'	## This is the name of the run. You need to make a unique name each time you run.
+TotalGens=100			## number of generations (after initial) to run through
+NPOP=50				## number of individuals per generation; please keep this value below 99
+Seeds=10			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
-NNT=300			## Number of Neutrinos Thrown in AraSim   
+NNT=30000			## Number of Neutrinos Thrown in AraSim   
 exp=18				## exponent of the energy for the neutrinos in AraSim
 ScaleFactor=1.0			## ScaleFactor used when punishing fitness scores of antennae larger than the drilling holes
 GeoFactor=1			## This is the number by which we are scaling DOWN our antennas. This is passed to many files
 num_keys=4			## how many XF keys we are letting this run use
 database_flag=0			## 0 if not using the database, 1 if using the database
 				## These next 3 define the symmetry of the cones.
-PUEO=1				## IF 1, we evolve the PUEO quad-ridged horn antenna, if 0, we evolve the Bicone
-RADIUS=1			## If 1, radius is asymmetric. If 0, radius is symmetric		
-LENGTH=1			## If 1, length is asymmetric. If 0, length is symmetric
-ANGLE=1				## If 1, angle is asymmetric. If 0, angle is symmetric
-CURVED=1			## If 1, evolve curved sides. If 0, sides are straight
-A=1				## If 1, A is asymmetric
-B=1				## If 1, B is asymmetric
+RADIUS=0			## If 1, radius is asymmetric. If 0, radius is symmetric		
+LENGTH=0			## If 1, length is asymmetric. If 0, length is symmetric
+ANGLE=0				## If 1, angle is asymmetric. If 0, angle is symmetric
+CURVED=0			## If 1, evolve curved sides. If 0, sides are straight
+A=0				## If 1, A is asymmetric
+B=0				## If 1, B is asymmetric
 SEPARATION=0    		## If 1, separation evolves. If 0, separation is constant
-NSECTIONS=2 			## The number of chromosomes
+NSECTIONS=1 			## The number of chromosomes
 DEBUG_MODE=0			## 1 for testing (ex: send specific seeds), 0 for real runs
 				## These next variables are the values passed to the GA
-REPRODUCTION=2			## Number (not fraction!) of individuals formed through reproduction
-CROSSOVER=2			## Number (not fraction!) of individuals formed through crossover
-MUTATION=1			## Probability of mutation (divided by 100)
-SIGMA=5				## Standard deviation for the mutation operation (divided by 100)
-ROULETTE=2			## Percent of individuals selected through roulette (divided by 10)
+REPRODUCTION=3			## Number (not fraction!) of individuals formed through reproduction
+CROSSOVER=36			## Number (not fraction!) of individuals formed through crossover
+MUTATION=25			## Probability of mutation (divided by 100)
+SIGMA=6				## Standard deviation for the mutation operation (divided by 100)
+ROULETTE=8			## Percent of individuals selected through roulette (divided by 10)
 TOURNAMENT=2			## Percent of individuals selected through tournament (divided by 10)
-RANK=6				## Percent of individuals selected through rank (divided by 10)
+RANK=0				## Percent of individuals selected through rank (divided by 10)
 ELITE=0				## Elite function on/off (1/0)
 
 #####################################################################################################################################################
 
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-BEOSC=/users/PAS1960/dylanwells1629/PUEO/GENETIS_PUEO/
+BEOSC=/fs/ess/PAS1960/BiconeEvolutionOSC
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
 XmacrosDir=$WorkingDir/../Xmacros 
 XFProj=$WorkingDir/Run_Outputs/${RunName}/${RunName}.xf  ## Provide path to the project directory in the 'single quotes'
 echo $XFProj
 #AraSimExec="/fs/ess/PAS1960/BiconeEvolutionOSC/AraSim"  ##Location of AraSim.exe
-AraSimExec="${WorkingDir}/../../../../AraSim"
-#$BEOSC/AraSim ## Location of AraSim directory
-IceMCExec="${WorkingDir}/../../../../anitaBuildTool" 
+AraSimExec=${WorkingDir}/../../../../Original_GENETIS_AraSim/AraSim #"${WorkingDir}/../../../../AraSim" #$BEOSC/AraSim ## Location of AraSim directory
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 source $WorkingDir/../../../../araenv.sh
@@ -159,7 +156,8 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Antenna_Images
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraOut
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Generation_Data
-		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEOFlags
+		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Evolution_Plots
+		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Root_Files
 		head -n 53 Loop_Scripts/Asym_XF_Loop.sh | tail -n 33 > $WorkingDir/Run_Outputs/$RunName/run_details.txt
 		# Create the run's date and save it in the run's directory
 		python Data_Generators/dateMaker.py
@@ -172,17 +170,13 @@ do
 	##Here, we are running the genetic algorithm and moving the outputs to csv files 
 	if [ $state -eq 1 ]
 	then
-		if [ $PUEO -eq 0]
+		if [ $CURVED -eq 0 ] #Evolve straight sides
 		then
-			if [ $CURVED -eq 0 ] #Evolve straight sides
-			then
-				./Loop_Parts/Part_A/Part_A_With_Switches.sh $gen $NPOP $NSECTIONS $WorkingDir $RunName $GeoFactor $RADIUS $LENGTH $ANGLE $SEPARATION $NSECTIONS
-			else #Evolve curved sides
-				./Loop_Parts/Part_A/Part_A_Curved.sh $gen $NPOP $NSECTIONS $WorkingDir $RunName $GeoFactor $RADIUS $LENGTH $A $B $SEPARATION $NSECTIONS $REPRODUCTION $CROSSOVER $MUTATION $SIGMA $ROULETTE $TOURNAMENT $RANK $ELITE
-			fi
-		else
-						./Loop_Parts/Part_A/Part_A_PUEO.sh $gen $NPOP $WorkingDir $RunName $GeoFactor $RANK $ROULETTE $TOURNAMENT $REPRODUCTION $CROSSOVER $MUTATION $SIGMA
+			./Loop_Parts/Part_A/Part_A_With_Switches.sh $gen $NPOP $NSECTIONS $WorkingDir $RunName $GeoFactor $RADIUS $LENGTH $ANGLE $SEPARATION 
+		else #Evolve curved sides
+			./Loop_Parts/Part_A/Part_A_Curved.sh $gen $NPOP $NSECTIONS $WorkingDir $RunName $GeoFactor $RADIUS $LENGTH $A $B $SEPARATION $NSECTIONS $REPRODUCTION $CROSSOVER $MUTATION $SIGMA $ROULETTE $TOURNAMENT $RANK $ELITE
 		fi
+	 	
 		state=2
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 
@@ -192,37 +186,32 @@ do
 	## Part B1 ##
 	if [ $state -eq 2 ]
 	then
-		if [ $PUEO -eq 1 ]
+		if [ $CURVED -eq 0 ]
 		then
-			./Loop_Parts/Part_B/Part_B_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
-		else
-			if [ $CURVED -eq 0 ]
+			if [ $NSECTIONS -eq 1 ]
 			then
-				if [ $NSECTIONS -eq 1 ]
+				if [ $database_flag -eq 0 ]
 				then
-					if [ $database_flag -eq 0 ]
-					then
-						./Loop_Parts/Part_B/Part_B_GPU_job1.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
-
-					else
-						./Loop_Parts/Part_B/Part_B_GPU_job1_database.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
-
-					fi
+					./Loop_Parts/Part_B/Part_B_GPU_job1.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
 
 				else
-					if [ $database_flag -eq 0 ]
-					then
-						./Loop_Parts/Part_B/Part_B_job1_sep.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys 
+					./Loop_Parts/Part_B/Part_B_GPU_job1_database.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
 
-					else
-						./Loop_Parts/Part_B/Part_B_GPU_job1_asym_database.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
-
-					fi
 				fi
+
 			else
-				./Loop_Parts/Part_B/Part_B_Curved_1.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
-				#./Loop_Parts/Part_B/Part_B_Curved_Constant_Quadratic_1.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+				if [ $database_flag -eq 0 ]
+				then
+					./Loop_Parts/Part_B/Part_B_job1_sep.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys 
+
+				else
+					./Loop_Parts/Part_B/Part_B_GPU_job1_asym_database.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+
+				fi
 			fi
+		else
+			./Loop_Parts/Part_B/Part_B_Curved_1.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+			#./Loop_Parts/Part_B/Part_B_Curved_Constant_Quadratic_1.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
 		fi
 		state=3
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -232,18 +221,15 @@ do
 	## Part B2 ##
 	if [ $state -eq 3 ]
 	then
-		if [ $PUEO -eq 1]
+
+		if [ $database_flag -eq 0 ]
 		then
-			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+		#./Loop_Parts/Part_B/Part_B_GPU_job2_asym.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS
+		./Loop_Parts/Part_B/Part_B_GPU_job2_asym_array.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS
 		else
-			if [ $database_flag -eq 0 ]
-			then
-			#./Loop_Parts/Part_B/Part_B_GPU_job2_asym.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS
-			./Loop_Parts/Part_B/Part_B_GPU_job2_asym_array.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS
-			else
-			./Loop_Parts/Part_B/Part_B_GPU_job2_asym_database.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS
-			fi
+		./Loop_Parts/Part_B/Part_B_GPU_job2_asym_database.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS
 		fi
+
 		state=4
 
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -253,13 +239,9 @@ do
 	if [ $state -eq 4 ]
 	then
 	  indiv=1
-	  if [ $PUEO -eq 1 ]
-	  then
-	    ./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv
-	  else
-		./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
+	  ./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
 		state=5
-	  fi
+
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 
 	fi
@@ -271,12 +253,7 @@ do
 		#We need to make a new AraSim job script which takes the runname as a flag 
 		#./Loop_Parts/Part_D/Part_D1_AraSeed.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		#./Loop_Parts/Part_D/Part_D1_AraSeed_Notif.sh 
-		if [$PUEO -eq 0]
-		then
-			./Loop_Parts/Part_D/Part_D1_Array.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
-		else
-			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $IceMCExec $exp $NNT $RunName $Seeds $DEBUG_MODE
-		fi
+		./Loop_Parts/Part_D/Part_D1_Array.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		state=6
 
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -287,13 +264,8 @@ do
 	if [ $state -eq 6 ]
 	then
 		#./Part_D2_AraSeed.sh 
-		if [ $PUEO -eq 0]
-		then
-			./Loop_Parts/Part_D/Part_D2_Array.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
-			#./Loop_Parts/Part_D/Part_D2_AraSeed_Notif.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
-		else
-			./Loop_Parts/Part_D/Part_D2_PUEO.sh $gen $NPOP $WorkingDir $RunName $Seeds $IceMCExec
-		fi
+		./Loop_Parts/Part_D/Part_D2_Array.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
+		#./Loop_Parts/Part_D/Part_D2_AraSeed_Notif.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
 		state=7
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 
@@ -305,16 +277,11 @@ do
 	## moves the .uan files from Antenna Performance Metric to RunOutputs/$RunName folder
 	if [ $state -eq 7 ]
 	then
-		if [ $PUEO -eq 0]
+		if [ $CURVED -eq 0 ]	# Evolve straight sides
 		then
-			if [ $CURVED -eq 0 ]	# Evolve straight sides
-			then
-				./Loop_Parts/Part_E/Part_E_Asym.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $AraSimExec $XFProj $NSECTIONS $SEPARATION
-			else			# Evolv curved sides
-				./Loop_Parts/Part_E/Part_E_Curved.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $AraSimExec $XFProj $NSECTIONS $SEPARATION $CURVED
-			fi
-		else
-			./Loop_Parts/Part_E/Part_E_PUEO.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $IceMCExec $XFProj 
+			./Loop_Parts/Part_E/Part_E_Asym.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $AraSimExec $XFProj $NSECTIONS $SEPARATION
+		else			# Evolv curved sides
+			./Loop_Parts/Part_E/Part_E_Curved.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $AraSimExec $XFProj $NSECTIONS $SEPARATION $CURVED
 		fi
 		state=8
 		./SaveState_Prototype.sh $gen $state $RunName $indiv 
@@ -324,15 +291,12 @@ do
 	## Part F ##
 	if [ $state -eq 8 ]
 	then
-		if [PEUO -eq 0]
-			if [ $CURVED -eq 0 ]
-			then
-				./Loop_Parts/Part_F/Part_F_asym.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
-			else
-				./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
-			fi
+		if [ $CURVED -eq 0 ]
+		then
+			./Loop_Parts/Part_F/Part_F_asym.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
 		else
-			./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
+			./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
+		fi
 		state=1
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 

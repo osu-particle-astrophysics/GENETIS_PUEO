@@ -45,7 +45,7 @@ chmod -R 777 ${PSIMDIR}/${gen}_outputs/
 ./pueoBuilder/build/components/pueoSim/simulatePueo -i ${PSIMDIR}/pueoBuilder/components/pueoSim/config/setup.conf -o ${PSIMDIR}/${gen}_outputs/ -r $run_num -n $NNT -e $Exp > $TMPDIR/
 
 cd ${gen}_outputs/run${run_num}
-mv veff${run_num}.txt $WorkingDir/Run_Outputs/$RunName/veff_${gen}_${num}.txt
+cp veff${run_num}.csv $WorkingDir/Run_Outputs/$RunName/veff_${gen}_${num}.csv
 mv IceFinal_${run_num}.root $WorkingDir/Run_Outputs/$RunName/IceFinal_${gen}_{num}.root
 
 cd $TMPDIR
@@ -60,7 +60,7 @@ echo $seed >> $TMPDIR/${num}_${seed}.txt
 # we need to go fix the file names from the jobs
 cd $WorkingDir/Run_Outputs/$RunName
 
-cp veff_${gen}_${num}.txt.* veff_${gen}_${num}.txt
+#cp veff_${gen}_${num}.csv.* veff_${gen}_${num}.csv
 
 # now do the flag files
 cd $WorkingDir/Run_Outputs/$RunName/PSIMFlags

@@ -6,7 +6,7 @@ NPOP=$2
 WorkingDir=$3
 RunName=$4
 Seeds=$5
-IceMCExec=$6
+PSIMDIR=$6
 
 
 
@@ -20,7 +20,7 @@ while [ "$nFiles" != "$totPop" ]
 do
 	echo "Waiting for IceMC jobs to finish..."
 	sleep 20
-	nFiles=$(ls -1 --file-type | grep ".txt" | wc -l) # update nFiles
+	nFiles=$(ls -1 --file-type | grep "_${gen}_" | wc -l) # update nFiles
 
 done
 

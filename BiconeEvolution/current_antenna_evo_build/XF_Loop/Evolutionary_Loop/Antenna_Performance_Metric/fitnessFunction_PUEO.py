@@ -7,7 +7,8 @@
 # 
 ## Imports
 import argparse
-import csv
+import pandas as pd
+import numpy as np
 ## Arguments
 #scaleFactor and GeoScaleFactor are used in the AraSim Loop, not currently utilized for PUEO.
 parser = argparse.ArgumentParser()
@@ -22,19 +23,12 @@ fitnessScores = []
 print(g.NPOP, g.NSEEDS, g.antennaFile)
 #Reads the veff output file for the antenna, returns the average veff
 def read_veff(NSEEDS, antenna_file):
-    veff_list = []
-    out_list = []
-    with open(antenna_file, newline='') as out_file:
-        out_reader = csv.reader(out_file, delimiter='\t')
-        out_list = list(out_reader)
-    chunks = []
-    for line in out_list:
-        chunks.append(str(line).split())
-    for line in chunks:
-        veff_list.append(float(line[1]))
-    veff_sum = sum(veff_list)
-    veff = veff_sum/NSEEDS
-    return veff
+    veff_list = pd.read_csv(antenna_file, header=None)
+    veff_list = np.array(veff_list)
+    veff_list = veff_list.flatten()
+    total = sum(veff_list)
+    total = total/NSEEDS
+    return total
 
 def write_fitness(f_scores):
     """Write the fitness scores data into a csv file."""
@@ -45,7 +39,7 @@ def write_fitness(f_scores):
             csv_file.write(f'{f_scores[i]}\n')
 def main(): #Loops through the antennas,calculates their fitness, and writes them to a csv
     for i in range(g.NPOP):
-        fitness = read_veff(g.NSEEDS, f'{g.antennaFile}_{i+1}.txt')
+        fitness = read_veff(g.NSEEDS, f'{g.antennaFile}_{i+1}.csv')
         fitnessScores.append(fitness)
     write_fitness(fitnessScores)
 #calls the main function

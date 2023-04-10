@@ -13,7 +13,7 @@
 gen=$1
 NPOP=$2
 WorkingDir=$3
-IceMCExec=$4
+PSIMDIR=$4
 exp=$5
 NNT=$6
 RunName=$7
@@ -25,7 +25,7 @@ SpecificSeed=32000
 cd $WorkingDir
 
 #move the test_outputs into the icemc data folder
-cp Test_Outputs/* $IceMCExec/components/icemc/data/
+cp Test_Outputs/* $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/
 #record the gain data
 mv Test_Outputs/* XFProj/XF_model_${gen}
 
@@ -40,21 +40,22 @@ fi
 cd Antenna_Performance_Metric
 
 echo "Resuming..."
-cd $IceMCExec
+cd $PSIMDIR
 
 
 #Let's make sure we're sourcing the correct files
-source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
+#source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
 #put a copy of this in the repository
 #Probably change this in the future
-source $IceMCExec/../../Anita.sh
+source $PSIMDIR/set_env.sh
 
 #If we're doing a real run, we only need to change the setup.txt file once
 #Although we need to be careful, since maybe eventually we'll want to run multiple times at once?
 if [ $DEBUG_MODE -eq 0 ]
 then
 
-	sed -e "s/Number of neutrinos: 2000000/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" -e "s/Random seed: 65546/Random seed: $SpecificSeed/" ${IceMCExec}/components/icemc/inputs.anita4.conf > ${IceMCExec}/components/icemc/setup.conf
+	#Shouldn't need this as we input these as paramaters into the simulatePueo call
+	#sed -e "s/Number of neutrinos: 200/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" ${PSIMDIR}/pueoBuilder/components/pueoSim/config/pueo.conf > ${PSIMDIR}/pueoBuilder/components/pueoSim/config/setup.conf
 	
 	# Now we just need to run IceMC from the setup file
 	# Instead of a for loop, we can use a single command
@@ -64,8 +65,8 @@ then
 	cd $WorkingDir
 	maxJobs=$((NPOP*Seeds))
 	maxJobs=252 #for now, maybe make this a variable in the main script
-	sbatch --array=1-${numJobs}%${maxJobs} --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,IceMCDir=$IceMCExec --job-name=${RunName} Batch_Jobs/IceMCCall_Array.sh
-	cd $IceMCExec
+	sbatch --array=1-${numJobs}%${maxJobs} --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT,Exp=$exp --job-name=${RunName} Batch_Jobs/PueoCall_Array.sh
+	cd $PSIMDIR
 
 # If we're testing with the seed, use DEBUG_MODE=1
 #For now DEBUG mode doesn't work for PUEO
@@ -80,18 +81,18 @@ else
 		SpecificSeed=$(expr $j + 32000)
 		#SpecificSeed=32000
 		
-		sed -e "s/Number of neutrinos: 2000000/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" -e "s/Random seed: 65546/Random seed: $SpecificSeed/" ${IceMCExec}/inputs.conf > ${IceMCExec}/setup.conf
+		sed -e "s/Number of neutrinos: 2000000/Number of neutrinos: ${NNT}/" -e "s/Energy exponent: 20/Energy exponent: $exp/" -e "s/Random seed: 65546/Random seed: $SpecificSeed/" ${PSIMDIR}/inputs.conf > ${PSIMDIR}/setup.conf
 		
 		#We will want to call a job here to do what this AraSim call is doing so it can run in parallel
 		cd $WorkingDir
 		output_name=/users/PAS1960/dylanwells1629/GNETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/$RunName/IceMC_Outputs/${gen}_${i}_${j}.output
 		error_name=/users/PAS1960/dylanwells1629/GNETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/$RunName/IceMC_Errors/${gen}_${i}_${j}.error
-		sbatch --export=ALL,gen=$gen,num=$i,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$j,IceMCDir=$IceMCExec --job-name=IceMCCall_Array_${gen}_${i}_${j}.run --output=$output_name --error=$error_name Batch_Jobs/IceMCCall_Array.sh
+		sbatch --export=ALL,gen=$gen,num=$i,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$j,PSIMDIR=$PSIMDIR --job-name=PueoCall_Array_${gen}_${i}_${j}.run --output=$output_name --error=$error_name Batch_Jobs/PueoCall_Array.sh
 		# We are going to implement a notification system
 		# This will require being able to know the job IDs
 		# We'll print this to a file and then read it in D2
 
-		cd $IceMCExec
+		cd $PSIMDIR
 		rm -f outputs/*.root
 		done
 	done
@@ -103,7 +104,7 @@ fi
 if [ $gen -eq 10000 ]
 then
 	#sed -e "s/num_nnu/100000" /fs/ess/PAS1960/BiconeEvolutionOSC/AraSim/setup_dummy_araseed.txt > /fs/ess/PAS1960/BiconeEvolutionOSC/AraSim/setup.txt
-	sbatch --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,IceMCDir=$IceMCExec Batch_Jobs/IceMCActual.sh
+	sbatch --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,PSIMDIR=$PSIMDIR,NNT=$NNT Batch_Jobs/PueoActual.sh
 
 fi
 ## Let's move the uan files to a directory

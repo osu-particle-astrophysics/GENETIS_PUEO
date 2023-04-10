@@ -24,11 +24,22 @@ SpecificSeed=32000
 
 cd $WorkingDir
 
-#move the test_outputs into the icemc data folder
-cp Test_Outputs/* $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/
+
+#Move the gain files into the correct place for PSIM to read them in
+for i in `seq 1 $NPOP`
+do
+	run_num=$((NPOP * gen + num))
+	cp Test_Outputs/hh_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_0_toyon${run_num}
+	cp Test_Outputs/hv_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hv_0_toyon${run_num}
+	cp Test_Outputs/vv_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_0_toyon${run_num}
+	cp Test_Outputs/vh_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vh_0_toyon${run_num}
+	cp Test_Outputs/hh_el_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_el_toyon${run_num}
+	cp Test_Outputs/hh_az_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_az_toyon${run_num}
+	cp Test_Outputs/vv_el_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_el_toyon${run_num}
+	cp Test_Outputs/vv_az_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_az_toyon${run_num}
+done
 #record the gain data
 mv Test_Outputs/* XFProj/XF_model_${gen}
-
 
 if [ ${gen} -eq 0 ]
 then

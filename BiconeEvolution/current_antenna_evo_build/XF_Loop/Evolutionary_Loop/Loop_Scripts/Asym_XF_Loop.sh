@@ -55,7 +55,7 @@ ELITE=0				## Elite function on/off (1/0)
 
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-BEOSC=/users/PAS1960/dylanwells1629/PUEO/GENETIS_PUEO/
+BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
 XmacrosDir=$WorkingDir/../Xmacros 
@@ -64,7 +64,7 @@ echo $XFProj
 #AraSimExec="/fs/ess/PAS1960/BiconeEvolutionOSC/AraSim"  ##Location of AraSim.exe
 AraSimExec="${WorkingDir}/../../../../AraSim"
 #$BEOSC/AraSim ## Location of AraSim directory
-IceMCExec="${WorkingDir}/../../../../anitaBuildTool" 
+PSIMDIR="/fs/ess/PAS1960/buildingPueoSim/" 
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 source $WorkingDir/../../../../araenv.sh
@@ -275,7 +275,7 @@ do
 		then
 			./Loop_Parts/Part_D/Part_D1_Array.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		else
-			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $IceMCExec $exp $NNT $RunName $Seeds $DEBUG_MODE
+			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $PSIMDIR $exp $NNT $RunName $Seeds $DEBUG_MODE
 		fi
 		state=6
 
@@ -292,7 +292,7 @@ do
 			./Loop_Parts/Part_D/Part_D2_Array.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
 			#./Loop_Parts/Part_D/Part_D2_AraSeed_Notif.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
 		else
-			./Loop_Parts/Part_D/Part_D2_PUEO.sh $gen $NPOP $WorkingDir $RunName $Seeds $IceMCExec
+			./Loop_Parts/Part_D/Part_D2_PUEO.sh $gen $NPOP $WorkingDir $RunName $Seeds $PSIMDIR
 		fi
 		state=7
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -314,7 +314,7 @@ do
 				./Loop_Parts/Part_E/Part_E_Curved.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $AraSimExec $XFProj $NSECTIONS $SEPARATION $CURVED
 			fi
 		else
-			./Loop_Parts/Part_E/Part_E_PUEO.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $IceMCExec $XFProj 
+			./Loop_Parts/Part_E/Part_E_PUEO.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $PSIMDIR $XFProj 
 		fi
 		state=8
 		./SaveState_Prototype.sh $gen $state $RunName $indiv 

@@ -35,7 +35,7 @@ cd $PSIMDIR
 num=$(($((${SLURM_ARRAY_TASK_ID}-1))/${Seeds}+1))
 seed=$(($((${SLURM_ARRAY_TASK_ID}-1))%${Seeds}+1))
 
-run_num=$((NPOP * gen + num))
+run_num=$(((NPOP * gen + num) * 1000 + seed))
 
 echo a_${num}_${seed}.txt
 
@@ -45,8 +45,11 @@ chmod -R 777 ${PSIMDIR}/${gen}_outputs/
 ./pueoBuilder/build/components/pueoSim/simulatePueo -i ${PSIMDIR}/pueoBuilder/components/pueoSim/config/setup.conf -o ${PSIMDIR}/${gen}_outputs/ -r $run_num -n $NNT -e $Exp > $TMPDIR/
 
 cd ${gen}_outputs/run${run_num}
-cp veff${run_num}.csv $WorkingDir/Run_Outputs/$RunName/veff_${gen}_${num}.csv
-mv IceFinal_${run_num}.root $WorkingDir/Run_Outputs/$RunName/IceFinal_${gen}_{num}.root
+cat veff${run_num}.csv >> $WorkingDir/Run_Outputs/$RunName/veff_${gen}_${num}.csv
+cat {seed} >> $WorkingDir/Run_Outputs/$RunName/${gen}_counts.txt #might need to take this in to account to see which veff corresponds to which in the veff file
+mv IceFinal_${run_num}.root $WorkingDir/Run_Outputs/$RunName/IceFinal_${gen}_{num}_{seed}.root
+cd ..
+rm -r run${run_num}
 
 cd $TMPDIR
 mv * $WorkingDir/Run_Outputs/$RunName/PSIMFlags

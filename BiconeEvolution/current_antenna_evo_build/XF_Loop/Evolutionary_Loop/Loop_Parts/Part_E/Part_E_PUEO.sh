@@ -25,13 +25,14 @@ XFProj=${10}
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 
-module load python/3.7-2019.10
 
 #cd $WorkingDir
 # put the actual bicone results in the run name directory
 #cp ARA_Bicone_Data/AraOut_Actual_Bicone_Fixed_Polarity_2.9M_NNU.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
 
 cd Antenna_Performance_Metric/
+
+source set_plotting_env.sh
 
 echo 'Starting fitness function calculating portion...'
 
@@ -62,7 +63,7 @@ mv fitnessScores.csv $WorkingDir/Generation_Data/
 
 
 #Plotting software for Veff(for each individual) vs Generation
-python Veff_Plotting.py "$WorkingDir"/Run_Outputs/$RunName "$WorkingDir"/Run_Outputs/$RunName $gen $NPOP $Seeds
+python Veff_Plotting_PUEO.py "$WorkingDir"/Run_Outputs/$RunName "$WorkingDir"/Run_Outputs/$RunName $gen $NPOP
 
 cd $WorkingDir
 

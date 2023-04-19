@@ -31,7 +31,7 @@
 void DataRead(vector<vector<vector<float> > >& varInput, vector<float>& fitness)
 {
   ifsteam generationDNA;
-  generationDNA.open("generationDNA.csv");
+  generationDNA.open("Generation_Data/generationDNA.csv");
   int csv_file_size = DNA_GARBAGE_END + (NPOP * NSECTIONS);
   string csvContent[csv_file_size];                              // Contain each line of the csv file
   string strToDbl;                                               // Data change from string to float, then written into verInput or fitness
@@ -60,11 +60,11 @@ void DataRead(vector<vector<vector<float> > >& varInput, vector<float>& fitness)
   // Now we need to read fitness scores:
 
   ifstream fitnessScores;
-  fitnessScores.open("fitnessScores.csv");
+  fitnessScores.open("Generation_Data/fitnessScores.csv");
   string fitnessRead[NPOP+2];
 
   ifstream fitnessScores;
-  fitnessScores.open("fitnessScores.csv");
+  fitnessScores.open("Generation_Data/fitnessScores.csv");
   string fitnessRead[NPOP+2];
 
   for (int i=0; i<(NPOP+2); i++)

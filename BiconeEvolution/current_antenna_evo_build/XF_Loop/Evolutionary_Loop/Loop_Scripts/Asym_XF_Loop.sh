@@ -19,9 +19,9 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2022_07_15_Test_5'	## This is the name of the run. You need to make a unique name each time you run.
+RunName='2023_04_17_Test_23'	## This is the name of the run. You need to make a unique name each time you run.
 TotalGens=5			## number of generations (after initial) to run through
-NPOP=5				## number of individuals per generation; please keep this value below 99
+NPOP=2				## number of individuals per generation; please keep this value below 99
 Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 NNT=300			## Number of Neutrinos Thrown in AraSim   
@@ -172,7 +172,7 @@ do
 	##Here, we are running the genetic algorithm and moving the outputs to csv files 
 	if [ $state -eq 1 ]
 	then
-		if [ $PUEO -eq 0]
+		if [ $PUEO -eq 0 ]
 		then
 			if [ $CURVED -eq 0 ] #Evolve straight sides
 			then
@@ -181,7 +181,7 @@ do
 				./Loop_Parts/Part_A/Part_A_Curved.sh $gen $NPOP $NSECTIONS $WorkingDir $RunName $GeoFactor $RADIUS $LENGTH $A $B $SEPARATION $NSECTIONS $REPRODUCTION $CROSSOVER $MUTATION $SIGMA $ROULETTE $TOURNAMENT $RANK $ELITE
 			fi
 		else
-						./Loop_Parts/Part_A/Part_A_PUEO.sh $gen $NPOP $WorkingDir $RunName $GeoFactor $RANK $ROULETTE $TOURNAMENT $REPRODUCTION $CROSSOVER $MUTATION $SIGMA
+			./Loop_Parts/Part_A/Part_A_PUEO.sh $gen $NPOP $WorkingDir $RunName $GeoFactor $RANK $ROULETTE $TOURNAMENT $REPRODUCTION $CROSSOVER $MUTATION $SIGMA
 		fi
 		state=2
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -213,7 +213,6 @@ do
 					if [ $database_flag -eq 0 ]
 					then
 						./Loop_Parts/Part_B/Part_B_job1_sep.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys 
-
 					else
 						./Loop_Parts/Part_B/Part_B_GPU_job1_asym_database.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
 
@@ -232,7 +231,7 @@ do
 	## Part B2 ##
 	if [ $state -eq 3 ]
 	then
-		if [ $PUEO -eq 1]
+		if [ $PUEO -eq 1 ]
 		then
 			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
 		else
@@ -271,7 +270,7 @@ do
 		#We need to make a new AraSim job script which takes the runname as a flag 
 		#./Loop_Parts/Part_D/Part_D1_AraSeed.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		#./Loop_Parts/Part_D/Part_D1_AraSeed_Notif.sh 
-		if [$PUEO -eq 0]
+		if [ $PUEO -eq 0 ]
 		then
 			./Loop_Parts/Part_D/Part_D1_Array.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		else
@@ -287,7 +286,7 @@ do
 	if [ $state -eq 6 ]
 	then
 		#./Part_D2_AraSeed.sh 
-		if [ $PUEO -eq 0]
+		if [ $PUEO -eq 0 ]
 		then
 			./Loop_Parts/Part_D/Part_D2_Array.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
 			#./Loop_Parts/Part_D/Part_D2_AraSeed_Notif.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
@@ -305,7 +304,7 @@ do
 	## moves the .uan files from Antenna Performance Metric to RunOutputs/$RunName folder
 	if [ $state -eq 7 ]
 	then
-		if [ $PUEO -eq 0]
+		if [ $PUEO -eq 0 ]
 		then
 			if [ $CURVED -eq 0 ]	# Evolve straight sides
 			then
@@ -324,7 +323,8 @@ do
 	## Part F ##
 	if [ $state -eq 8 ]
 	then
-		if [PEUO -eq 0]
+		if [ $PEUO -eq 0 ]
+		then
 			if [ $CURVED -eq 0 ]
 			then
 				./Loop_Parts/Part_F/Part_F_asym.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
@@ -333,9 +333,9 @@ do
 			fi
 		else
 			./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
+		fi
 		state=1
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
-
 	fi
 done
 

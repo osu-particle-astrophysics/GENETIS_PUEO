@@ -27,7 +27,7 @@ XmacrosDir=$6
 XFProj=$7
 GeoFactor=$8
 num_keys=$9
-NSECTIONS=${10}
+NSECTIONS=$10
 
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
@@ -49,7 +49,7 @@ cd $WorkingDir/Run_Outputs/$RunName/GPUFlags/
 flag_files=$(ls | wc -l) #$(ls -l --file-type | grep -v '/$' | wc -l)
 
 #Now we need to repeat that for the rest of the jobs
-while [[ $flag_files -lt $NPOP ]] #we need to loop until flag_files reaches totPop
+while [[ $flag_files -lt $((NPOP*2)) ]] #we need to loop until flag_files reaches totPop
 do
 	sleep 1m
 	echo $flag_files
@@ -70,7 +70,7 @@ rm -f output.xmacro
 
 #echo "var m = $i;" >> output.xmacro
 echo "var NPOP = $NPOP;" >> output.xmacro
-echo "for (var k = $(($gen*$NPOP + 1)); k <= $(($gen*$NPOP+$NPOP)); k++){" >> output.xmacro
+echo "for (var k = $(($gen*$NPOP*2 + 1)); k <= $(($gen*$NPOP*2+$NPOP*2)); k++){" >> output.xmacro
 
 if [ $NSECTIONS -eq 1 ] # if 1, then the cone is symmetric
 then
@@ -84,16 +84,16 @@ sed -i "s+fileDirectory+${WorkingDir}+" output.xmacro
 # When we use the sed command, anything can be the delimiter between each of the arguments; usually, we use /, but since there are / in the thing we are trying to substitute in ($WorkingDir), we need to use a different delimiter that doesn't appear there
 
 
-module load xfdtd
+module load xfdtd/7.9.2.2
 xfdtd $XFProj --execute-macro-script=$XmacrosDir/output.xmacro || true --splash=false
 
 #Xvnc :5 &  DISPLAY=:5 xfdtd $XFProj --execute-macro-script=$XmacrosDir/simulation_PEC.xmacro || true
 
 
 cd $WorkingDir/Antenna_Performance_Metric
-for i in `seq $(($gen*$NPOP + $indiv)) $(($gen*$NPOP+$NPOP))`
+for i in `seq $(($gen*$NPOP*2 + $indiv)) $(($gen*$NPOP*2+$NPOP*2))`
 do
-	pop_ind_num=$(($i - $gen*$NPOP))
+	pop_ind_num=$(($i - $gen*$NPOP*2))
 	for freq in `seq 1 131`
 	do
 		mv ${i}_${freq}.uan "$WorkingDir"/Run_Outputs/$RunName/${gen}_${pop_ind_num}_${freq}.uan

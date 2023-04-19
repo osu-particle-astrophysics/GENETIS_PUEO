@@ -107,7 +107,7 @@ if( !inputpower.isValid() ){
 Output.println( "5getCurrentDataSet() : " +
 inputpower.getReasonWhyInvalid() );
 }
-for (var i = 0; i <= 59; i++){
+for (var i = 0; i <= 130; i++){
 var file = "fileDirectory/Antenna_Performance_Metric/";
 file = file + k + "_";
 file = file + (i+1) + ".uan";

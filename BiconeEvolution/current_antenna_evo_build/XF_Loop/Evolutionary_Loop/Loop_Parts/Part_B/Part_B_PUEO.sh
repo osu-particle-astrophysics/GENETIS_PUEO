@@ -34,8 +34,9 @@ fi
 # we need to check if directories we're going to write to already exist
 # this would occur if already ran this part but went back to rerun the same generation
 # the directories are the simulation directories from gen*NPOP+1 to gen*NPOP+10
-
-for i in `seq 1 $NPOP`
+# Note that for PUEO, we need TWO XF simulation per individual
+# This is because we need to do the VPol and Hpol
+for i in `seq 1 $((NPOP*2))`
 do
         # first, declare the number of the individual we are checking
 	individual_number=$(($gen*$NPOP + $i))
@@ -84,6 +85,7 @@ rm -f simulation_PEC.xmacro
 
 echo "var NPOP = $NPOP;" > simulation_PEC.xmacro
 echo "var indiv = $indiv;" >> simulation_PEC.xmacro
+chmod -R 775 simulation_PEC.xmacro
 #now we can write the frequencies to simulation_PEC.xmacro
 #now let's change our frequencies by the scale factor (and then back down by 100)
 
@@ -135,8 +137,9 @@ fi
 
 #we cat things into the simulation_PEC.xmacro file, so we can just echo the list to it before catting other files
 
-cat simulationPECmacroskeleton_PUEO.txt >> simulation_PEC.xmacro
-cat simulationPECmacroskeleton2_PUEO.txt >> simulation_PEC.xmacro
+cat PUEO_skeleton.txt >> simulation_PEC.xmacro
+#cat simulationPECmacroskeleton_PUEO.txt >> simulation_PEC.xmacro
+#cat simulationPECmacroskeleton2_PUEO.txt >> simulation_PEC.xmacro
 
 #we need to change the gridsize by the same factor as the antenna size
 #the gridsize in the macro skeleton is currently set to 0.1
@@ -165,7 +168,7 @@ echo '1. Import and run simulation_PEC.xmacro'
 echo '2. Import and run output.xmacro'
 echo '3. Close XF'
 
-module load xfdtd/7.8.1.4
+module load xfdtd/7.9.2.2
 
 xfdtd $XFProj --execute-macro-script=$XmacrosDir/simulation_PEC.xmacro || true
 
@@ -173,9 +176,9 @@ chmod -R 775 $WorkingDir/../Xmacros
 
 cd $WorkingDir
 
-if [ $NPOP -lt $num_keys ]
+if [ $((NPOP*2)) -lt $num_keys ]
 then
-	batch_size=$NPOP
+	batch_size=$((NPOP*2))
 else
 	batch_size=$num_keys
 fi
@@ -183,7 +186,7 @@ fi
 ## We'll make the run name the job name
 ## This way, we can use it in the SBATCH commands
 #I think this should work for PUEO too
-sbatch --array=1-${NPOP}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen} --job-name=${RunName} Batch_Jobs/GPU_XF_Job.sh
+sbatch --array=1-$((NPOP*2))%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen} --job-name=${RunName} Batch_Jobs/GPU_XF_Job.sh
 
 
 

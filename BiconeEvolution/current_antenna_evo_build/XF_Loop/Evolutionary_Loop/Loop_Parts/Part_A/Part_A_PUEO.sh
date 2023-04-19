@@ -20,19 +20,20 @@ roulette_no=$7
 tournament_no=$8
 reproduction_no=$9
 crossover_no=${10}
-mutation-rate=${11}
+mutationRate=${11}
 sigma=${12}
 
 cd $WorkingDir
 
-g++ -std=c++11 GA/SourceFiles/New_GA.cpp -o GA/Executables/New_GA.exe
-./GA/Executables/New_GA.exe PUEO $gen $NPOP $rank_no $roulette_no $tournament_no $reproduction_no $crossover_no $mutation-rate $sigma
+g++ -std=c++11 GA/SourceFiles/New_GA.cpp -o GA/New_GA.exe
+./GA/New_GA.exe PUEO $gen $NPOP $rank_no $roulette_no $tournament_no $reproduction_no $crossover_no $mutationRate $sigma
 
-cp generationDNA.csv Run_Outputs/$RunName/${gen}_generationDNA.csv
-mv generators.csv Run_Outputs/$RunName/${gen}_generators.csv
+cp Generation_Data/generationDNA.csv Run_Outputs/$RunName/${gen}_generationDNA.csv
+mv Generation_Data/generators.csv Run_Outputs/$RunName/${gen}_generators.csv
 
 if [ $gen -gt 0 ]
 then
-	mv parents.csv Run_Outputs/$RunName/${gen}_parents.csv
+	mv Generation_Data/parents.csv Run_Outputs/$RunName/${gen}_parents.csv
 fi
+chmod -R 775 Generation_Data/generationDNA.csv
 

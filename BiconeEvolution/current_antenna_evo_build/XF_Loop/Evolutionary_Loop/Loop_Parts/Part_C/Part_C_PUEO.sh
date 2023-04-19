@@ -17,8 +17,6 @@ indiv=$5
 cd $WorkingDir
 cd Antenna_Performance_Metric
 
- 
-
 chmod -R 777 $WorkingDir/Antenna_Performance_Metric
 python XFintoPUEO.py $NPOP $WorkingDir $RunName $gen $indiv
 

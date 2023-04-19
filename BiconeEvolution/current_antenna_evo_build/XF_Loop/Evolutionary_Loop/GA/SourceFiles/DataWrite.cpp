@@ -32,7 +32,7 @@
 void DataWrite( vector<vector<vector<float> > >& varVector, vector<int> selected)
 {
   ofstream generationDNA;
-  generationDNA.open("generationDNA.csv");
+  generationDNA.open("Generation_Data/generationDNA.csv");
   generationDNA << "Hybrid of Roulette and Tournament -- Thanks to Cal Poly / Jordan Potter" << "\n";
   generationDNA << "Author was David Liu" << "\n";
   generationDNA << "Notable contributors: Julie Rolla, Hannah Hasan, and Adam Blenk" << "\n";
@@ -79,7 +79,7 @@ void DataWrite( vector<vector<vector<float> > >& varVector, vector<int> selected
   if (generation == 0)
     {
       ofstream Parents;
-      Parents.open("parents.csv");
+      Parents.open("Generation_Data/parents.csv");
       Parents << "Location of individuals used to make this generation:" << endl;
       Parents << "Seed: " << seed << endl;
       Parents << "\n" << endl;

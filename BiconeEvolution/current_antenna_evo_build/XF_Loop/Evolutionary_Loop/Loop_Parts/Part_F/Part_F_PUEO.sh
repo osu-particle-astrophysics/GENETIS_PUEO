@@ -18,16 +18,18 @@ Seeds=$5
 
 cd $WorkingDir
 
-module load python/3.7-2019.10
 
 #cp AraOut_ActualBicone_10_18.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
 #cp ARA_Bicone_Data/AraOut_Actual_Bicone_Fixed_Polarity_2.9M_NNU.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
 
 cd Antenna_Performance_Metric
-# Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
-python FScorePlot.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $NPOP $gen
 
-python3 color_plots.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $NPOP $gen $Seeds
+source set_plotting_env.sh
+
+# Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
+python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $NPOP $gen
+
+python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $NPOP $gen $Seeds
 
 ./image_maker.sh $WorkingDir/Run_Outputs/$RunName/ $WorkingDir/Run_Outputs/$RunName/ $WorkingDir/Run_Outputs/$RunName/ $gen $RunName
 

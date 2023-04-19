@@ -9,7 +9,6 @@ parser.add_argument("source", help="Name of source folder from home directory", 
 parser.add_argument("destination", help="Name of destination folder from home directory", type=str)
 parser.add_argument("numGens", help="Number of generations the code is running for", type=int)
 parser.add_argument("NPOP", help="Number of individuals in a population", type=int)
-parser.add_argument("Seeds", help="The seed for PueoSim", type=int)
 g = parser.parse_args()
 
 Veff = []
@@ -45,8 +44,6 @@ def read_errors(error_file):
 for gen in range(0, g.numGens+1):
     read_veff(g.source + "/" + str(gen) + "_vEffectives.csv")
     read_errors(g.source + "/" + str(gen) + "_errorBars.csv")
-#print(VeffArray, Err_minusArray, Err_plusArray)
-#print(VeffArray[0], Err_minusArray[0], Err_plusArray[0])
 #re format the data into veffArray
 for ind in range(0, g.NPOP):
     for gen in range(0, g.numGens+1):

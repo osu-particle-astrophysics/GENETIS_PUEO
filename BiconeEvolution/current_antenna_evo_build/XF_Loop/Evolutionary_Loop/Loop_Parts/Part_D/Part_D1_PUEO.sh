@@ -22,24 +22,33 @@ DEBUG_MODE=$9
 XFProj=${10}
 SpecificSeed=32000
 
+echo "Entering Part D1 PUEO!"
+echo $XFProj
 cd $WorkingDir
-
+cd $XFProj
+pwd
+mkdir -m775 XF_models_${gen}
+cd ../Root_Files
+mkdir -m775 ${gen}_Root_Files
+cd $PSIMDIR/outputs
+mkdir -m775 ${gen}_outputs
+cd $WorkingDir
 
 #Move the gain files into the correct place for PSIM to read them in
 for i in `seq 1 $NPOP`
 do
-	run_num=$((NPOP * gen + num))
-	cp Test_Outputs/hh_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_0_toyon${run_num}
-	cp Test_Outputs/hv_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hv_0_toyon${run_num}
-	cp Test_Outputs/vv_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_0_toyon${run_num}
-	cp Test_Outputs/vh_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vh_0_toyon${run_num}
-	cp Test_Outputs/hh_el_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_el_toyon${run_num}
-	cp Test_Outputs/hh_az_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_az_toyon${run_num}
-	cp Test_Outputs/vv_el_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_el_toyon${run_num}
-	cp Test_Outputs/vv_az_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_az_toyon${run_num}
+	run_num=$((NPOP * gen + i))
+	cp Test_Outputs/hh_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_0_Toyon${run_num}
+	cp Test_Outputs/hv_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hv_0_Toyon${run_num}
+	cp Test_Outputs/vv_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_0_Toyon${run_num}
+	cp Test_Outputs/vh_0_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vh_0_Toyon${run_num}
+	cp Test_Outputs/hh_el_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_el_Toyon${run_num}
+	cp Test_Outputs/hh_az_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_az_Toyon${run_num}
+	cp Test_Outputs/vv_el_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_el_Toyon${run_num}
+	cp Test_Outputs/vv_az_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_az_Toyon${run_num}
 done
 #record the gain data
-mv Test_Outputs/* XFProj/XF_model_${gen}
+cp Test_Outputs/* $XFProj/XF_models_${gen}/
 
 if [ ${gen} -eq 0 ]
 then
@@ -74,7 +83,7 @@ then
 	# For the job name, make it the RunName
 	# This will help for directing the output/error files
 	cd $WorkingDir
-	maxJobs=$((NPOP*Seeds))
+	numJobs=$((NPOP*Seeds))
 	maxJobs=252 #for now, maybe make this a variable in the main script
 	sbatch --array=1-${numJobs}%${maxJobs} --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT,Exp=$exp --job-name=${RunName} Batch_Jobs/PueoCall_Array.sh
 	cd $PSIMDIR
@@ -120,11 +129,11 @@ then
 fi
 ## Let's move the uan files to a directory
 
-cd $WorkingDir/RunOutputs/${RunName}/uan_files
+cd $WorkingDir/Run_Outputs/${RunName}/uan_files
 mkdir -m775 ${gen}_uan_files
-for i in `seq 1 $NPOP`
+for i in `seq 1 $((2*NPOP))`
 do
 	mkdir -m775 ${gen}_uan_files/${i}
-	mv ../${gen}_${i}*.uan ${gen}_uan_files/${i}/
+	mv ../${gen}_${i}_*.uan ${gen}_uan_files/${i}/
 done
 

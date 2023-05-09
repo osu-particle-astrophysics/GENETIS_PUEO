@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import argparse
 import csv
 import matplotlib.cm as cm
+import seaborn as sns
+import pandas as pd
  
 #---------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES
 
@@ -17,28 +18,16 @@ g = parser.parse_args()
 
 # The name of the plot that will be put into the destination folder, g.destination
 Plot2DName = "/FScorePlot2D.png"
-#Plot3DName = "/FScorePlot3D.png"
+ViolinPlotName="ViolinPlot.png"
+
 
 #----------STARTS HERE----------STARTS HERE----------STARTS HERE----------STARTS HERE
 fileReadTemp = []
 fScoresGen = []
 fScoresInd = []
-"""
-#We may want to only have g.numGens and not g.numGens+1
-for gen in range(g.numGens+1):
-    filename = "/{}_fitnessScores.csv".format(gen)
-    #fileReadTemp = np.genfromtxt(g.source + filename, delimiter=',')
-    #The above comment was here orignally but the delimiter is no longer a comma so the next line should work with new line
-    #fileReadTemp = (line.rstrip('\n') for line in open(g.source + filename))
-    #fScoresGen.append(fileReadTemp[2:])
-    with open(g.source + filename, "r") as f:
-        fileReadTemp = [line.strip() for line in f]
-    fScoresGen.append(fileReadTemp[2:])
-fScoresInd = np.transpose(fScoresGen)
-NPOP = len(fScoresInd)
-"""
 
-#new way (similar to in VeffPlotting.py)
+
+#Load in the Fitnesses
 
 tempFitnesses = []
 FitnessesArray = []
@@ -66,7 +55,8 @@ for ind in range(1, g.NPOP+1):
 
 
 genAxis = np.linspace(0,g.numGens,g.numGens+1,endpoint=True)
-'''
+
+''' Put in the average psim when we get it 
 Veff_ARA = []
 Err_plus_ARA = []
 Err_minus_ARA = []
@@ -88,30 +78,27 @@ for line in fpActual:
 
 ## Adding line of average fitness score
 MeanFitness = []
+MedianFitness = []
 FlippedFitness = np.transpose(FitnessesArray)
 #print(FlippedFitness)
 for ind in range(g.numGens+1):	
-	mean = sum(FlippedFitness[ind])/g.NPOP
-	MeanFitness.append(mean)	
+    mean = sum(FlippedFitness[ind])/g.NPOP
+    MeanFitness.append(mean)	
+    MedianFitness.append(FlippedFitness[ind][int(g.NPOP/2)])
 
 
-#Veff_ARA_Ref = Veff_ARA * np.ones(len(genAxis))
 
 plt.figure(figsize=(10, 8))
-#plt.plot(genAxis, Veff_ARA_Ref, label = "ARA Reference", linestyle= '--', color = 'k')
+
 #plt.axhline(y=Veff_ARA, linestyle = '--', color = 'k')
-#plt.axes([-1, g.numGens+1, -1, 6])
-#plt.xlabel('Generation', size = 22)
-#plt.ylabel('Fitness Score', size = 22)
-#plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 25)
+
 colors = cm.rainbow(np.linspace(0, 1, g.NPOP))
-plt.axis([-1, g.numGens+1, -0.5, np.max(FitnessesArray) + 0.5])
+plt.axis([-1, g.numGens+1, -0.5, np.max(FitnessesArray) + np.max(MeanFitness)/10 +0.5])
 
 for ind in range(g.NPOP):
-		LabelName = "Individual {}".format(ind+1)
-		plt.plot(genAxis, FitnessesArray[ind], label = LabelName, marker = 'o', color = colors[ind], linestyle='', alpha = 0.4, markersize = 11)
-		#plt.plot(genAxis, FitnessesArray[ind], label = LabelName, marker = 'o', color = 'k', linestyle='', alpha = 0.8, markersize = 9)
-		plt.plot(genAxis, MeanFitness, label = LabelName, linestyle='-', alpha = 1, markersize = 15)
+    LabelName = "Individual {}".format(ind+1)
+    plt.plot(genAxis, FitnessesArray[ind], label = LabelName, marker = 'o', color = colors[ind], linestyle='', alpha = 0.4, markersize = 11)
+    plt.plot(genAxis, MeanFitness, label = LabelName, linestyle='-', alpha = 1, markersize = 15)
 plt.xlabel('Generation', size = 26)
 plt.ylabel('Fitness Score (km$^3$str)', size = 26)
 plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 30)
@@ -119,27 +106,24 @@ plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size
 #plt.legend()
 plt.savefig(g.destination + Plot2DName)
 
-#for x in range (len(fScoresInd[1])):
-    #print fScoresInd[1][x]
-
-##plt.show()
-# was commented out to prevent graph from popping up and block=False replaced it along with plt.pause
-# the pause functions for how many seconds to wait until it closes graph
-#plt.show(block=False)
-#plt.pause(15)
-
-#plt.figure(figsize=(10, 8))
-#indAxis = np.linspace(1,g.NPOP,g.NPOP)
-#genAxis, indAxis = np.meshgrid(genAxis, indAxis)
-#ax = plt.axes(projection='3d')
-#ax.plot_surface(genAxis, indAxis, fScoresInd, rstride=1, cstride=1, cmap='viridis', edgecolor='none')
-#ax.set_title('3D Fitness Score over Generations');
-#ax.set_xlabel('Generation')
-#ax.set_ylabel('Individual')
-#ax.set_zlabel('Fitness Score')
-#plt.savefig(g.destination + Plot3DName)
-##plt.show()
-# was commented out to prevent graph from popping up and block=False replaced it along with plt.pause
-# the pause functions for how many seconds to wait until it closes graph
-##plt.show(block=False)
-#plt.pause(15)
+#create a violin plot of the fitness scores
+#Create a new figure
+plt.figure(figsize=(10, 8))
+#Plot the mean and median fitnesses
+plt.plot(genAxis, MeanFitness, linestyle='-', alpha = 1, markersize = 25, color='red')
+plt.plot(genAxis, MedianFitness, linestyle='dashed', alpha = 1, markersize =20, color='green')
+#We need to create a dataframe in the form of (gen, fitness) for each individual fitness 
+violinArray = []
+for unit in FitnessesArray:
+    for j in range(len(unit)):
+        violinArray.append([j, unit[j]])
+violinArray = np.array(violinArray)
+df0 = pd.DataFrame(violinArray, columns = ['Generation','Fitness Score'])
+#add the violinplot to the figure
+violinplot = sns.violinplot(data=df0, x="Generation", y="Fitness Score", color='lightcyan', width=0.25)
+fig = violinplot.get_figure()
+plt.xlabel('Generation', size = 26)
+plt.ylabel('Fitness Score (km$^3$str)', size = 26)
+plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 30)
+plt.legend(["Mean", "Median"])
+fig.savefig(g.destination+ViolinPlotName) 

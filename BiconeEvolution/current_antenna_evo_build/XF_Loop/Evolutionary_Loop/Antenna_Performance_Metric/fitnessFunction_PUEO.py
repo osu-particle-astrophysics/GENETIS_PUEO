@@ -23,7 +23,8 @@ fitnessScores = []
 print(g.NPOP, g.NSEEDS, g.antennaFile)
 #Reads the veff output file for the antenna, returns the average veff
 def read_veff(NSEEDS, antenna_file):
-    veff_list = pd.read_csv(antenna_file, header=None)
+    df = pd.read_csv(antenna_file, header = None, delimiter = ' ')
+    veff_list = df[2].tolist() # Index 2 because the file is made using grep
     veff_list = np.array(veff_list)
     veff_list = veff_list.flatten()
     total = sum(veff_list)

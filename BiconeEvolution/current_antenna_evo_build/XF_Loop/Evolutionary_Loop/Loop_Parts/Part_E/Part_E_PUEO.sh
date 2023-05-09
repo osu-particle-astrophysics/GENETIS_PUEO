@@ -22,7 +22,8 @@ Seeds=$7
 GeoFactor=$8
 IceMCExec=$9
 XFProj=${10}
-
+PSIMDIR=${11}
+exp=${12}
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 
 
@@ -30,19 +31,41 @@ XFProj=${10}
 # put the actual bicone results in the run name directory
 #cp ARA_Bicone_Data/AraOut_Actual_Bicone_Fixed_Polarity_2.9M_NNU.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
 
-cd Antenna_Performance_Metric/
+cd $WorkingDir/Antenna_Performance_Metric/
 
-source set_plotting_env.sh
+#source set_plotting_env.sh
 
 echo 'Starting fitness function calculating portion...'
 
-mv *.root "$WorkingDir/Run_Outputs/$RunName/RootFilesGen${gen}/"
+mv *.root $WorkingDir/Run_Outputs/$RunName/RootFilesGen${gen}/
+
+#python fitnessFunction_PUEO.py $NPOP $Seeds $WorkingDir/Run_Outputs/$RunName/veff_${gen} 
+
+#The rootAnalysis script only works with the base python, so unload 3.6
+module load python/3.6-conda5.2
+module unload python/3.6-conda5.2
+
+#change this to $PSIMDIR WHEN LOOP ISNT RUNNING
+source $PSIMDIR/set_env.sh
+
+for i in `seq 1 $NPOP`
+do
+	##CHANGE 19 TO $exp WHEN LOOP ISNT RUNNING
+	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName} $RunName
+done
+
+##TEMPORARY FIX FOR PLOTS. I (DYLAN) AM CURRENTLY WORKING ON GETTING REAL ERORR BARS
+#python temp_errors_fix.py $NPOP $gen
+
+#cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/${gen}_fitnessScores.csv
+#cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/${gen}_vEffectives.csv
+#cp fitnessScores.csv $WorkingDir/Generation_Data/
+#cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_fitnessScores.csv
+#cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_vEffectives.csv
+#mv ${gen}_errorBars.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_errorBars.csv
+cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/${gen}_generationDNA.csv
 
 
-python fitnessFunction_PUEO.py $NPOP $Seeds "$WorkingDir/Run_Outputs/veff_${gen}" 
-cp fitnessScores.csv "$WorkingDir"/Run_Outputs/$RunName/${gen}_fitnessScores.csv
-cp fitnessScores.csv "$WorkingDir"/Run_Outputs/$RunName/${gen}_vEffectives.csv
-mv fitnessScores.csv $WorkingDir/Generation_Data/
 
 #./fitnessFunction.exe $NPOP $Seeds $ScaleFactor $WorkingDir/Generation_Data/generationDNA.csv $GeoFactor $InputFiles #Here's where we add the flags for the generation
 #cp fitnessScores.csv "$WorkingDir"/Run_Outputs/$RunName/${gen}_fitnessScores.csv
@@ -63,7 +86,9 @@ mv fitnessScores.csv $WorkingDir/Generation_Data/
 
 
 #Plotting software for Veff(for each individual) vs Generation
-python Veff_Plotting_PUEO.py "$WorkingDir"/Run_Outputs/$RunName "$WorkingDir"/Run_Outputs/$RunName $gen $NPOP
+module load python/3.6-conda5.2
+source set_plotting_env.sh
+python Veff_Plotting_PUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $gen $NPOP
 
 cd $WorkingDir
 
@@ -74,13 +99,14 @@ fi
 
 if [ $indiv -eq $NPOP ]
 then
-	cp Generation_Data/runData.csv $WorkingDir/Run_Outputs/$RunName/runData_$gen.csv
+	cp Generation_Data/runData.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/runData_$gen.csv
 fi
 
 python Data_Generators/gensData.py $gen Generation_Data 
 cd Antenna_Performance_Metric
 next_gen=$(($gen+1))
 
+python VariablePlots.py "$WorkingDir"/Run_Outputs/$RunName "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor
 
 cd $WorkingDir/Antenna_Performance_Metric
 
@@ -93,9 +119,9 @@ echo 'Congrats on getting a fitness score!'
 
 cd $WorkingDir
 
-mv Generation_Data/parents.csv Run_Outputs/$RunName/${gen}_parents.csv
-mv Generation_Data/genes.csv Run_Outputs/$RunName/${gen}_genes.csv
-mv Generation_Data/mutations.csv Run_Outputs/$RunName/${gen}_mutations.csv
-mv Generation_Data/generators.csv Run_Outputs/$RunName/${gen}_generators.csv
+mv Generation_Data/parents.csv Run_Outputs/$RunName/Generation_Data/${gen}_parents.csv
+mv Generation_Data/genes.csv Run_Outputs/$RunName/Generation_Data/${gen}_genes.csv
+mv Generation_Data/mutations.csv Run_Outputs/$RunName/Generationa_Data/${gen}_mutations.csv
+mv Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_generators.csv
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

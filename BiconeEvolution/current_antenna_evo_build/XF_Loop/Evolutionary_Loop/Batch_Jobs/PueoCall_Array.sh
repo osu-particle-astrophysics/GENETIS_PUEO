@@ -1,13 +1,13 @@
 #!/bin/bash
 ## This job is designed to be submitted by an array batch submission
 ## Here's the command:
-## sbatch --array=1-NPOP*SEEDS%max --export=ALL,(variables) AraSimCall_Array.sh
+## sbatch --array=1-NPOP*SEEDS%max --export=ALL,(variables) PueoCall_Array.sh
 #SBATCH -A PAS1960
 #SBATCH -t 10:00:00
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --output=/fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/AraSim_Outputs/AraSim_%a.output
-#SBATCH --error=/fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/AraSim_Errors/AraSim_%a.error
+#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/PUEO_Outputs/PUEOsim_%a.output
+#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/PUEO_Errors/PUEOsim_%a.error
 
 #variables
 #gen=$1
@@ -24,7 +24,9 @@
 source /fs/ess/PAS1960/buildingPueoSim/set_env.sh
 
 cd $PSIMDIR
-
+cd outputs/${gen}_outputs
+mkdir -m775 $SLURM_ARRAY_TASK_ID
+cd ../..
 # Need to change IceMC to read in the correct gain files for each run 
 
 
@@ -39,35 +41,42 @@ run_num=$(((NPOP * gen + num) * 1000 + seed))
 
 echo a_${num}_${seed}.txt
 
-chmod -R 777 ${PSIMDIR}/${gen}_outputs/
+chmod -R 777 ${PSIMDIR}/outputs/${gen}_outputs/
 
 #./icemc -i ${PSIMDIR}/components/icemc/setup.conf -o outputs/ -r "_${gen}_${num}" > $TMPDIR/
-./pueoBuilder/build/components/pueoSim/simulatePueo -i ${PSIMDIR}/pueoBuilder/components/pueoSim/config/setup.conf -o ${PSIMDIR}/${gen}_outputs/ -r $run_num -n $NNT -e $Exp > $TMPDIR/
 
-cd ${gen}_outputs/run${run_num}
-cat veff${run_num}.csv >> $WorkingDir/Run_Outputs/$RunName/veff_${gen}_${num}.csv
-cat {seed} >> $WorkingDir/Run_Outputs/$RunName/${gen}_counts.txt #might need to take this in to account to see which veff corresponds to which in the veff file
-mv IceFinal_${run_num}.root $WorkingDir/Run_Outputs/$RunName/IceFinal_${gen}_{num}_{seed}.root
-cd ..
-rm -r run${run_num}
+./pueoBuilder/build/components/pueoSim/simulatePueo -i pueo.conf -o ${PSIMDIR}/outputs/${gen}_outputs/$SLURM_ARRAY_TASK_ID -r $run_num -n $NNT -e $Exp > $TMPDIR/out.txt
 
 cd $TMPDIR
-mv * $WorkingDir/Run_Outputs/$RunName/PSIMFlags
+echo "After done running PUEOsim"
+pwd
+ls -alrt
+mv out.txt $PSIMDIR/outputs/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
+cd $PSIMDIR/outputs/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
+grep -s "Effective volume: " out.txt | tail -n1 > veff_${run_num}.csv
+grep -s "Effective volume: " out.txt
+ls -alrt
+cat veff_${run_num}.csv >> $WorkingDir/Run_Outputs/$RunName/veff_${gen}_${num}.csv
+echo ${seed} >> $WorkingDir/Run_Outputs/$RunName/${gen}_counts.txt #might need to take this in to account to see which veff corresponds to which in the veff file
+mv IceFinal_${run_num}.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_${gen}_${num}_${seed}.root
+cd ..
+#rm -r run${run_num}
+
+cd $TMPDIR
+mv * $WorkingDir/Antenna_Performance_Metric 
 #cd $WorkingDir/Run_Outputs/$RunName/AraSimFlags
 #echo ${num}_${Seeds} > ${num}_${Seeds}.txt
 echo $gen > $TMPDIR/${num}_${seed}.txt
 echo $num >> $TMPDIR/${num}_${seed}.txt
 echo $seed >> $TMPDIR/${num}_${seed}.txt
 
-
-# we need to go fix the file names from the jobs
-cd $WorkingDir/Run_Outputs/$RunName
+mv * $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 
 #cp veff_${gen}_${num}.csv.* veff_${gen}_${num}.csv
 
 # now do the flag files
-cd $WorkingDir/Run_Outputs/$RunName/PSIMFlags
+cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 
-cp ${num}_${Seeds}.txt.* ${num}_${Seeds}.txt
-rm ${num}_${Seeds}.txt.*
+cp ${num}_${seed}.txt.* ${num}_${seed}.txt
+rm ${num}_${seed}.txt.*
 

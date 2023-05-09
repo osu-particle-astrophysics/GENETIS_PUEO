@@ -19,16 +19,16 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2023_04_17_Test_23'	## This is the name of the run. You need to make a unique name each time you run.
-TotalGens=5			## number of generations (after initial) to run through
-NPOP=2				## number of individuals per generation; please keep this value below 99
-Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
+RunName='2023_05_08'	## This is the name of the run. You need to make a unique name each time you run.
+TotalGens=10			## number of generations (after initial) to run through
+NPOP=50			## number of individuals per generation; please keep this value below 99
+Seeds=10			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
-NNT=300			## Number of Neutrinos Thrown in AraSim   
-exp=18				## exponent of the energy for the neutrinos in AraSim
+NNT=40000			## Number of Neutrinos Thrown in AraSim   
+exp=19				## exponent of the energy for the neutrinos in AraSim
 ScaleFactor=1.0			## ScaleFactor used when punishing fitness scores of antennae larger than the drilling holes
 GeoFactor=1			## This is the number by which we are scaling DOWN our antennas. This is passed to many files
-num_keys=4			## how many XF keys we are letting this run use
+num_keys=6			## how many XF keys we are letting this run use
 database_flag=0			## 0 if not using the database, 1 if using the database
 				## These next 3 define the symmetry of the cones.
 PUEO=1				## IF 1, we evolve the PUEO quad-ridged horn antenna, if 0, we evolve the Bicone
@@ -42,13 +42,13 @@ SEPARATION=0    		## If 1, separation evolves. If 0, separation is constant
 NSECTIONS=2 			## The number of chromosomes
 DEBUG_MODE=0			## 1 for testing (ex: send specific seeds), 0 for real runs
 				## These next variables are the values passed to the GA
-REPRODUCTION=2			## Number (not fraction!) of individuals formed through reproduction
-CROSSOVER=2			## Number (not fraction!) of individuals formed through crossover
+REPRODUCTION=3			## Number (not fraction!) of individuals formed through reproduction
+CROSSOVER=36			## Number (not fraction!) of individuals formed through crossover
 MUTATION=1			## Probability of mutation (divided by 100)
 SIGMA=5				## Standard deviation for the mutation operation (divided by 100)
-ROULETTE=2			## Percent of individuals selected through roulette (divided by 10)
-TOURNAMENT=2			## Percent of individuals selected through tournament (divided by 10)
-RANK=6				## Percent of individuals selected through rank (divided by 10)
+ROULETTE=20			## Percent of individuals selected through roulette (divided by 10)
+TOURNAMENT=20			## Percent of individuals selected through tournament (divided by 10)
+RANK=60				## Percent of individuals selected through rank (divided by 10)
 ELITE=0				## Elite function on/off (1/0)
 
 #####################################################################################################################################################
@@ -67,9 +67,15 @@ AraSimExec="${WorkingDir}/../../../../AraSim"
 PSIMDIR="/fs/ess/PAS1960/buildingPueoSim/" 
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
-source $WorkingDir/../../../../araenv.sh
-source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
-source /cvmfs/ara.opensciencegrid.org/trunk/centos7/setup.sh
+if [ $PUEO -eq 1 ]
+then
+	source /fs/ess/PAS1960/buildingPueoSim/set_env.sh	
+else
+	source $WorkingDir/../../../../araenv.sh
+	source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
+	source /cvmfs/ara.opensciencegrid.org/trunk/centos7/setup.sh
+fi
+module load python/3.6-conda5.2
 #####################################################################################################################################################
 
 
@@ -160,6 +166,8 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraOut
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Generation_Data
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEOFlags
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
+
 		head -n 53 Loop_Scripts/Asym_XF_Loop.sh | tail -n 33 > $WorkingDir/Run_Outputs/$RunName/run_details.txt
 		# Create the run's date and save it in the run's directory
 		python Data_Generators/dateMaker.py
@@ -254,11 +262,11 @@ do
 	  indiv=1
 	  if [ $PUEO -eq 1 ]
 	  then
-	    ./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv
+			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv
 	  else
-		./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
-		state=5
+			./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
 	  fi
+		state=5
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
 
 	fi
@@ -266,7 +274,7 @@ do
 	## Part D1 ##
 	if [ $state -eq 5 ]
 	then
-	        #The reason here why Part_D1.sh is run after teh save state is changed is because all Part_D1 does is submit AraSim jobs which are their own jobs and run on their own time
+	        #The reason here why Part_D1.sh is run after the save state is changed is because all Part_D1 does is submit AraSim jobs which are their own jobs and run on their own time
 		#We need to make a new AraSim job script which takes the runname as a flag 
 		#./Loop_Parts/Part_D/Part_D1_AraSeed.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		#./Loop_Parts/Part_D/Part_D1_AraSeed_Notif.sh 
@@ -274,7 +282,7 @@ do
 		then
 			./Loop_Parts/Part_D/Part_D1_Array.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		else
-			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $PSIMDIR $exp $NNT $RunName $Seeds $DEBUG_MODE
+			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $PSIMDIR $exp $NNT $RunName $Seeds $DEBUG_MODE $XFProj
 		fi
 		state=6
 
@@ -313,7 +321,7 @@ do
 				./Loop_Parts/Part_E/Part_E_Curved.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $AraSimExec $XFProj $NSECTIONS $SEPARATION $CURVED
 			fi
 		else
-			./Loop_Parts/Part_E/Part_E_PUEO.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $PSIMDIR $XFProj 
+			./Loop_Parts/Part_E/Part_E_PUEO.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $PSIMDIR $XFProj $PSIMDIR $exp
 		fi
 		state=8
 		./SaveState_Prototype.sh $gen $state $RunName $indiv 
@@ -323,7 +331,7 @@ do
 	## Part F ##
 	if [ $state -eq 8 ]
 	then
-		if [ $PEUO -eq 0 ]
+		if [ $PUEO -eq 0 ]
 		then
 			if [ $CURVED -eq 0 ]
 			then

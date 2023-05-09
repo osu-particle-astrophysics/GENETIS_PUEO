@@ -26,6 +26,14 @@ cd Antenna_Performance_Metric
 
 source set_plotting_env.sh
 
+#this is for the rainbow plot
+module load python/3.9-2022.05
+
+python Antenna_Performance_Metric/DataConverter_PUEO.py
+python Antenna_Performance_Metric/Rainbow_Plotter_PUEO.py
+
+module load python/3.7-2019.10
+
 # Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
 python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $NPOP $gen
 
@@ -36,9 +44,10 @@ python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outp
 cd $WorkingDir/Run_Outputs/$RunName
 mail -s "FScore_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < FScorePlot2D.png
 mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fitness_Scores_RG.png
-#mail -s "LRT_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < LRTPlot2D.png
-#mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
-#mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
+mail -s "LRT_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < LRTPlot2D.png
+mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
+mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
+mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
 cd "$WorkingDir"
 
 echo 'Congrats on getting some nice plots!'

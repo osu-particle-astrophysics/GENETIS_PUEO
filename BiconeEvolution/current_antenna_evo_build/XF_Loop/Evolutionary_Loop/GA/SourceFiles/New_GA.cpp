@@ -47,7 +47,7 @@ using namespace std;
 
 
 // GLOBAL CONSTANTS
-float max_S=50;
+float max_S=25;
 float max_H=50;
 int seed = time(NULL);
 default_random_engine generator(seed);

@@ -10,32 +10,32 @@ PSIMDIR=$6
 
 
 
-cd $WorkingDir/Run_Outputs/$RunName
+cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 
 nFiles=0
 
-totPop=$( expr $NPOP \* 2 )
+totPop=$( expr $NPOP \* $Seeds )
 
 while [ "$nFiles" != "$totPop" ]
 do
-	echo "Waiting for IceMC jobs to finish..."
+	echo "Waiting for PUEOsim jobs to finish..."
 	sleep 20
-	nFiles=$(ls -1 --file-type | grep "_${gen}_" | wc -l) # update nFiles
+	nFiles=$(ls -1 --file-type | grep -v '/$' | wc -l) # update nFiles
 
 done
 
-
-rm -f $WorkingDir/Run_Outputs/$RunName/IceMCFlags/*
-rm -f $WorkingDir/Run_Outputs/$RunName/IceMCConfirmed/*
+cd ..
+rm -f $WorkingDir/Run_Outputs/$RunName/PUEOFlags/*
+rm -f $WorkingDir/Run_Outputs/$RunName/PUEOConfirmed/*
 #rm -f $WorkingDir/Run_Outputs/$RunName/AraSim_Outputs/*
 #rm -f $WorkingDir/Run_Outputs/$RunName/AraSim_Errors/*
 wait
 
-cd "$WorkingDir"/Antenna_Performnance_Metric
+cd $WorkingDir/Antenna_Performance_Metric
 
-if [$gen -eq 10000 ]
+if [ $gen -eq 10000 ]
 then
 	#Will need to change this
-	cp $WorkingDir/Antenna_Performance_Metric/IceMCActual/ $WorkingDir/Run_Outputs/$RunName/IceMCActual/
+	cp $WorkingDir/Antenna_Performance_Metric/PUEOActual/ $WorkingDir/Run_Outputs/$RunName/PUEOActual/
 fi
 

@@ -39,7 +39,7 @@ fi
 for i in `seq 1 $((NPOP*2))`
 do
         # first, declare the number of the individual we are checking
-	individual_number=$(($gen*$NPOP + $i))
+	individual_number=$(($gen*$((NPOP*2)) + $i))
 
         # next, write the potential directories corresponding to that individual
 	if [ $individual_number -lt 10 ]
@@ -69,7 +69,7 @@ done
 
 if [[ $gen -ne 0 ]]
 then
-	echo $(($gen*$NPOP + 1)) > $XFProj/Simulations/.nextSimulationNumber
+	echo $(($gen*$((2*NPOP)) + 1)) > $XFProj/Simulations/.nextSimulationNumber
 fi
 
 

@@ -20,9 +20,9 @@ std::vector<std::vector<float> > GeneratePUEO()
   for(int i=0; i < sections; i++){
     while(intersect==true){ //while the antenna intersects, generate new values for antena (S, m, H, x_0, y_0, z_0, x_f, y_f, z_f, tau, beta)
       
-      std::uniform_real_distribution <float> distribution_S(0, max_S);  //Side length (= x_f)
+      std::uniform_real_distribution <float> distribution_S(10, max_S);  //Side length (= x_f)
       S = distribution_S(generator);
-      std::uniform_real_distribution <float> distribution_H(0, max_H);  //Height 
+      std::uniform_real_distribution <float> distribution_H(10, max_H);  //Height 
       H = distribution_H(generator);
       std::uniform_real_distribution <float> distribution_X0(0, S);  //x_0
       X0 = distribution_X0(generator);
@@ -41,6 +41,9 @@ std::vector<std::vector<float> > GeneratePUEO()
       //outputVector[i][8] = tau;
       intersect = ConstraintPUEO(S, H, X0, Y0, YF, ZF, beta);
     }
+    // MACHTAY LOOK HERE
+    // Original:
+    /*
     outputVector[i][0] = S;
     outputVector[i][1] = H;
     outputVector[i][2] = X0;
@@ -48,6 +51,15 @@ std::vector<std::vector<float> > GeneratePUEO()
     outputVector[i][4] = YF;
     outputVector[i][5] = ZF;
     outputVector[i][6] = beta;
+    */
+    // current:
+    outputVector[i][0] = S;
+    outputVector[i][1] = H;
+    outputVector[i][2] = 4.0;//X0;
+    outputVector[i][3] = 4.0;//Y0;
+    outputVector[i][4] = 6.0;//YF;
+    outputVector[i][5] = H;//ZF;
+    outputVector[i][6] = 0.1;//beta;
   }
   return outputVector;
 

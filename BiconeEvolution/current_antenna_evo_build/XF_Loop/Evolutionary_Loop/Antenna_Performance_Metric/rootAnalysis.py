@@ -17,10 +17,10 @@ parser.add_argument("opath", help="Output path", type=str)
 parser.add_argument("RunName", help="Run Name", type=str)
 g=parser.parse_args()
 
-ROOT.gSystem.Load("/fs/ess/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
-ROOT.gSystem.Load("/fs/ess/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
-ROOT.gSystem.Load("/fs/ess/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
-ROOT.gSystem.Load("/fs/ess/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
 
 def EffectiveVolume2(thisColor,thisLabel):
@@ -33,8 +33,9 @@ def EffectiveVolume2(thisColor,thisLabel):
 	#It will automatically group together multiple runs at the same energy.
 
 
-	root = '/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/'+g.RunName
-	pattern = "IceFinal_" + str(g.gen) + "_" + str(g.indiv) + "*"
+	root = '/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/'+g.RunName+"/Root_Files/"+str(g.gen)+"_Root_Files"
+	print(root)
+	pattern = "IceFinal_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"
 
 
 
@@ -53,7 +54,7 @@ def EffectiveVolume2(thisColor,thisLabel):
 	for path, subdirs, files in os.walk(root):
 		for name in files:
 			if fnmatch(name,pattern):
-				#print(os.path.join(path,name))
+				print(os.path.join(path,name))
 				#Original script loops through the energies, when we just simulate one 
 				'''
 				fullName = os.path.join(path,name)
@@ -193,14 +194,17 @@ def EffectiveVolume2(thisColor,thisLabel):
 	#print('scaledP: ', scaledP, scaledP[0])
 	#print('scaledM: ', scaledM, scaledM[0])
 
-	with open(g.opath+str(g.gen)+"_pueoOut.csv",'a') as f:
+	with open(g.opath+"/"+str(g.gen)+"_pueoOut.csv",'a') as f:
 		f.write(str(g.indiv)+","+str(effective_V[0])+","+str(scaledP[0])+","+str(scaledM[0])+"\n")
+		print("Writing to:", g.opath+"/"+str(g.gen)+"_pueoOut.csv" )
 
-	with open(g.opath+str(g.gen)+"_fitnessScores.csv",'a') as f:
+	with open(g.opath+"/"+str(g.gen)+"_fitnessScores.csv",'a') as f:
 		f.write(str(effective_V[0])+"\n")
+		print("Writing to:", g.opath+"/"+str(g.gen)+"_fitnessScores.csv")
 
-	with open(g.opath+str(g.gen)+"_errorBars.csv",'a') as f:
+	with open(g.opath+"/"+str(g.gen)+"_errorBars.csv",'a') as f:
 		f.write(str(scaledP[0])+","+str(scaledM[0])+"\n")
+		print("Writing to:", g.opath+"/"+str(g.gen)+"_errorBars.csv")
 
 	'''
 	effective_A=(effective_V/(L_int/100000))#factor of 100000 to convert from cm to km 

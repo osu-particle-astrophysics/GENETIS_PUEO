@@ -202,6 +202,10 @@ def EffectiveVolume2(thisColor,thisLabel):
 		f.write(str(effective_V[0])+"\n")
 		print("Writing to:", g.opath+"/"+str(g.gen)+"_fitnessScores.csv")
 
+	with open(g.opath+"/"+str(g.gen)+"_vEffectives.csv",'a') as f:
+		f.write(str(effective_V[0])+"\n")
+		print("Writing to:", g.opath+"/"+str(g.gen)+"_fitnessScores.csv")
+
 	with open(g.opath+"/"+str(g.gen)+"_errorBars.csv",'a') as f:
 		f.write(str(scaledP[0])+","+str(scaledM[0])+"\n")
 		print("Writing to:", g.opath+"/"+str(g.gen)+"_errorBars.csv")

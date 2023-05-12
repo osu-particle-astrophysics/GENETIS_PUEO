@@ -45,21 +45,17 @@ mv *.root $WorkingDir/Run_Outputs/$RunName/RootFilesGen${gen}/
 module load python/3.6-conda5.2
 module unload python/3.6-conda5.2
 
-#change this to $PSIMDIR WHEN LOOP ISNT RUNNING
 source $PSIMDIR/set_env.sh
 
 for i in `seq 1 $NPOP`
 do
-	##CHANGE 19 TO $exp WHEN LOOP ISNT RUNNING
-	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName} $RunName
+	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName
 done
 
-cd $WorkingDir/Run_Outputs/$Run_Name/
+cd $WorkingDir/Run_Outputs/$Run_Name/Generation_Data
 cp ${gen}_fitnessScores.csv $WorkingDir/Generation_Data/fitnessScores.csv
 cd -
 
-##TEMPORARY FIX FOR PLOTS. I (DYLAN) AM CURRENTLY WORKING ON GETTING REAL ERORR BARS
-#python temp_errors_fix.py $NPOP $gen
 
 #cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/${gen}_fitnessScores.csv
 #cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/${gen}_vEffectives.csv
@@ -67,7 +63,7 @@ cd -
 #cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_fitnessScores.csv
 #cp fitnessScores.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_vEffectives.csv
 #mv ${gen}_errorBars.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_errorBars.csv
-cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/${gen}_generationDNA.csv
+cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_generationDNA.csv
 
 
 
@@ -93,7 +89,7 @@ cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/${gen}_
 module load python/3.6-conda5.2
 source set_plotting_env.sh
 ##currently doesn't work as vEffective.csv files aren't being made.
-python Veff_Plotting_PUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $gen $NPOP
+python Veff_Plotting_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
 
 cd $WorkingDir
 
@@ -108,11 +104,11 @@ then
 fi
 #changing this to correct version of gensData, couldn't overwrite the current file in the Data_Generators directory. this may have caused the issue initially
 #I have updated gensData to read from the run directory, as using the GenerationData directory didn't make much sense to me.
-python Antenna_Performance_Metric/gensDataPUEO.py $gen $WorkingDir/Run_Outputs/$RunName  
+python Antenna_Performance_Metric/gensDataPUEO.py $gen $WorkingDir/Run_Outputs/$RunName/Generation_Data  
 cd Antenna_Performance_Metric
 next_gen=$(($gen+1))
 
-python VariablePlots.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor
+python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
 
 cd $WorkingDir/Antenna_Performance_Metric
 

@@ -29,15 +29,15 @@ source set_plotting_env.sh
 #this is for the rainbow plot
 module load python/3.9-2022.05
 
-python DataConverter_PUEO.py $WorkingDir/Run_Outputs/$RunName
-python Rainbow_Plotter_PUEO.py $WorkingDir/Run_Outputs/$RunName
+python DataConverter_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data
+python Rainbow_Plotter_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data
 
 module load python/3.7-2019.10
 
 # Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
-python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $NPOP $gen
+python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
-python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $NPOP $gen
+python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
 ./image_maker.sh $WorkingDir/Run_Outputs/$RunName/ $WorkingDir/Run_Outputs/$RunName/ $WorkingDir/Run_Outputs/$RunName/ $gen $RunName
 

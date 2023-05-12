@@ -54,6 +54,10 @@ do
 	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName} $RunName
 done
 
+cd $WorkingDir/Run_Outputs/$Run_Name/
+cp ${gen}_fitnessScores.csv $WorkingDir/Generation_Data/fitnessScores.csv
+cd -
+
 ##TEMPORARY FIX FOR PLOTS. I (DYLAN) AM CURRENTLY WORKING ON GETTING REAL ERORR BARS
 #python temp_errors_fix.py $NPOP $gen
 
@@ -88,6 +92,7 @@ cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/${gen}_
 #Plotting software for Veff(for each individual) vs Generation
 module load python/3.6-conda5.2
 source set_plotting_env.sh
+##currently doesn't work as vEffective.csv files aren't being made.
 python Veff_Plotting_PUEO.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $gen $NPOP
 
 cd $WorkingDir
@@ -101,12 +106,13 @@ if [ $indiv -eq $NPOP ]
 then
 	cp Generation_Data/runData.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/runData_$gen.csv
 fi
-
-python Data_Generators/gensData.py $gen Generation_Data 
+#changing this to correct version of gensData, couldn't overwrite the current file in the Data_Generators directory. this may have caused the issue initially
+#I have updated gensData to read from the run directory, as using the GenerationData directory didn't make much sense to me.
+python Antenna_Performance_Metric/gensDataPUEO.py $gen $WorkingDir/Run_Outputs/$RunName  
 cd Antenna_Performance_Metric
 next_gen=$(($gen+1))
 
-python VariablePlots.py "$WorkingDir"/Run_Outputs/$RunName "$WorkingDir"/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor
+python VariablePlots.py $WorkingDir/Run_Outputs/$RunName $WorkingDir/Run_Outputs/$RunName $next_gen $NPOP $GeoFactor
 
 cd $WorkingDir/Antenna_Performance_Metric
 

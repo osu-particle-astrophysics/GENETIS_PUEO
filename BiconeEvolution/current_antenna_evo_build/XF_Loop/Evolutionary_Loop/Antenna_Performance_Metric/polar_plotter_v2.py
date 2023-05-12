@@ -50,7 +50,7 @@ for individual in range(1, g.NPOP+1):
 		azimuth_gain = []
 		for m, row in enumerate(uan_read):
 			## skip the header
-			if m >= 17:
+			if m >= 18:
 				## Let's just add the azimuthal angles
 				azimuth_gain.append(float(row[2]))
 	f.close()

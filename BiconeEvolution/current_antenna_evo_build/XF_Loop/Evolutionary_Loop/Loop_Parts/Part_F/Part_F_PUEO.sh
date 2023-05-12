@@ -39,7 +39,7 @@ python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $Worki
 
 python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
-./image_maker.sh $WorkingDir/Run_Outputs/$RunName/ $WorkingDir/Run_Outputs/$RunName/ $WorkingDir/Run_Outputs/$RunName/ $gen $RunName
+./image_maker.sh $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen} $WorkingDir/Run_Outputs/$RunName $gen $WorkingDir $RunName $NPOP
 
 cd $WorkingDir/Run_Outputs/$RunName
 mail -s "FScore_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < FScorePlot2D.png

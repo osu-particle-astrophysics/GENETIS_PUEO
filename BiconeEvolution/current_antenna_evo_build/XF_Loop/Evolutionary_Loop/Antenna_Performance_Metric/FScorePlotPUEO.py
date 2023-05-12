@@ -18,7 +18,7 @@ g = parser.parse_args()
 
 # The name of the plot that will be put into the destination folder, g.destination
 Plot2DName = "/FScorePlot2D.png"
-ViolinPlotName="ViolinPlot.png"
+ViolinPlotName="/ViolinPlot.png"
 
 
 #----------STARTS HERE----------STARTS HERE----------STARTS HERE----------STARTS HERE

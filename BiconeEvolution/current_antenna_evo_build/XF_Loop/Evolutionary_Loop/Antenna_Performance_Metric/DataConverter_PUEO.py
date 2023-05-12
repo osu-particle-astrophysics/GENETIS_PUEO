@@ -2,10 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pandas.plotting import parallel_coordinates
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+
+#parser.add_argument("GenNumber", help="Generation number the code is running on (for formatting purposes)", type=int)
+parser.add_argument("location", help="Location of runData.csv and fitness.csv", type=str)
+g = parser.parse_args()
 
 #This preps the data to become a pandas dataframe
 #dtypedict={'InnerRadius':np.float64, 'Length':np.float64,'OpeningAngle':np.float64,'Fitness':np.float64,'Generation':np.int64,'GenerationString':str}
-df0 = pd.read_csv("Generation_Data/runData.csv",skiprows=1,names=["SideLength","Height","XInitial","YInital","ZFinal","YFinal","Beta","Fitness","Generation"],index_col=False)
+df0 = pd.read_csv(g.location+"/runData.csv",skiprows=1,names=["SideLength","Height","XInitial","YInital","ZFinal","YFinal","Beta","Fitness","Generation"],index_col=False)
 #df1 = df1.replace(r'^\s*$', np.nan, regex=True)
 
 
@@ -57,4 +64,4 @@ df4.reset_index()
 #    df3.iloc[i,3] = df3.iloc[i,3]*(180/np.pi)
 
 
-df0.to_csv("Generation_Data/testpara.csv",index=False)
+df0.to_csv(g.location+"/testpara.csv",index=False)

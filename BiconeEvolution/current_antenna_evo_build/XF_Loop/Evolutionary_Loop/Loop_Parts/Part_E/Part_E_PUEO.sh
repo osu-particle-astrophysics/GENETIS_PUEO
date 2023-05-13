@@ -52,8 +52,10 @@ do
 	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName
 done
 
-cd $WorkingDir/Run_Outputs/$Run_Name/Generation_Data
-cp ${gen}_fitnessScores.csv $WorkingDir/Generation_Data/fitnessScores.csv
+cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
+echo "The Ohio State University GENETIS Data." > $WorkingDir/Generation_Data/fitnessScores.csv
+echo "Current generation's fitness scores:" >> $WorkingDir/Generation_Data/fitnessScores.csv
+cat ${gen}_fitnessScores.csv >> $WorkingDir/Generation_Data/fitnessScores.csv
 cd -
 
 
@@ -84,7 +86,7 @@ cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/Generat
 #mkdir -m 775 $WorkingDir/Run_Outputs/$RunName/${gen}_Gain_Plots
 #python $WorkingDir/Antenna_Performance_Metric/polar_plotter.py $WorkingDir/Run_Outputs/$RunName/${gen}_Gain_Plots $RunName 14 $NPOP $gen
 
-
+cd $WorkingDir/Antenna_Performance_Metric
 #Plotting software for Veff(for each individual) vs Generation
 module load python/3.6-conda5.2
 source set_plotting_env.sh
@@ -110,7 +112,6 @@ next_gen=$(($gen+1))
 
 python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
 
-cd $WorkingDir/Antenna_Performance_Metric
 
 python3 avg_freq.py $XFProj $XFProj 10 $NPOP
 

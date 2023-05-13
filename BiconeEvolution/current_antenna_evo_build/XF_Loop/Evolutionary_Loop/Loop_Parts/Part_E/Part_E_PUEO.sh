@@ -87,6 +87,7 @@ cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/Generat
 #python $WorkingDir/Antenna_Performance_Metric/polar_plotter.py $WorkingDir/Run_Outputs/$RunName/${gen}_Gain_Plots $RunName 14 $NPOP $gen
 
 cd $WorkingDir/Antenna_Performance_Metric
+
 #Plotting software for Veff(for each individual) vs Generation
 module load python/3.6-conda5.2
 source set_plotting_env.sh

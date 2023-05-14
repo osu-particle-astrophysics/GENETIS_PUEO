@@ -52,6 +52,11 @@ for ind in range(1, g.NPOP+1):
     FitnessesArray.append(tempFitnesses)
     tempFitnesses = []
     
+# Load in the max, min, and max error
+maxFits, minFits, maxErrors = np.loadtxt(g.location + "/plottingData.csv", delimiter=',', skiprows=0, unpack=True)
+maxFit = maxFits.max()
+minFit = minFits.min()
+maxError = maxErrors.max()
 
 
 genAxis = np.linspace(0,g.numGens,g.numGens+1,endpoint=True)
@@ -93,7 +98,8 @@ plt.figure(figsize=(10, 8))
 #plt.axhline(y=Veff_ARA, linestyle = '--', color = 'k')
 
 colors = cm.rainbow(np.linspace(0, 1, g.NPOP))
-plt.axis([-1, g.numGens+1, -0.5, np.max(FitnessesArray) + np.max(MeanFitness)/10 +0.5])
+plt.axis([-1, g.numGens+1, minFit - maxError, maxFit + maxError])
+
 
 for ind in range(g.NPOP):
     LabelName = "Individual {}".format(ind+1)

@@ -33,6 +33,12 @@ Err_plus_ARA = []
 Err_minus_ARA = []
 Veff_ARA_Ref = []
 
+#Load in the plottindData
+maxFits, minFits, maxErrors = np.loadtxt(g.location + "/plottingData.csv", delimiter=',', skiprows=0, unpack=True)
+maxFit = maxFits.max()
+minFit = minFits.min()
+maxError = maxErrors.max()
+
 #we need to loop over the individuals
 for gen in range(0, g.numGens+1):
 	#we need to loop over all the generations, since the gen is in the file names
@@ -120,7 +126,7 @@ for ind in range(g.numGens+1):
 # The fitness score plot
 
 fscores_plot = plt.figure(figsize=(10, 8))
-plt.axis([-2.0, g.numGens + 2.0, -0.5, math.ceil(np.amax(FitnessesArray))+0.5])
+plt.axis([-2.0, g.numGens + 2.0, minFit - maxError, maxFit + maxError])
 genAxis = np.linspace(0,g.numGens,g.numGens+1,endpoint=True)
 
 print("finished part 3")
@@ -186,7 +192,7 @@ for ind in range(g.numGens+1):
 '''
 
 Veff_plot = plt.figure(figsize = (10, 8))
-plt.axis([-2.0, g.numGens + 2, -0.5, math.ceil(np.amax(VeffArray))+0.5])
+plt.axis([-2.0, g.numGens + 2, minFit - maxError, maxFit + maxError])
 #plt.axhline(y=Veff_ARA, linestyle = '--', color = 'k')
 
 for gen in range(g.numGens+1):

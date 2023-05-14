@@ -116,9 +116,9 @@ for i in range(len(indiv_list)):
 	ax.plot(zenith_angles, gains[indiv_list[i]], color = colors[i], linestyle = linestyles[i], alpha = 0.6, linewidth=3, label = LabelName)
 
 ### Creates legend and title for plot, then saves as an image
-ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number', fontsize=17)
-plt.title("Antennas at Frequency number {} MHz".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
-plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_1.png")
+ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number (Gen ' + str(g.gen)+ ')', fontsize=17)
+plt.title("Antennas at Frequency number {} MHz (Vertical Polarization)".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
+plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_Vpol.png")
 
 ## plot the second antenna ###################
 
@@ -136,6 +136,6 @@ for i in range(len(indiv_list2)):
 	ax.plot(zenith_angles, gains[indiv_list2[i]], color = colors[i], linestyle = linestyles[i], alpha = 0.6, linewidth=3, label = LabelName)
 
 ### Creates legend and title for plot, then saves as an image
-ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number', fontsize=17)
-plt.title("Antennas at Frequency number {} MHz".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
-plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_2.png")
+ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number (Gen ' + str(g.gen)+ ')', fontsize=17)
+plt.title("Antennas at Frequency number {} MHz (Horizontal Polarization)".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
+plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_Hpol.png")

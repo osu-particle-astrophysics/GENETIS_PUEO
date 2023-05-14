@@ -54,6 +54,15 @@ cd "$WorkingDir"
 cd $WorkingDir/Run_Outputs/$RunName
 chmod -R 775 Generation_Data
 
+#Move the plots to the Plots folder and corresponding generation folder (could probably just make this the destination)
+if [ ${gen} -eq 0 ]
+then
+    mkdir -m775 Plots 
+fi
+
+mkdir -m775 Plots/Generation_${gen}
+mv Generation_Data/*.png Plots/Generation_${gen}
+
 echo 'Congrats on getting some nice plots!'
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

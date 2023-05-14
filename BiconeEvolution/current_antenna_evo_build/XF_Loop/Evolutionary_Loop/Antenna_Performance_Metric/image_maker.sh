@@ -31,13 +31,13 @@ echo $photoSourceDir
 echo $destinationDir
 echo $RunName
 #
+cd $WorkingDir/Antenna_Performance_Metric
 ### Creates a temporary file to hold the index of the best detector
 touch temp_best.csv
 touch temp_mid.csv
 touch temp_worst.csv
 #
 ### Runs a Python script that identifies the index of the best detector
-cd $WorkingDir/Antenna_Performance_Metric
 python3 image_finder.py $fitnessSourceDir $gen
 #
 ### Stores the indices of the best, middle, and worst individuals in variables
@@ -54,7 +54,9 @@ mv ${photoSourceDir}/${min_index}_detector.png ${destinationDir}/${gen}_detector
 ### Removes the remaining photos
 rm ${photoSourceDir}/*_detector.png
 #
-python $WorkingDir/Antenna_Performance_Metric/polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/ $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${i}_Gain_Plots 131 $NPOP $gen
+doubleNPOP=$((NPOP*2))
+
+python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots 131 $doubleNPOP $gen
 #
 ### Removes temporary files
 rm temp_best.csv

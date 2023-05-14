@@ -77,9 +77,10 @@ f2 = open("temp_mid.csv", "r")
 f3 = open("temp_worst.csv", "r")
 
 ### Saves these indices to variables
-max_index = int(f1.readline())
-mid_index = int(f2.readline())
-min_index = int(f3.readline())
+### Each individual has 2 files, so the index is multiplied by 2 and subtracted by 1
+max_index = (int(f1.readline())*2)-1
+mid_index = (int(f2.readline())*2)-1
+min_index = (int(f3.readline())*2)-1
 
 ### Closes the temporary files
 f1.close()
@@ -88,6 +89,7 @@ f3.close()
 
 ### Delcares a list of the above indices and corresponding labels
 indiv_list=[min_index, mid_index, max_index]
+indiv_list2=[min_index+1, mid_index+1, max_index+1]
 rank_list=['Min', 'Mid', 'Max']
 
 ### Declares lists of colors and linestyles used to distinguish individuals
@@ -110,11 +112,30 @@ ax.tick_params(axis='both', which='major', labelsize=11.5)
 for i in range(len(indiv_list)):
     
     ### Plots the gain pattern for one individual
-	LabelName = "{}".format(str(rank_list[i]) + ": " + str(indiv_list[i]))
+	LabelName = "{}".format(str(rank_list[i]) + ": " + str(int((indiv_list[i]+1)/2)))
 	ax.plot(zenith_angles, gains[indiv_list[i]], color = colors[i], linestyle = linestyles[i], alpha = 0.6, linewidth=3, label = LabelName)
 
 ### Creates legend and title for plot, then saves as an image
-ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number', title_fontsize=14, fontsize=17)
-plt.title("Antennas at Frequency number {} MHz".format(round(83.33 + 16.67*(g.freq_num-1), 6)), fontsize = 18)
-plt.savefig(g.destination + "/polar_plot_" + str(round(83.33 + 16.67 * (g.freq_num-1), 3)) + ".png")
+ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number', fontsize=17)
+plt.title("Antennas at Frequency number {} MHz".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
+plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_1.png")
 
+## plot the second antenna ###################
+
+## Declare a figure
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize = (10, 8))
+ax.set_theta_zero_location("N")
+ax.set_rlabel_position(225)
+ax.tick_params(axis='both', which='major', labelsize=11.5)
+
+### Iterates over the three individuals above (best, worst, and mid performing)
+for i in range(len(indiv_list2)):
+    
+    ### Plots the gain pattern for one individual
+	LabelName = "{}".format(str(rank_list[i]) + ": " + str(int((indiv_list2[i]+1)/2)))
+	ax.plot(zenith_angles, gains[indiv_list2[i]], color = colors[i], linestyle = linestyles[i], alpha = 0.6, linewidth=3, label = LabelName)
+
+### Creates legend and title for plot, then saves as an image
+ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number', fontsize=17)
+plt.title("Antennas at Frequency number {} MHz".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
+plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_2.png")

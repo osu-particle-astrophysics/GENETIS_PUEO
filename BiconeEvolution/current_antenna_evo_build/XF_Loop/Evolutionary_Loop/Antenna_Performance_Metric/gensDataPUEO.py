@@ -64,3 +64,26 @@ maxFScore = fScores.max()
 # Then, append this onto the maxFitnessScores list
 with open(g.location + "/maxFitnessScores.csv", "a+") as maxFScores:
 	maxFScores.write("Generation "+str(g.GenNumber)+"'s Max Fitness Score: "+str(maxFScore)+ '\n')
+
+# First, we need to find the minimum fitness score
+minFScore = fScores.min()
+# Then, append this onto the minFitnessScores list
+with open(g.location + "/minFitnessScores.csv", "a+") as minFScores:
+	minFScores.write("Generation "+str(g.GenNumber)+"'s Min Fitness Score: "+str(minFScore)+ '\n')
+
+# errorBars are in format Plus, Minus
+# Load in the errorBars.csv file
+errorBarsPlus, errorBarsMinus = np.loadtxt(g.location + "/" + str(g.GenNumber) + "_errorBars.csv", delimiter=',', skiprows=0, unpack=True)
+
+maxErrorBarPlus = errorBarsPlus.max()
+maxErrorBarMinus = errorBarsMinus.max()
+maxErrorBar = max(maxErrorBarPlus, maxErrorBarMinus)
+
+#then, append this onto the maxErrorBars list
+with open(g.location + "/maxErrorBars.csv", "a+") as maxErrorBars:
+	maxErrorBars.write("Generation "+str(g.GenNumber)+"'s Max Error Bar: "+str(maxErrorBar)+ '\n')
+
+#Now add these values to the plottingData.csv file
+with open(g.location + "/plottingData.csv", "a+") as plottingData:
+	plottingData.write(+str(maxFScore)+","+str(minFScore)+","+str(maxErrorBar)+"\n")
+	

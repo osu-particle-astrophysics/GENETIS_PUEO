@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt	# For plotting
 import os			# exclusively for rstrip()
 import argparse			# for getting the user's arguments from terminal
 import matplotlib.cm as cm
+import matplotlib as mpl
 
 
 # We need to grab the three arguments from the bash script or user. These arguments in order are [the name of the source folder of the fitness scores], [the name of the destination folder for the plots], and [the number of generations] #why is is number of generations and not gen number??
@@ -163,7 +164,9 @@ for ind in range(g.NPOP):
 
 # Plot!
 #Create figure and subplots
+mpl.rcParams['text.usetex'] = True
 fig = plt.figure(figsize=(40, 8))
+plt.style.use('seaborn')
 axS = fig.add_subplot(1,7,1)
 axH = fig.add_subplot(1,7,2)
 axXi = fig.add_subplot(1,7,3)
@@ -195,19 +198,30 @@ for i in range(g.NPOP):
 
 # Loop through each individual and plot each array
 colors = cm.rainbow(np.linspace(0, 1, g.NPOP))
+# Testing our colorblind friendly colors
+colors2 = ['#00429d', '#3e67ae', '#618fbf', '#85b7ce', '#b1dfdb', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a']
 for ind in range(g.NPOP):
     LabelName = "Individual {}".format(ind+1)
     E = np.random.uniform(-1/3, 1/3)
-    axS.plot(gen_array[ind], SArray[ind], marker = 'o', label = LabelName, color = colors[ind], linestyle = '', alpha = 0.4, markersize=10)
-    axH.plot(gen_array[ind], HArray[ind], marker = 'o', label = LabelName, color = colors[ind], linestyle = '', alpha = 0.4, markersize=10)
-    axXi.plot(gen_array[ind], XiArray[ind], marker = 'o', label = LabelName, color = colors[ind], linestyle = '', alpha = 0.4, markersize=10)
-    axYi.plot(gen_array[ind], YiArray[ind], marker = 'o', label = LabelName, color = colors[ind], linestyle = '', alpha = 0.4, markersize=10)
-    axZf.plot(gen_array[ind], ZfArray[ind], marker = 'o', label = LabelName, color = colors[ind], linestyle = '', alpha = 0.4, markersize=10)
-    axYf.plot(gen_array[ind], YfArray[ind], marker = 'o', label = LabelName, color = colors[ind], linestyle = '', alpha = 0.4, markersize=10)
-    axBeta.plot(gen_array[ind], BetaArray[ind], marker = 'o', label = LabelName, color = colors[ind], linestyle = '', alpha = 0.4, markersize=10)
+    axS.plot(gen_array[ind], SArray[ind], marker = 'o', label = LabelName, color = colors2[ind%10], linestyle = '', alpha = 0.4, markersize=10)
+    axH.plot(gen_array[ind], HArray[ind], marker = 'o', label = LabelName, color = colors2[ind%10], linestyle = '', alpha = 0.4, markersize=10)
+    axXi.plot(gen_array[ind], XiArray[ind], marker = 'o', label = LabelName, color = colors2[ind%10], linestyle = '', alpha = 0.4, markersize=10)
+    axYi.plot(gen_array[ind], YiArray[ind], marker = 'o', label = LabelName, color = colors2[ind%10], linestyle = '', alpha = 0.4, markersize=10)
+    axZf.plot(gen_array[ind], ZfArray[ind], marker = 'o', label = LabelName, color = colors2[ind%10], linestyle = '', alpha = 0.4, markersize=10)
+    axYf.plot(gen_array[ind], YfArray[ind], marker = 'o', label = LabelName, color = colors2[ind%10], linestyle = '', alpha = 0.4, markersize=10)
+    axBeta.plot(gen_array[ind], BetaArray[ind], marker = 'o', label = LabelName, color = colors2[ind%10], linestyle = '', alpha = 0.4, markersize=10)
 	#axO.plot(bigRadii[ind], marker = 'o', label = LabelName, linestyle = '')
 
 # Labels:
+
+def get_sub(x):
+    normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
+    sub_s = "ₐ₈CDₑբGₕᵢⱼₖₗₘₙₒₚQᵣₛₜᵤᵥwₓᵧZₐ♭꜀ᑯₑբ₉ₕᵢⱼₖₗₘₙₒₚ૧ᵣₛₜᵤᵥwₓᵧ₂₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎"
+    res = x.maketrans(''.join(normal), ''.join(sub_s))
+    return x.translate(res)
+
+littlef = get_sub("F")
+littlei = get_sub("i")
 
 #S subplot
 axS.set_xlabel("Generation", size = 18)
@@ -221,23 +235,23 @@ axH.set_title("H over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
 
 #Xi subplot
 axXi.set_xlabel("Generation", size = 18)
-axXi.set_ylabel("Xi [cm]", size = 18)
-axXi.set_title("Xi over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
+axXi.set_ylabel("Initial X [cm]", size = 18)
+axXi.set_title("Initial X over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
 
 #Yi subplot
 axYi.set_xlabel("Generation", size = 18)
-axYi.set_ylabel("Yi [cm]", size = 18)
-axYi.set_title("Yi over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
+axYi.set_ylabel("Initial Y [cm]", size = 18)
+axYi.set_title("Initial Y over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
 
 #Zf subplot
 axZf.set_xlabel("Generation", size = 18)
-axZf.set_ylabel("Zf [cm]", size = 18)
-axZf.set_title("Zf over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
+axZf.set_ylabel("Final Z [cm]", size = 18)
+axZf.set_title("Final Z over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
 
 #Yf subplot
 axYf.set_xlabel("Generation", size = 18)
-axYf.set_ylabel("Yf [cm]", size = 18)
-axYf.set_title("Yf over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
+axYf.set_ylabel("Final Y [cm]", size = 18)
+axYf.set_title("Final Y over Generations (0 - {})".format(int(g.numGens-1)), size = 20)
 
 #Beta subplot
 axBeta.set_xlabel("Generation", size = 18)

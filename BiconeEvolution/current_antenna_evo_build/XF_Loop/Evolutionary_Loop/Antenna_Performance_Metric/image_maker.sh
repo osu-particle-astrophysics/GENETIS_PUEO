@@ -56,7 +56,11 @@ rm ${photoSourceDir}/*_detector.png
 #
 doubleNPOP=$((NPOP*2))
 
-python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots 131 $doubleNPOP $gen
+# gainNum corresponds to the frequency in which we want to see the gain pattern
+# A value X corresponds to (200 MHz + 10 MHz * X) frequency
+freqNum=10
+
+python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots $freqNum $doubleNPOP $gen
 #
 ### Removes temporary files
 rm temp_best.csv

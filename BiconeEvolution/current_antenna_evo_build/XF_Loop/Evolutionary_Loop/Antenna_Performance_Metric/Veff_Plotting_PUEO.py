@@ -11,6 +11,12 @@ parser.add_argument("numGens", help="Number of generations the code is running f
 parser.add_argument("NPOP", help="Number of individuals in a population", type=int)
 g = parser.parse_args()
 
+# Load in the max, min, and max error
+maxFits, minFits, maxErrors = np.loadtxt(g.location + "/plottingData.csv", delimiter=',', skiprows=0, unpack=True)
+maxFit = maxFits.max()
+minFit = minFits.min()
+maxError = maxErrors.max()
+
 Veff = []
 Err_plus = []
 Err_minus = []
@@ -70,7 +76,7 @@ plt.figure(figsize = (10, 8))
 
 ax = plt.subplot(111)
 
-ax.set_ylim(bottom = -0.2, top = max(max(VeffArray)) + max(max(Err_plusArray)) + 0.5)
+ax.set_ylim(bottom = minFit - maxError, top = maxFit + maxError)
 colors = cm.rainbow(np.linspace(0, 1, g.NPOP))
 
 for ind in range(0, g.NPOP):

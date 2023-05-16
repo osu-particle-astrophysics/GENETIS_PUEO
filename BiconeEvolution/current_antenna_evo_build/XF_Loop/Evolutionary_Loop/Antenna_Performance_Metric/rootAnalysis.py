@@ -153,6 +153,7 @@ def EffectiveVolume2(thisColor,thisLabel):
 	#print('PassingWeights: ', PassingWeights)
 	#print('PassingEvents: ', PassingEvents)
 	#print('TotalEvents: ', TotalEvents)
+
 	for en in E_EV:
 		#if(en==17.5):
 		#	continue
@@ -189,8 +190,8 @@ def EffectiveVolume2(thisColor,thisLabel):
 	#print("Effective, p, m :", effective_V, effective_V_p, effective_V_m)
 	#print('scaled?: ', effective_V_m/interaction_lengths*1e3)
 	#Scaling down the errors by the interaction lengths
-	scaledP = effective_V_p/interaction_lengths*1e3
-	scaledM = effective_V_m/interaction_lengths*1e3
+	#scaledP = effective_V_p/interaction_lengths*1e3
+	#scaledM = effective_V_m/interaction_lengths*1e3
 	#print('scaledP: ', scaledP, scaledP[0])
 	#print('scaledM: ', scaledM, scaledM[0])
 
@@ -207,7 +208,7 @@ def EffectiveVolume2(thisColor,thisLabel):
 		print("Writing to:", g.opath+"/"+str(g.gen)+"_fitnessScores.csv")
 
 	with open(g.opath+"/"+str(g.gen)+"_errorBars.csv",'a') as f:
-		f.write(str(scaledP[0])+","+str(scaledM[0])+"\n")
+		f.write(str(effective_V_p[0])+","+str(effective_V_m[0])+"\n")
 		print("Writing to:", g.opath+"/"+str(g.gen)+"_errorBars.csv")
 
 	'''

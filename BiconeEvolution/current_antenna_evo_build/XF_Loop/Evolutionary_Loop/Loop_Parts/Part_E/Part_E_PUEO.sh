@@ -92,7 +92,6 @@ cd $WorkingDir/Antenna_Performance_Metric
 module load python/3.6-conda5.2
 source set_plotting_env.sh
 ##currently doesn't work as vEffective.csv files aren't being made.
-python Veff_Plotting_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
 
 cd $WorkingDir
 
@@ -108,13 +107,17 @@ fi
 #changing this to correct version of gensData, couldn't overwrite the current file in the Data_Generators directory. this may have caused the issue initially
 #I have updated gensData to read from the run directory, as using the GenerationData directory didn't make much sense to me.
 python Antenna_Performance_Metric/gensDataPUEO.py $gen $WorkingDir/Run_Outputs/$RunName/Generation_Data  
+
 cd Antenna_Performance_Metric
+
+python Veff_Plotting_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
+
 next_gen=$(($gen+1))
 
 python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
 
 
-python3 avg_freq.py $XFProj $XFProj 10 $NPOP
+python3 avg_freq.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $gen $XFProj 131 $NPOP
 
 cd $XFProj
 mv gain_vs_freq.png gain_vs_freq_gen_$gen.png

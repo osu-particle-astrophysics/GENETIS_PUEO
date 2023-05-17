@@ -58,7 +58,9 @@ doubleNPOP=$((NPOP*2))
 
 # gainNum corresponds to the frequency in which we want to see the gain pattern
 # A value X corresponds to (200 MHz + 10 MHz * X) frequency
-freqNum=10
+freqNum=11
+
+mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots
 
 python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots $freqNum $doubleNPOP $gen
 #

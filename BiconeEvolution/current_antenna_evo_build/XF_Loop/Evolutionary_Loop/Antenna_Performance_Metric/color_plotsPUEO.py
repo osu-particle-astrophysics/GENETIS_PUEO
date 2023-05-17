@@ -34,7 +34,7 @@ Err_minus_ARA = []
 Veff_ARA_Ref = []
 
 #Load in the plottindData
-maxFits, minFits, maxErrors = np.loadtxt(g.location + "/plottingData.csv", delimiter=',', skiprows=0, unpack=True)
+maxFits, minFits, maxErrors = np.loadtxt(g.source + "/plottingData.csv", delimiter=',', skiprows=0, unpack=True)
 maxFit = maxFits.max()
 minFit = minFits.min()
 maxError = maxErrors.max()

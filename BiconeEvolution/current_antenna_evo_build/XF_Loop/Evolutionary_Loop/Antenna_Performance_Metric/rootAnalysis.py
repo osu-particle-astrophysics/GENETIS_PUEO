@@ -196,7 +196,7 @@ def EffectiveVolume2(thisColor,thisLabel):
 	#print('scaledM: ', scaledM, scaledM[0])
 
 	with open(g.opath+"/"+str(g.gen)+"_pueoOut.csv",'a') as f:
-		f.write(str(g.indiv)+","+str(effective_V[0])+","+str(scaledP[0])+","+str(scaledM[0])+"\n")
+		f.write(str(g.indiv)+","+str(effective_V[0])+","+str(effective_V_p[0])+","+str(effective_V_m[0])+"\n")
 		print("Writing to:", g.opath+"/"+str(g.gen)+"_pueoOut.csv" )
 
 	with open(g.opath+"/"+str(g.gen)+"_fitnessScores.csv",'a') as f:

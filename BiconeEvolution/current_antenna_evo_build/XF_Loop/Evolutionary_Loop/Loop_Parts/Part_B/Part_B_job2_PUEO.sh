@@ -103,10 +103,13 @@ done
 
 #I'm going to move the detector photos to the run directory
 cd $XmacrosDir
+chmod 775 *
 
-for i in `seq 1 $NPOP`
+FinalIndex=$(($NPOP-1))
+
+for i in `seq 0 $FinalIndex`
 do
-	mv ${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png
+	mv ${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${i}_detector.png
 done
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

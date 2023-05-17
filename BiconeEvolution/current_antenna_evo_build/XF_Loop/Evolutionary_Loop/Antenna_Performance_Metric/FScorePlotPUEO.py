@@ -43,8 +43,8 @@ for i in range(g.NPOP):
 
 tempFitnesses = []
 FitnessesArray = []
-for ind in range(1, g.NPOP+1):
-    lineNum = ind + 1 #the line in the csv files that the individual data is in 
+for ind in range(0, g.NPOP):
+    lineNum = ind #the line in the csv files that the individual data is in 
     #we need to loop over all the generations, since the gen is in the file names
     for gen in range(0, g.numGens+1):
         #we need to give the changeable filenames we're gonna read
@@ -65,15 +65,38 @@ for ind in range(1, g.NPOP+1):
     tempFitnesses = []
 
 # Load in the Plus and Minus Errors
-PlusErrorArray = []
-MinusErrorArray = []
-for gen in range(0, g.numGens+1):
-    plusErrors, minusErrors = np.loadtxt(g.source + "/{}_errorBars.csv".format(gen), delimiter=',', skiprows=0, unpack=True)
-    PlusErrorArray.append(plusErrors)
-    MinusErrorArray.append(minusErrors)
-#Now transpose the arrays so that they are in the correct format for the violin plot
-PlusErrorArray = np.transpose(PlusErrorArray)
-MinusErrorArray = np.transpose(MinusErrorArray)
+tempErrorsPlus = []
+tempErrorsMinus = []
+ErrorsArrayPlus = []
+ErrorsArrayMinus = []
+for ind in range(0, g.NPOP):
+    lineNum = ind #the line in the csv files that the individual data is in
+    #we need to loop over all the generations, since the gen is in the file names
+    for gen in range(0, g.numGens+1):
+        #we need to give the changeable filenames we're gonna read
+        errors = "{}_errorBars.csv".format(gen)
+        #for each generation, we need to get all the fitnesses
+        with open(g.source + "/" + errors, "r") as fr:
+            f_read = csv.reader(fr, delimiter=',')
+            for i, row in enumerate(f_read): #loop over the rows
+                if i == lineNum: #skipping the header
+                    errorplus = float(row[0]) #lineNum contains the fitness score
+                    errorminus = float(row[1])
+                    #print(fitness)
+        fr.close()
+        #fill the generation individual values into arrays to hold them temporarily
+        tempErrorsPlus.append(errorplus)
+        tempErrorsMinus.append(errorminus)
+    #The temporary files contain the same individual at different generations
+    #we want to store these now in the arrays containing all the data
+    ErrorsArrayPlus.append(tempErrorsPlus)
+    ErrorsArrayMinus.append(tempErrorsMinus)
+    tempErrorsPlus = []
+    tempErrorsMinus = []
+#print(ErrorsArrayPlus, ErrorsArrayMinus)
+print(len(ErrorsArrayPlus), len(ErrorsArrayMinus))
+
+
 
 
 # Load in the max, min, and max error
@@ -85,7 +108,7 @@ diffFit = maxFit - minFit
 
 
 genAxis = np.linspace(0,g.numGens,g.numGens+1,endpoint=True)
-
+genAxis = [int(i) for i in genAxis]
 ''' Put in the average psim when we get it 
 Veff_ARA = []
 Err_plus_ARA = []
@@ -133,14 +156,14 @@ colors = cm.rainbow(np.linspace(0, 1, g.NPOP))
 
 # Testing our colorblind friendly colors
 colors2 = ['#00429d', '#3e67ae', '#618fbf', '#85b7ce', '#b1dfdb', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a']
-plt.axis([-1, g.numGens+1, minFit - (diffFit * 0.1) , maxFit + (diffFit * 0.1)])
+plt.axis([-1, g.numGens+1, minFit - maxError*1.2 , maxFit + maxError*1.2])
 plt.plot(genAxis, MeanFitness, linestyle='-', alpha = 1, markersize = 15)
 plt.plot(genAxis, MedianFitness, linestyle='dashed', alpha = 1, markersize = 15)
 
 #plotting with small deviations in the x axis so we can see the data points
 for ind in range(g.NPOP):
     LabelName = "Individual {}".format(ind+1)
-    plt.errorbar(gen_array[ind], FitnessesArray[ind], yerr=[MinusErrorArray[ind], PlusErrorArray[ind]], label = LabelName, marker = 'o', color = colors2[ind%10], linestyle='', alpha = 0.6, markersize = 11, capsize=3, capthick=1)
+    plt.errorbar(gen_array[ind], FitnessesArray[ind], yerr=[ErrorsArrayMinus[ind], ErrorsArrayPlus[ind]], label = LabelName, marker = 'o', color = colors2[ind%10], linestyle='', alpha = 0.6, markersize = 11, capsize=3, capthick=1)
 
 
 plt.xlabel('Generation', size = 23)

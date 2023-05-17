@@ -85,5 +85,5 @@ with open(g.location + "/maxErrorBars.csv", "a+") as maxErrorBars:
 
 #Now add these values to the plottingData.csv file
 with open(g.location + "/plottingData.csv", "a+") as plottingData:
-	plottingData.write(+str(maxFScore)+","+str(minFScore)+","+str(maxErrorBar)+"\n")
+	plottingData.write(str(maxFScore)+","+str(minFScore)+","+str(maxErrorBar)+"\n")
 	

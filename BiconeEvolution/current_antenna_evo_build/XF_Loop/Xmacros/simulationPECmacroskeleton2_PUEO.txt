@@ -1,4 +1,4 @@
-pp.getActiveProject().getGeometryAssembly().clear();
+App.getActiveProject().getGeometryAssembly().clear();
 //make simulatiosn for each individual for each frequency
 for(var i = 0;i < NPOP;i++)
 {

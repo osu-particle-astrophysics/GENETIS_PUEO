@@ -53,9 +53,9 @@ tuples = zip(*sorted_scores)
 sorted_fitness_scores, sorted_indices = [list(tuple) for tuple in  tuples]
 
 ### Stores the max, min, and middle indices from the above sorted list
-max_index = sorted_indices[-1]
-mid_index = sorted_indices[round(len(fitness_scores)/2)]
-min_index = sorted_indices[0]
+max_index = sorted_indices[-1]+1
+mid_index = sorted_indices[round(len(fitness_scores)/2)]+1
+min_index = sorted_indices[0]+1
 
 ### Creates a temporary file that holds the index for the best-performing detector
 f=open('temp_best.csv', 'w')

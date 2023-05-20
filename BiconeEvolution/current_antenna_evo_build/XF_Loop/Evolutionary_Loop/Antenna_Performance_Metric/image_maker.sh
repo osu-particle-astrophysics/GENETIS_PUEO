@@ -44,12 +44,15 @@ python3 image_finder.py $fitnessSourceDir $gen
 max_index=`cat temp_best.csv`
 mid_index=`cat temp_mid.csv`
 min_index=`cat temp_worst.csv`
+temp_max_index=$((max_index - 1))
+temp_mid_index=$((mid_index - 1))
+temp_min_index=$((min_index - 1))
 #
 ### Makes directory for this generation's photos, then moves the indicated photos into it
 mkdir ${destinationDir}/${gen}_detector_photos
-mv ${photoSourceDir}/${max_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${max_index}_detector_max.png
-mv ${photoSourceDir}/${mid_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${mid_index}_detector_mid.png
-mv ${photoSourceDir}/${min_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${min_index}_detector_min.png
+mv ${photoSourceDir}/${temp_max_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${max_index}_detector_max.png
+mv ${photoSourceDir}/${temp_mid_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${mid_index}_detector_mid.png
+mv ${photoSourceDir}/${temp_min_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${min_index}_detector_min.png
 #
 ### Removes the remaining photos
 rm ${photoSourceDir}/*_detector.png

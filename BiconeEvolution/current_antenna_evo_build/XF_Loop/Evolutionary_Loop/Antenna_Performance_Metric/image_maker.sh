@@ -50,9 +50,9 @@ temp_min_index=$((min_index - 1))
 #
 ### Makes directory for this generation's photos, then moves the indicated photos into it
 mkdir ${destinationDir}/${gen}_detector_photos
-mv ${photoSourceDir}/${temp_max_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${max_index}_detector_max.png
-mv ${photoSourceDir}/${temp_mid_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${mid_index}_detector_mid.png
-mv ${photoSourceDir}/${temp_min_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${min_index}_detector_min.png
+mv ${photoSourceDir}/${max_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${max_index}_detector_max.png
+mv ${photoSourceDir}/${mid_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${mid_index}_detector_mid.png
+mv ${photoSourceDir}/${min_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${min_index}_detector_min.png
 #
 ### Removes the remaining photos
 rm ${photoSourceDir}/*_detector.png

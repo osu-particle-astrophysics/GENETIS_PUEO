@@ -107,7 +107,8 @@ chmod 775 *
 
 FinalIndex=$(($NPOP-1))
 
-for i in `seq 0 $FinalIndex`
+mkdir -m775 $WorkingDir/Run_Outputs/$RunName/AntennaImages/${gen}
+for i in `seq $NPOP`
 do
 	mv ${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png
 done

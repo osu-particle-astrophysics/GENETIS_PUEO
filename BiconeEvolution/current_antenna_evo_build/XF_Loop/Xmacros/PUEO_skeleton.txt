@@ -135,7 +135,7 @@ for(var j = indiv;j<=NPOP;j++)
 			}
 		}
 	}
-	MakeImage(i);
+	MakeImage(j);
 }
 file.close();
 

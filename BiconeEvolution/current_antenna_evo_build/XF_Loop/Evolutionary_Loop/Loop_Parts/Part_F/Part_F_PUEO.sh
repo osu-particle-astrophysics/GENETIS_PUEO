@@ -47,7 +47,7 @@ mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fit
 mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
 mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
 mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
-mv *.csv Generation_Data/
+mv -f *.csv Generation_Data/
 
 cd "$WorkingDir"
 #open permissions on the data files
@@ -61,7 +61,7 @@ then
 fi
 
 mkdir -m775 Plots/Generation_${gen}
-mv Generation_Data/*.png Plots/Generation_${gen}
+mv -f Generation_Data/*.png Plots/Generation_${gen}
 
 echo 'Congrats on getting some nice plots!'
 

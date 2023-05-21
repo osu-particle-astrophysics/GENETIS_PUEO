@@ -37,7 +37,7 @@ cd $WorkingDir/Antenna_Performance_Metric/
 
 echo 'Starting fitness function calculating portion...'
 
-mv *.root $WorkingDir/Run_Outputs/$RunName/RootFilesGen${gen}/
+mv -f *.root $WorkingDir/Run_Outputs/$RunName/RootFilesGen${gen}/
 
 #python fitnessFunction_PUEO.py $NPOP $Seeds $WorkingDir/Run_Outputs/$RunName/veff_${gen} 
 
@@ -120,15 +120,15 @@ python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $Workin
 python3 avg_freq.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $gen $XFProj 131 $NPOP
 
 cd $XFProj
-mv gain_vs_freq.png gain_vs_freq_gen_$gen.png
+mv -f gain_vs_freq.png gain_vs_freq_gen_$gen.png
 
 echo 'Congrats on getting a fitness score!'
 
 cd $WorkingDir
 
-mv Generation_Data/parents.csv Run_Outputs/$RunName/Generation_Data/${gen}_parents.csv
-mv Generation_Data/genes.csv Run_Outputs/$RunName/Generation_Data/${gen}_genes.csv
-mv Generation_Data/mutations.csv Run_Outputs/$RunName/Generationa_Data/${gen}_mutations.csv
-mv Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_generators.csv
+mv -f Generation_Data/parents.csv Run_Outputs/$RunName/Generation_Data/${gen}_parents.csv
+mv -f Generation_Data/genes.csv Run_Outputs/$RunName/Generation_Data/${gen}_genes.csv
+mv -f Generation_Data/mutations.csv Run_Outputs/$RunName/Generationa_Data/${gen}_mutations.csv
+mv -f Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_generators.csv
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

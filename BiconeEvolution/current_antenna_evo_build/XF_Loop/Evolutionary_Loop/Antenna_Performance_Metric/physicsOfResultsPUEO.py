@@ -8,13 +8,7 @@ GENETIS Pueo project.
 This script will take in the location for IceFinal root files for an
 individual and loop through them, pull variables, and plot them.
 =======================
-Usage:
-python physicsOfResultsPUEO.py <source> <destination> <indiv> <energy>
-<source> = location of IceFinal root files
-<destination> = location to save plots
-# <gen> = generation number
-<indiv> = individual number
-<energy> = energy of neutrino
+Use `python physicsOfResultsPUEO.py --help` for usage instructions.
 =======================
 example: python physicsOfResultsPUEO.py /fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/2023_05_08/Root_Files/10_Root_Files /users/PAS1960/dylanwells1629/plots 10 2 19
 '''
@@ -32,7 +26,8 @@ import matplotlib.pyplot as plt
 import ROOT
 
 # Global Variables
-parser = argparse.ArgumentParser()
+desc = 'Create the physics of results plots for the GENETIS Pueo project.'
+parser = argparse.ArgumentParser(desc=desc)
 parser.add_argument("source", help="source directory of root files", type=str)
 parser.add_argument("destination", help="destination directory for plots", type=str)
 # parser.add_argument("gen", help="generation number", type=int)

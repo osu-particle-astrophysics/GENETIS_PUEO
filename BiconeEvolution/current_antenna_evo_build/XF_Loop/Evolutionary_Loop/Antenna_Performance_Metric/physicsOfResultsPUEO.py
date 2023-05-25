@@ -33,7 +33,7 @@ parser.add_argument("destination", help="destination directory for plots", type=
 # parser.add_argument("gen", help="generation number", type=int)
 parser.add_argument("indiv", help="individual number", type=int)
 parser.add_argument("energy", help="energy of neutrino", type=int)
-g=parser.parse_args()
+g = parser.parse_args()
 
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
@@ -109,8 +109,8 @@ def getFiles(source, energy, indiv):
                     continue
                 success_runs.append(fileName)
                 
-                for i in range(0,passEvents):
-                    j = j + 1
+                for i in range(passEvents):
+                    j += 1
                     
                     passTree.GetEvent(i)
                     allTree.GetEvent(i)
@@ -139,18 +139,12 @@ def getFiles(source, energy, indiv):
                     showerPnuEv = passTree.event.shower.pnu.eV
                     maxEField = passTree.event.signalSummaryAtDetector.maxEField
                     maxEFieldFreq = passTree.event.signalSummaryAtDetector.maxEFieldFreq
-                    if(passTree.event.neutrino.flavor==1):
-                        nu_e = 1
-                        nu_m = 0
-                        nu_t = 0
-                    elif(passTree.event.neutrino.flavor==2):
-                        nu_e = 0
-                        nu_m = 1
-                        nu_t = 0
+                    if passTree.event.neutrino.flavor == 1:
+                        nu_e, nu_m, nu_t = 1, 0, 0
+                    elif passTree.event.neutrino.flavor == 2:
+                        nu_e, nu_m, nu_t = 0, 1, 0
                     else:
-                        nu_e = 0
-                        nu_m = 0
-                        nu_t = 1
+                        nu_e, nu_m, nu_t = 0, 0, 1
                     
                     all_var = [trigg, passed, passWeight, rawWeights,
                                position, neutrinoFlavor, 

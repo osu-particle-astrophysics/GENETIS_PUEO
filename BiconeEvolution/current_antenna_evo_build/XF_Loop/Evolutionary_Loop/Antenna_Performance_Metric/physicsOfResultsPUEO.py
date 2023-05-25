@@ -39,7 +39,7 @@ parser.add_argument("destination", help="destination directory for plots", type=
 # parser.add_argument("gen", help="generation number", type=int)
 parser.add_argument("indiv", help="individual number", type=int)
 parser.add_argument("energy", help="energy of neutrino", type=int)
-g=parser.parse_args()
+g = parser.parse_args()
 
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")

@@ -185,11 +185,11 @@ patches[1].set_facecolor(plotting_colors[4])
 patches[2].set_facecolor(plotting_colors[-1])
 ax1.set_xlabel('Neutrino Flavor')
 ax1.set_ylabel('Number of Neutrinos')
-ax1.set_title('Neutrino Flavor for {} EeV Neutrinos'.format(g.energy))
+ax1.set_title(f'Neutrino Flavor for {g.energy} EeV Neutrinos')
 ax1.set_xticks([1, 2, 3])
 ax1.set_xticklabels(['$\\nu_e$', '$\\nu_\\mu$', '$\\nu_\\tau$'])
 ax1.grid(True)
-fig1.savefig('{}/{}_neutrinoFlavor_bestindiv.png'.format(g.destination, g.indiv))
+fig1.savefig(f'{g.destination}/{g.indiv}_neutrinoFlavor_bestindiv.png')
 
 #plot the interaction length against the interaction cross section
 fig2 = plt.figure()

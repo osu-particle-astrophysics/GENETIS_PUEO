@@ -340,7 +340,7 @@ do
 				./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
 			fi
 		else
-			./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
+			./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $exp
 		fi
 		state=1
 		./SaveState_Prototype.sh $gen $state $RunName $indiv

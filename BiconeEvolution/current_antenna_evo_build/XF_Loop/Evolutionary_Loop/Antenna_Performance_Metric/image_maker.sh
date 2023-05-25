@@ -25,6 +25,8 @@ gen=$4
 WorkingDir=$5
 RunName=$6
 NPOP=$7
+PSIMDIR=$8
+exp=$9
 #
 echo $fitnessSourceDir
 echo $photoSourceDir
@@ -44,9 +46,6 @@ python3 image_finder.py $fitnessSourceDir $gen
 max_index=`cat temp_best.csv`
 mid_index=`cat temp_mid.csv`
 min_index=`cat temp_worst.csv`
-temp_max_index=$((max_index - 1))
-temp_mid_index=$((mid_index - 1))
-temp_min_index=$((min_index - 1))
 #
 ### Makes directory for this generation's photos, then moves the indicated photos into it
 mkdir ${destinationDir}/${gen}_detector_photos
@@ -66,6 +65,14 @@ freqNum=11
 mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots
 
 python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots $freqNum $doubleNPOP $gen
+
+#make sure the correct python is loaded (default 2.7)
+module load python/3.7-2019.10
+module unload python/3.7-2019.10
+source $PSIMDIR/set_env.sh
+
+python physicsOfResultsPUEO.py $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files $WorkingDir/Run_Outputs/$RunName/Plots/Generation_${gen} $max_index $exp
+
 #
 ### Removes temporary files
 rm temp_best.csv

@@ -115,8 +115,8 @@ def getFiles(source, energy, indiv):
                     continue
                 success_runs.append(fileName)
                 
-                for i in range(0,passEvents):
-                    j = j + 1
+                for i in range(passEvents):
+                    j += 1
                     
                     passTree.GetEvent(i)
                     allTree.GetEvent(i)

@@ -26,14 +26,16 @@ example: python physicsOfResultsPUEO.py /fs/ess/PAS1960/HornEvolutionOSC/GENETIS
 '''
 
 # Imports
-import ROOT
+import os
+import argparse
+from collections import defaultdict
+from fnmatch import fnmatch
+
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from collections import defaultdict
-import os
-from fnmatch import fnmatch
-import argparse
+
+import ROOT
 
 # Global Variables
 parser = argparse.ArgumentParser()

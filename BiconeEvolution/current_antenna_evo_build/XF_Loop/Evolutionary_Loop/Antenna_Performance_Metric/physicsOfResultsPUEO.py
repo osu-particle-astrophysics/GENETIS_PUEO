@@ -145,18 +145,12 @@ def getFiles(source, energy, indiv):
                     showerPnuEv = passTree.event.shower.pnu.eV
                     maxEField = passTree.event.signalSummaryAtDetector.maxEField
                     maxEFieldFreq = passTree.event.signalSummaryAtDetector.maxEFieldFreq
-                    if(passTree.event.neutrino.flavor==1):
-                        nu_e = 1
-                        nu_m = 0
-                        nu_t = 0
-                    elif(passTree.event.neutrino.flavor==2):
-                        nu_e = 0
-                        nu_m = 1
-                        nu_t = 0
+                    if passTree.event.neutrino.flavor == 1:
+                        nu_e, nu_m, nu_t = 1, 0, 0
+                    elif passTree.event.neutrino.flavor == 2:
+                        nu_e, nu_m, nu_t = 0, 1, 0
                     else:
-                        nu_e = 0
-                        nu_m = 0
-                        nu_t = 1
+                        nu_e, nu_m, nu_t = 0, 0, 1
                     
                     all_var = [trigg, passed, passWeight, rawWeights,
                                position, neutrinoFlavor, 

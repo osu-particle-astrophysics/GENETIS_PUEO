@@ -1,12 +1,6 @@
 #!/usr/bin/env python
+__author__ = "Dylan Wells <wells.1629@osu.edu>"
 '''
-=======================
-physicsOfResultsPUEO.py
-=======================
-Author: Dylan Wells
-Email: wells.1629@osu.edu
-Date: May 18 2023
-Last Modified Date: May 21 2023
 =======================
 Description: This file will create the physics of results plots for the
 GENETIS Pueo project.

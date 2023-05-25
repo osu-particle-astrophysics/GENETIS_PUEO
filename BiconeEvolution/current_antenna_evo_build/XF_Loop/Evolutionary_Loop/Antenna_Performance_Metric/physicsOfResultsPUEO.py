@@ -163,8 +163,8 @@ def getFiles(source, energy, indiv):
                     
                 PassingEvents[energy].append(np.sum(nuPasses))
                 PassingWeights[energy].append(np.sum(nuWeights))
-    print("Number of events: {}".format(np.sum(TotalEvents[energy])))
-    print("Number of passing events: {}".format(np.sum(PassingEvents[energy])))
+    print(f"Number of events: {np.sum(TotalEvents[energy])}")
+    print(f"Number of passing events: {np.sum(PassingEvents[energy])}")
     print("Done collecting variables")
 
 getFiles(g.source, g.energy, g.indiv)

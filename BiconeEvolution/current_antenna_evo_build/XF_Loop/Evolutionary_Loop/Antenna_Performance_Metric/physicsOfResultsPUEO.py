@@ -152,13 +152,13 @@ def getFiles(source, energy, indiv):
                                interactionStrength, showerPnuEv, maxEField,
                                maxEFieldFreq, nu_e, nu_m, nu_t]
                     
-                    for k in range(1, len(all_var)):
-                        var_dict['{0}'.format(var[k])].append(all_var[k])
+                    for k, v in enumerate(all_var, start=1):
+                        var_dict[var[k]].append(v)
                     
                 PassingEvents[energy].append(np.sum(nuPasses))
                 PassingWeights[energy].append(np.sum(nuWeights))
-    print("Number of events: {}".format(np.sum(TotalEvents[energy])))
-    print("Number of passing events: {}".format(np.sum(PassingEvents[energy])))
+    print(f"Number of events: {np.sum(TotalEvents[energy])}")
+    print(f"Number of passing events: {np.sum(PassingEvents[energy])}")
     print("Done collecting variables")
 
 getFiles(g.source, g.energy, g.indiv)
@@ -179,11 +179,11 @@ patches[1].set_facecolor(plotting_colors[4])
 patches[2].set_facecolor(plotting_colors[-1])
 ax1.set_xlabel('Neutrino Flavor')
 ax1.set_ylabel('Number of Neutrinos')
-ax1.set_title('Neutrino Flavor for {} EeV Neutrinos'.format(g.energy))
+ax1.set_title(f'Neutrino Flavor for {g.energy} EeV Neutrinos')
 ax1.set_xticks([1, 2, 3])
 ax1.set_xticklabels(['$\\nu_e$', '$\\nu_\\mu$', '$\\nu_\\tau$'])
 ax1.grid(True)
-fig1.savefig('{}/{}_neutrinoFlavor_bestindiv.png'.format(g.destination, g.indiv))
+fig1.savefig(f'{g.destination}/{g.indiv}_neutrinoFlavor_bestindiv.png')
 
 #plot the interaction length against the interaction cross section
 fig2 = plt.figure()

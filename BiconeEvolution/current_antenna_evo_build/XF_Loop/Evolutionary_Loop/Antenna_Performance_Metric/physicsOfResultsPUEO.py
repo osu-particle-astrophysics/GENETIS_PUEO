@@ -158,8 +158,8 @@ def getFiles(source, energy, indiv):
                                interactionStrength, showerPnuEv, maxEField,
                                maxEFieldFreq, nu_e, nu_m, nu_t]
                     
-                    for k in range(1, len(all_var)):
-                        var_dict['{0}'.format(var[k])].append(all_var[k])
+                    for k, v in enumerate(all_var, start=1):
+                        var_dict[var[k]].append(v)
                     
                 PassingEvents[energy].append(np.sum(nuPasses))
                 PassingWeights[energy].append(np.sum(nuWeights))

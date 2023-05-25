@@ -2,15 +2,10 @@
 __author__ = "Dylan Wells <wells.1629@osu.edu>"
 '''
 =======================
-Description: This file will create the physics of results plots for the
-GENETIS Pueo project.
-
-This script will take in the location for IceFinal root files for an
-individual and loop through them, pull variables, and plot them.
-=======================
 Use `python physicsOfResultsPUEO.py --help` for usage instructions.
 =======================
-example: python physicsOfResultsPUEO.py /fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/2023_05_08/Root_Files/10_Root_Files /users/PAS1960/dylanwells1629/plots 10 2 19
+example usage: python physicsOfResultsPUEO.py /fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/2023_05_08/Root_Files/10_Root_Files /users/PAS1960/dylanwells1629/plots 2 19
+=======================
 '''
 
 # Imports
@@ -27,7 +22,7 @@ import ROOT
 
 # Global Variables
 desc = 'Create the physics of results plots for the GENETIS Pueo project.'
-parser = argparse.ArgumentParser(desc=desc)
+parser = argparse.ArgumentParser(description=desc)
 parser.add_argument("source", help="source directory of root files", type=str)
 parser.add_argument("destination", help="destination directory for plots", type=str)
 # parser.add_argument("gen", help="generation number", type=int)
@@ -152,13 +147,14 @@ def getFiles(source, energy, indiv):
                                interactionStrength, showerPnuEv, maxEField,
                                maxEFieldFreq, nu_e, nu_m, nu_t]
                     
-                    for k, v in enumerate(all_var, start=1):
+                    for k, v in enumerate(all_var):
                         var_dict[var[k]].append(v)
                     
                 PassingEvents[energy].append(np.sum(nuPasses))
                 PassingWeights[energy].append(np.sum(nuWeights))
-    print(f"Number of events: {np.sum(TotalEvents[energy])}")
-    print(f"Number of passing events: {np.sum(PassingEvents[energy])}")
+                
+    print("Number of events: {}".format(np.sum(TotalEvents[energy])))
+    print("Number of passing events: {}".format(np.sum(PassingEvents[energy])))
     print("Done collecting variables")
 
 getFiles(g.source, g.energy, g.indiv)
@@ -179,11 +175,11 @@ patches[1].set_facecolor(plotting_colors[4])
 patches[2].set_facecolor(plotting_colors[-1])
 ax1.set_xlabel('Neutrino Flavor')
 ax1.set_ylabel('Number of Neutrinos')
-ax1.set_title(f'Neutrino Flavor for {g.energy} EeV Neutrinos')
+ax1.set_title('Neutrino Flavor for {} EeV Neutrinos'.format(g.energy))
 ax1.set_xticks([1, 2, 3])
 ax1.set_xticklabels(['$\\nu_e$', '$\\nu_\\mu$', '$\\nu_\\tau$'])
 ax1.grid(True)
-fig1.savefig(f'{g.destination}/{g.indiv}_neutrinoFlavor_bestindiv.png')
+fig1.savefig('{}/{}_neutrinoFlavor_bestindiv.png'.format(g.destination, g.indiv))
 
 #plot the interaction length against the interaction cross section
 fig2 = plt.figure()

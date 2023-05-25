@@ -38,7 +38,8 @@ import matplotlib.pyplot as plt
 import ROOT
 
 # Global Variables
-parser = argparse.ArgumentParser()
+desc = 'Create the physics of results plots for the GENETIS Pueo project.'
+parser = argparse.ArgumentParser(desc=desc)
 parser.add_argument("source", help="source directory of root files", type=str)
 parser.add_argument("destination", help="destination directory for plots", type=str)
 # parser.add_argument("gen", help="generation number", type=int)

@@ -65,12 +65,14 @@ new_err_minus = []
 
 # combine the errors and fitnesses of parents and children
 def combine_measurements(m1, err1_plus, err1_minus, m2, err2_plus, err2_minus):
-    weight1 = err1_plus + err1_minus
-    weight2 = err2_plus + err2_minus
+    err1 = (err1_plus + err1_minus) / 2
+    err2 = (err2_plus + err2_minus) / 2
+    weight1 = 1 / (err1**2)
+    weight2 = 1 / (err2**2)
     
     combined_measurement = (
-        (m1 / (weight1**2) + m2 / (weight2**2)) /
-        (1/(weight1**2) + 1/(weight2**2))
+        (m1 * weight1 + m2 * weight2) /
+        (weight1 + weight2)
     )
     
     combined_err_plus = math.sqrt(1/(1/(err1_plus**2) + 1/(err2_plus**2)))

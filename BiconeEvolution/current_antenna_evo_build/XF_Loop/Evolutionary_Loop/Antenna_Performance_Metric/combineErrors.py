@@ -3,6 +3,7 @@ __author__ = 'Dylan Wells <wells.1629@osu.edu>'
 # Imports
 import argparse
 import math
+from pathlib import Path
 
 import pandas as pd
 
@@ -10,14 +11,23 @@ import pandas as pd
 desc = ("This script will combine the errors and fitness scores "
         "of individuals made with reproduction")
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument("source", help="source directory for fitness files", type=str)
+parser.add_argument("source", help="source directory for fitness files", type=Path)
 parser.add_argument("gen", help="Generation number.", type=int)
 
 g = parser.parse_args()
 
+source_dir = g.source
+curr_gen = g.gen
+prev_gen = g.gen - 1
+parents_csv = source_dir / f'{curr_gen}_parents.csv'
+prev_fitness = source_dir / f'{prev_gen}_fitnessScores.csv'
+curr_fitness = source_dir / f'{curr_gen}_fitnessScores.csv'
+prev_errors = source_dir / f'{prev_gen}_errorBars.csv'
+curr_errors = source_dir / f'{curr_gen}_errorBars.csv'
+
 # load in the parents.csv file to find inviduals made from reproduction
 skiprows = 4
-parents_csv = pd.read_csv(f'{g.source}/{g.gen}_parents.csv', header=0, 
+parents_csv = pd.read_csv(parents_csv, header=0, 
                           delimiter=',', skiprows=skiprows)
 operators = parents_csv.iloc[:, 3].values
 
@@ -26,31 +36,28 @@ reproduced = []
 for i, op in enumerate(operators):
     if op == ' Reproduction':
         reproduced.append(i)
+        
+parents = parents_csv.iloc[:, 1].values
+parents = [int(parents[i]) for i in reproduced]
+
 print(f"Combining errors and fitness scores of individuals {reproduced}")
 
-# load in the errors and fitnesses of parents
-fitness_csv = pd.read_csv(f'{g.source}/{(g.gen)-1}_fitnessScores.csv', header=None)
-p_fitness_scores = fitness_csv.iloc[:, 0].values
+def load_csv(fitness_csv, error_csv, iterator):
+    fitness_files = pd.read_csv(fitness_csv, header=None)
+    error_file = pd.read_csv(error_csv, header=None)
+    
+    fitness_scores = fitness_files.iloc[:, 0].values
+    err_plus = error_file.iloc[:, 0].values
+    err_minus = error_file.iloc[:, 1].values
+    
+    fitness_scores = [float(fitness_scores[i]) for i in iterator]
+    err_plus = [float(err_plus[i]) for i in iterator]
+    err_minus = [float(err_minus[i]) for i in iterator]
+    
+    return fitness_scores, err_plus, err_minus
 
-errors_csv = pd.read_csv(f'{g.source}/{(g.gen)-1}_errorBars.csv', header=None)
-p_err_plus = errors_csv.iloc[:, 0].values
-p_err_minus = errors_csv.iloc[:, 1].values
-
-p_fitness_scores = [float(p_fitness_scores[i]) for i in reproduced]
-p_err_plus = [float(p_err_plus[i]) for i in reproduced]
-p_err_minus = [float(p_err_minus[i]) for i in reproduced]
-
-# load in the errors and fitnesses of children
-fitness_csv = pd.read_csv(f'{g.source}/{g.gen}_fitnessScores.csv', header=None)
-c_fitness_scores = fitness_csv.iloc[:, 0].values
-
-errors_csv = pd.read_csv(f'{g.source}/{g.gen}_errorBars.csv', header=None)
-c_err_plus = errors_csv.iloc[:, 0].values
-c_err_minus = errors_csv.iloc[:, 1].values
-
-c_fitness_scores = [float(c_fitness_scores[i]) for i in reproduced]
-c_err_plus = [float(c_err_plus[i]) for i in reproduced]
-c_err_minus = [float(c_err_minus[i]) for i in reproduced]
+p_fitness_scores, p_err_plus, p_err_minus = load_csv(prev_fitness, prev_errors, parents)
+c_fitness_scores, c_err_plus, c_err_minus = load_csv(curr_fitness, curr_errors, reproduced)
 
 new_fitness_scores = []
 new_err_plus = []
@@ -78,6 +85,9 @@ for i in range(len(p_fitness_scores)):
     new_fitness_scores.append(new_fitness)
     new_err_plus.append(plus_err)
     new_err_minus.append(minus_err)
+
+fitness_csv = pd.read_csv(curr_fitness, header=None)
+errors_csv = pd.read_csv(curr_errors, header=None)
 
 # Reconstruct the fitness csv file with the new fitness scores at indexes of reproduction
 for i in reproduced:

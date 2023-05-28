@@ -7,8 +7,8 @@ import math
 import pandas as pd
 
 # Arguments
-desc = "This script will combine the errors and fitness scores \
-        of individuals made with reproduction"
+desc = ("This script will combine the errors and fitness scores "
+        "of individuals made with reproduction")
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument("source", help="source directory for fitness files", type=str)
 parser.add_argument("gen", help="Generation number.", type=int)

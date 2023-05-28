@@ -23,7 +23,7 @@ parser.add_argument("WorkingDir", help="Working Directory", type=str)
 g=parser.parse_args()
 
 
-
+'''
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
@@ -35,7 +35,7 @@ ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib
 ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
 ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
-'''
+
 
 def EffectiveVolume2(thisColor,thisLabel):
 
@@ -95,7 +95,6 @@ def EffectiveVolume2(thisColor,thisLabel):
                     this_energy=g.energy
                     
                     nuWeights = []
-                    nuPasses = []
                     
                     passTree = IceFinalFile.passTree
                     passEvents = passTree.GetEntries()
@@ -103,17 +102,33 @@ def EffectiveVolume2(thisColor,thisLabel):
                     #print('error! skipping run')
                     continue
                 
+                df = ROOT.RDataFrame("passTree", fileName)
+                
+                print(df.GetColumnNames())
+                
+                #for i in range(passEvents):
+                 #   passTree.getEvent(i)
+                  #  
+                   # nuPasses.append(1)
+                    #nuWeights.append(passTree.event.neutrino.path.weight/(passTree.event.loop.positionWeight*passTree.event.loop.directionWeight))
+                    #RawWeights[this_energy].append(nuWeights[-1])
+                
+                nuWeights = df.Define("nuWeights","event.neutrino.path.weight/(event.loop.positionWeight*event.loop.directionWeight)")
+                #now get a list of the nuWeights column without numpy
+                
+                
+                
+                #nuPasses = df.AsNumpy(["event.neutrino.path.weight"])
+                #Define numpy arrays for the weights and passes
+                #cols = df.AsNumpy(["event.neutrino.path.weight","event.loop.positionWeight","event.loop.directionWeight"])
+                #print("past asNumpy")
+               # nuWeights = cols["event.neutrino.path.weight"]/(cols["event.loop.positionWeight"]*cols["event.loop.directionWeight"])
+                #RawWeights[this_energy].append(nuWeights)
+                
+                #Now append to lists
+                
 
-                print(passEvents)
-                for i in range(passEvents):
-                    passTree.getEvent(i)
-                    
-                    nuPasses.append(1)
-                    nuWeights.append(passTree.event.neutrino.path.weight/(passTree.event.loop.positionWeight*passTree.event.loop.directionWeight))
-                    RawWeights[this_energy].append(nuWeights[-1])
-                    
-
-                PassingEvents[this_energy].append(np.sum(nuPasses))
+                PassingEvents[this_energy].append(passEvents)
                 PassingWeights[this_energy].append(np.sum(nuWeights))
                 
 

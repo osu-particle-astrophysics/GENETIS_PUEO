@@ -8,6 +8,7 @@ example usage: python physicsOfResultsPUEO.py /fs/ess/PAS1960/HornEvolutionOSC/G
 =======================
 '''
 
+
 # Imports
 import os
 import argparse
@@ -21,7 +22,8 @@ import matplotlib.pyplot as plt
 import ROOT
 
 # Global Variables
-desc = 'Create the physics of results plots for the GENETIS Pueo project.'
+desc = ('Create the physics of results plots for the GENETIS Pueo project.'
+        'This version is built for Python 2.7 and pueoSim v1.1.0')
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument("source", help="source directory of root files", type=str)
 parser.add_argument("destination", help="destination directory for plots", type=str)
@@ -35,12 +37,6 @@ ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarctica
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
-
-#ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
-#ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
-#ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
-#ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
-#ROOT.gInterpreter.Declare('#include "Geoid.h"')
 
 '''
 # Variables used in Dennis' code
@@ -67,17 +63,20 @@ var = ['trigg', 'passed', 'passWeight', 'rawWeights',
        'interactionLength', 'interactionCrossSection',
        'interactionStrength', 'showerPnuEv', 'maxEField', 
        'maxEFieldFreq', 'nu_e', 'nu_m', 'nu_t', 'RFx', 'RFy', 
-       'RFz', 'RFdirCosTheta', 'RFdirTheta', 'nuDirCosTheta', 'nuDirTheta']
+       'RFz', 'RFdirCosTheta', 'RFdirTheta', 'nuDirCosTheta', 
+       'nuDirTheta']
 
-waveformV_array = []
-waveformH_array = []
+
+#Create a multigraph for the signalAtDetector TGraphs
+#signalAtDetectorMother = ROOT.TMultiGraph()
+
 
 for x in var:
     var_dict['{0}'.format(x)] = []
 
 #Functions
 def getFiles(source, energy, indiv):
-    
+    counter = 1
     # The root files will be located in the 
     # $WorkingDir/Run_Outputs/$RunName/Root_Files/$genNum_Root_Files/ directory
     # The root files will be named IceFinal_$genNum_$indiv_$seed.root
@@ -129,8 +128,39 @@ def getFiles(source, energy, indiv):
                     continue
                 
                 
-                waveformsH = []
-                waveformsV = []
+
+                passTree.GetEvent(0)
+                #Create a canvas for the TGraphs
+                c = ROOT.TCanvas("c", "c", 1000, 1000)
+                c.Divide(1, 2)
+                c.cd(1)
+                signalAtDetector = passTree.event.signalAtDetector
+                # Add titles and axes to the TGraph and then save as a png
+                signalAtDetector.SetTitle("Signal at Detector for {} EeV Neutrinos".format(g.energy))
+                signalAtDetector.GetXaxis().SetTitle("Time (ns)")
+                signalAtDetector.GetYaxis().SetTitle("Voltage (V)")
+                signalAtDetector.SetLineColor(1)
+                signalAtDetector.SetLineWidth(2)
+                signalAtDetector.SetMarkerStyle(20)
+                signalAtDetector.SetMarkerSize(0.5)
+                signalAtDetector.SetMarkerColor(1)
+                signalAtDetector.Draw()
+                c.cd(2)
+                signalAtSource = passTree.event.signalAt1m
+                signalAtSource.SetTitle("Signal at 1m for {} EeV Neutrinos".format(g.energy))
+                signalAtSource.GetXaxis().SetTitle("Time (ns)")
+                signalAtSource.GetYaxis().SetTitle("Voltage (V)")
+                signalAtSource.SetLineColor(1)
+                signalAtSource.SetLineWidth(2)
+                signalAtSource.SetMarkerStyle(20)
+                signalAtSource.SetMarkerSize(0.5)
+                signalAtSource.SetMarkerColor(1)
+                signalAtSource.Draw()
+                c.Print("{}/signalPlots/{}_{}_signals_bestindiv.png".format(g.destination, g.indiv, counter))
+                counter += 1
+                c.Close()
+                
+                
                 for i in range(passEvents):
                     j += 1
                     
@@ -144,8 +174,7 @@ def getFiles(source, energy, indiv):
                     RawWeights[energy].append(nuWeights[-1])
 
                     # collecting varaibles in the dictionary
-                    waveformsV = passTree.event.waveformsV
-                    waveformsH = passTree.event.waveformsH
+                    
                     
                     trigg = j
                     var_dict['trigg'].append(j)
@@ -153,8 +182,6 @@ def getFiles(source, energy, indiv):
                     passWeight = nuWeights[-1]
                     rawWeights = nuWeights[-1]
                     position = passTree.event.interaction.position
-                    #pathEntry = passTree.event.neutrino.path.entry doesn't seem to be included
-                    #pathExit = passTree.event.neutrino.path.exit
                     neutrinoFlavor = passTree.event.neutrino.flavor
                     interactionLength = passTree.event.interaction.length
                     interactionCrossSection = passTree.event.interaction.crossSection
@@ -169,6 +196,7 @@ def getFiles(source, energy, indiv):
                     RFdirTheta = passTree.event.RFdir.Theta()
                     nuDirCosTheta = passTree.event.neutrino.path.direction.CosTheta()
                     nuDirTheta = passTree.event.neutrino.path.direction.Theta()
+                    
                     
                     if passTree.event.neutrino.flavor == 1:
                         nu_e, nu_m, nu_t = 1, 0, 0
@@ -189,20 +217,13 @@ def getFiles(source, energy, indiv):
                     
                 PassingEvents[energy].append(np.sum(nuPasses))
                 PassingWeights[energy].append(np.sum(nuWeights))
-                waveformH_array.append(waveformsH)
-                waveformV_array.append(waveformsV)
     print("Number of events: {}".format(np.sum(TotalEvents[energy])))
     print("Number of passing events: {}".format(np.sum(PassingEvents[energy])))
     print("Done collecting variables")
 
 getFiles(g.source, g.energy, g.indiv)
 
-print(waveformH_array, waveformV_array)
-print(len(waveformH_array), len(waveformV_array))
-try:
-    print(waveformH_array[0].size(), waveformV_array[0].size())
-except:
-    print("didn't work")
+
 
 print("Plotting")
 ### Plotting ###
@@ -240,15 +261,6 @@ cbar.set_ticks([1, 10, 100, 1000, 10000, 100000])
 cbar.set_ticklabels(['1', '10', '100', '1000', '10000', '100000'])
 fig5.savefig('{}/{}_maxEField_vs_maxEFieldFreq_2d_bestindiv.png'.format(g.destination, g.indiv))
 
-#plot RF direction
-fig6 = plt.figure()
-ax6 = fig6.add_subplot(111)
-ax6.scatter(var_dict['RFx'], var_dict['RFy'], s=1)
-ax6.set_xlabel('RFx')
-ax6.set_ylabel('RFy')
-ax6.set_title('RF Direction for {} EeV Neutrinos'.format(g.energy))
-ax6.grid(True)
-fig6.savefig('{}/{}_RF_direction_bestindiv.png'.format(g.destination, g.indiv))
 
 #Plot a histogram of the RF direction cosine theta
 fig7 = plt.figure()
@@ -281,3 +293,6 @@ ax10.set_xticks([0, 0.5*np.pi, np.pi])
 ax10.set_xticklabels(['0', '$\\frac{1}{2}\\pi$', '$\\pi$'])
 ax10.grid(True)
 fig10.savefig('{}/{}_nuDirTheta_bestindiv.png'.format(g.destination, g.indiv))
+
+
+

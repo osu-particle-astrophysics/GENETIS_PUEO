@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 #This file came from Will with some GENETIS specific modifications by Dylan
+# Run with:
+# python rootAnalysis.py 1 1 19 /users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Generation_Data 2023_05_08 /users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop
 
 # Imports
 import os
@@ -23,7 +25,7 @@ parser.add_argument("WorkingDir", help="Working Directory", type=str)
 g=parser.parse_args()
 
 
-'''
+
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
 ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
@@ -35,7 +37,7 @@ ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib
 ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
 ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
-
+'''
 
 def EffectiveVolume2(thisColor,thisLabel):
 
@@ -43,13 +45,12 @@ def EffectiveVolume2(thisColor,thisLabel):
     print(root)
     
     allTreePattern = "IceFinal_allTree_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"
-    passTreePattern = "IceFinal_passTree_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"+ "1.root"
+    passTreePattern = "IceFinal_skimmed_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"
 
     PassingEvents = defaultdict(list)
     PassingWeights = defaultdict(list)
     TotalEvents = defaultdict(list)
     RawWeights = defaultdict(list)
-
 
     success_runs = []
 
@@ -70,8 +71,6 @@ def EffectiveVolume2(thisColor,thisLabel):
 
                     nuWeights = []
                     nuPasses = []
-
-
 
                     allTree = IceFinalFile.allTree
                     allEvents = allTree.GetEntries()
@@ -96,53 +95,29 @@ def EffectiveVolume2(thisColor,thisLabel):
                     
                     nuWeights = []
                     
-                    passTree = IceFinalFile.passTree
-                    passEvents = passTree.GetEntries()
+                    #passTree = IceFinalFile.passTree
+                    #passEvents = passTree.GetEntries()
+                    skimTree = IceFinalFile.skimTree
+                    passEvents = skimTree.GetEntries()
                 except:
                     #print('error! skipping run')
                     continue
                 
-                df = ROOT.RDataFrame("passTree", fileName)
-                
-                print(df.GetColumnNames())
-                
-                #for i in range(passEvents):
-                 #   passTree.getEvent(i)
-                  #  
-                   # nuPasses.append(1)
+                for i in range(passEvents):
+                    #passTree.GetEvent(i)
+                    skimTree.GetEvent(i)
+                    nuPasses.append(1)
                     #nuWeights.append(passTree.event.neutrino.path.weight/(passTree.event.loop.positionWeight*passTree.event.loop.directionWeight))
-                    #RawWeights[this_energy].append(nuWeights[-1])
+                    nuWeights.append(skimTree.neutrinoPathWeight/(skimTree.positionWeight*skimTree.directionWeight))
+                    RawWeights[this_energy].append(nuWeights[-1])
                 
-                nuWeights = df.Define("nuWeights","event.neutrino.path.weight/(event.loop.positionWeight*event.loop.directionWeight)")
-                #now get a list of the nuWeights column without numpy
-                
-                
-                
-                #nuPasses = df.AsNumpy(["event.neutrino.path.weight"])
-                #Define numpy arrays for the weights and passes
-                #cols = df.AsNumpy(["event.neutrino.path.weight","event.loop.positionWeight","event.loop.directionWeight"])
-                #print("past asNumpy")
-               # nuWeights = cols["event.neutrino.path.weight"]/(cols["event.loop.positionWeight"]*cols["event.loop.directionWeight"])
-                #RawWeights[this_energy].append(nuWeights)
-                
-                #Now append to lists
-                
-
                 PassingEvents[this_energy].append(passEvents)
                 PassingWeights[this_energy].append(np.sum(nuWeights))
                 
 
-
-
-
     E_EV = np.sort(np.asarray(list(PassingEvents.keys())))
 
-
-
-
     E_EV = np.sort(np.asarray(list(PassingEvents.keys())))
-
-
 
     #cross_section_E = np.log10(np.asarray([1e4,2.5e4,6e4,1e5,2.5e5,6e5,1e6,2.5e6,6e6,1e7,2.5e7,6e7,1e8,2.5e8,6e8,1e9,2.5e9,6e9,1e10,2.5e10,6e10,1e11,2.5e11,6e11,1e12]))+9.0#eV
     #cross_sections = np.asarray([0.63e-34,0.12e-33,0.22e-33,0.3e-33,0.49e-33,0.77e-33,0.98e-33,0.15e-32,0.22e-32,0.27e-32,0.4e-32,0.56e-32,0.67e-32,0.94e-32,0.13e-31,0.15e-31,0.2e-31,0.27e-31,0.31e-31,0.41e-31,0.53e-31,0.61e-31,0.8e-31,0.1e-30,0.12e-30])#cm

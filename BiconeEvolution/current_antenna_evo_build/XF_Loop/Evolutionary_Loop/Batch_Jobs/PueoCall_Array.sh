@@ -60,8 +60,8 @@ cat veff_${run_num}.csv >> $WorkingDir/Run_Outputs/$RunName/veff_${gen}_${num}.c
 echo ${seed} >> $WorkingDir/Run_Outputs/$RunName/${gen}_counts.txt #might need to take this in to account to see which veff corresponds to which in the veff file
 # PueoSim v1.1.0 outputs 3 IceFinal files for each run
 mv IceFinal_${run_num}_allTree.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_allTree_${gen}_${num}_${seed}.root
+mv IceFinal_${run_num}_skimmed.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_skimmed_${gen}_${num}_${seed}.root
 mv IceFinal_${run_num}_passTree0.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${seed}_0.root
-mv IceFinal_${run_num}_passTree1.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${seed}_1.root
 # remove the rest of the files (Each takes up multiple GBs)
 rm *.root
 cd ..

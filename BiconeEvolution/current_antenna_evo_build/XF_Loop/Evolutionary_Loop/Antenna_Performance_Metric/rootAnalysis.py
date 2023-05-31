@@ -108,7 +108,7 @@ def EffectiveVolume2(thisColor,thisLabel):
                     skimTree.GetEvent(i)
                     nuPasses.append(1)
                     #nuWeights.append(passTree.event.neutrino.path.weight/(passTree.event.loop.positionWeight*passTree.event.loop.directionWeight))
-                    nuWeights.append(skimTree.neutrinoPathWeight/(skimTree.positionWeight*skimTree.directionWeight))
+                    nuWeights.append(skimTree.neutrinoPathWeight/(skimTree.loopPosWeight*skimTree.loopDirWeight))
                     RawWeights[this_energy].append(nuWeights[-1])
                 
                 PassingEvents[this_energy].append(passEvents)

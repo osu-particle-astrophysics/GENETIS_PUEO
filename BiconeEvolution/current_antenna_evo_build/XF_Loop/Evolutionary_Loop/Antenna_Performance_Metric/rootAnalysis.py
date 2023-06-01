@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #This file came from Will with some GENETIS specific modifications by Dylan
-# Run with:
+# example usage with:
 # python rootAnalysis.py 1 1 19 /users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Generation_Data 2023_05_08 /users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop
 
 # Imports
@@ -36,12 +36,16 @@ ROOT.gInterpreter.Declare('#include "Geoid.h"')
 
 def EffectiveVolume2(thisColor,thisLabel):
 
-    root = g.WorkingDir + "/Run_Outputs/" + g.RunName + "/Root_Files/" + str(g.gen) + "_Root_Files"
+    #root = g.WorkingDir + "/Run_Outputs/" + g.RunName + "/Root_Files/" + str(g.gen) + "_Root_Files"
+    root = "{}/Run_Outputs/{}/Root_Files/{}_Root_Files".format(g.WorkingDir, g.RunName, g.gen)
+    
     print(root)
     
-    allTreePattern = "IceFinal_allTree_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"
-    passTreePattern = "IceFinal_skimmed_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"
-
+    #allTreePattern = "IceFinal_allTree_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"
+    #passTreePattern = "IceFinal_skimmed_" + str(g.gen) + "_" + str(g.indiv) + "_" + "*"
+    allTreePattern = "IceFinal_allTree_{}_{}_*".format(g.gen, g.indiv)
+    passTreePattern = "IceFinal_skimmed_{}_{}_*".format(g.gen, g.indiv)
+    
     PassingEvents = defaultdict(list)
     PassingWeights = defaultdict(list)
     TotalEvents = defaultdict(list)
@@ -90,8 +94,6 @@ def EffectiveVolume2(thisColor,thisLabel):
                     
                     nuWeights = []
                     
-                    #passTree = IceFinalFile.passTree
-                    #passEvents = passTree.GetEntries()
                     skimTree = IceFinalFile.skimTree
                     passEvents = skimTree.GetEntries()
                 except Exception as e:
@@ -99,10 +101,9 @@ def EffectiveVolume2(thisColor,thisLabel):
                     continue
                 
                 for i in range(passEvents):
-                    #passTree.GetEvent(i)
                     skimTree.GetEvent(i)
                     nuPasses.append(1)
-                    #nuWeights.append(passTree.event.neutrino.path.weight/(passTree.event.loop.positionWeight*passTree.event.loop.directionWeight))
+
                     nuWeights.append(skimTree.neutrinoPathWeight/(skimTree.loopPosWeight*skimTree.loopDirWeight))
                     RawWeights[this_energy].append(nuWeights[-1])
                 
@@ -118,7 +119,7 @@ def EffectiveVolume2(thisColor,thisLabel):
     #cross_sections = np.asarray([0.63e-34,0.12e-33,0.22e-33,0.3e-33,0.49e-33,0.77e-33,0.98e-33,0.15e-32,0.22e-32,0.27e-32,0.4e-32,0.56e-32,0.67e-32,0.94e-32,0.13e-31,0.15e-31,0.2e-31,0.27e-31,0.31e-31,0.41e-31,0.53e-31,0.61e-31,0.8e-31,0.1e-30,0.12e-30])#cm
     #interp_cross = np.interp(E_EV,cross_section_E,cross_sections) #cm^2
     
-    IceVolume = 2.68592e7 #km^3
+    ice_volume = 2.68592e7 #km^3
     #rho_factor=917.0/1000.00 #g/cm^3
     #m_n = 1.67e-24 #g
 
@@ -157,11 +158,11 @@ def EffectiveVolume2(thisColor,thisLabel):
         error_p, error_m = AddErrors(RawWeights[en])
         #print(total_weighted,events_error,total_weighted*frac_error_p,total_weighted*frac_error_m)
 
-        effective_V.append(IceVolume*total_weighted/total_events*4*np.pi)
-        #print("effective V is ", IceVolume*total_weighted/total_events*4*np.pi)
-        #print("components were", IceVolume, total_weighted, total_events)
-        effective_V_p.append(IceVolume*(error_p)/total_events*4*np.pi)
-        effective_V_m.append(IceVolume*(error_m)/total_events*4*np.pi)
+        effective_V.append(ice_volume*total_weighted/total_events*4*np.pi)
+        #print("effective V is ", ice_volume*total_weighted/total_events*4*np.pi)
+        #print("components were", ice_volume, total_weighted, total_events)
+        effective_V_p.append(ice_volume*(error_p)/total_events*4*np.pi)
+        effective_V_m.append(ice_volume*(error_m)/total_events*4*np.pi)
         #effective_A.append(effective_V[-1]/(L_int/100000))#factor of 100000 to convert from cm to km 
 
     #all_weighted = np.asarray(all_weighted)
@@ -172,25 +173,21 @@ def EffectiveVolume2(thisColor,thisLabel):
     effective_V_p = np.asarray(effective_V_p)
     effective_V_m = np.asarray(effective_V_m)
 
-
-    with open(g.opath+"/"+str(g.gen)+"_pueoOut.csv",'a') as f:
-        f.write(str(g.indiv)+","+str(effective_V[0])+","+str(effective_V_p[0])+","+str(effective_V_m[0])+"\n")
-        print("Writing to:", g.opath+"/"+str(g.gen)+"_pueoOut.csv" )
-
-    with open(g.opath+"/"+str(g.gen)+"_fitnessScores.csv",'a') as f:
-        f.write(str(effective_V[0])+"\n")
-        print("Writing to:", g.opath+"/"+str(g.gen)+"_fitnessScores.csv")
-
-    with open(g.opath+"/"+str(g.gen)+"_vEffectives.csv",'a') as f:
-        f.write(str(effective_V[0])+"\n")
-        print("Writing to:", g.opath+"/"+str(g.gen)+"_fitnessScores.csv")
-
-    with open(g.opath+"/"+str(g.gen)+"_errorBars.csv",'a') as f:
-        f.write(str(effective_V_p[0])+","+str(effective_V_m[0])+"\n")
-        print("Writing to:", g.opath+"/"+str(g.gen)+"_errorBars.csv")
-
-
-
+    with open("{}/{}_pueoOut.csv".format(g.opath, g.gen), 'a') as f:
+        f.write("{},{},{},{}\n".format(g.indiv, effective_V[0], effective_V_p[0], effective_V_m[0]))
+        print("Writing to:", "{}/{}_pueoOut.csv".format(g.opath, g.gen))
+    
+    with open("{}/{}_fitnessScores.csv".format(g.opath, g.gen), 'a') as f:
+        f.write("{}\n".format(effective_V[0]))
+        print("Writing to:", "{}/{}_fitnessScores.csv".format(g.opath, g.gen))
+    
+    with open("{}/{}_vEffectives.csv".format(g.opath, g.gen), 'a') as f:
+        f.write("{}\n".format(effective_V[0]))
+        print("Writing to:", "{}/{}_vEffectives.csv".format(g.opath, g.gen))
+        
+    with open("{}/{}_errorBars.csv".format(g.opath, g.gen), 'a') as f:
+        f.write("{},{}\n".format(effective_V_p[0], effective_V_m[0]))
+        print("Writing to:", "{}/{}_errorBars.csv".format(g.opath, g.gen))
 
 
 def AddErrors(all_weights):

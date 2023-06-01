@@ -22,7 +22,7 @@ parser.add_argument("energy", help="Individual", type=int)
 parser.add_argument("opath", help="Output path", type=str)
 parser.add_argument("RunName", help="Run Name", type=str)
 parser.add_argument("WorkingDir", help="Working Directory", type=str)
-g=parser.parse_args()
+g = parser.parse_args()
 
 
 

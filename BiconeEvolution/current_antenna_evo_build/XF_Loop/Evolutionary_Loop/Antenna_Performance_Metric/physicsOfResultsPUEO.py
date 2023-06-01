@@ -123,8 +123,8 @@ def getFiles(source, energy, indiv):
                     nuPasses = []
                     print(passEvents)
                     
-                except:
-                    print("Error opening file")
+                except Exception as e:
+                    print("Error opening file", e)
                     continue
                 
                 

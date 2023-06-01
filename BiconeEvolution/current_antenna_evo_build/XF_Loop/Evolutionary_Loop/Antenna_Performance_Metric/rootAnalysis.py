@@ -16,10 +16,10 @@ import ROOT
 # Global Variables
 desc = 'Analyze the root files and output fitness scores and errors'
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument("gen", help="current gen", type=int)
-parser.add_argument("indiv", help="Individual", type=int)
-parser.add_argument("energy", help="Individual", type=int)
-parser.add_argument("opath", help="Output path", type=str)
+parser.add_argument("gen", help="Current generation", type=int)
+parser.add_argument("indiv", help="Index of the individual", type=int)
+parser.add_argument("energy", help="Energy exponent of simulated nus", type=int)
+parser.add_argument("opath", help="Output file path", type=str)
 parser.add_argument("RunName", help="Run Name", type=str)
 parser.add_argument("WorkingDir", help="Working Directory", type=str)
 g = parser.parse_args()
@@ -33,13 +33,6 @@ ROOT.gSystem.Load(lib_dir + 'libAntarcticaRoot.so')
 ROOT.gSystem.Load(lib_dir + 'libAnitaEvent.so')
 ROOT.gSystem.Load(lib_dir + 'libPueoSim.so')
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
-'''
-ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
-ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
-ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
-ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
-ROOT.gInterpreter.Declare('#include "Geoid.h"')
-'''
 
 def EffectiveVolume2(thisColor,thisLabel):
 

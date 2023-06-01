@@ -64,12 +64,7 @@ var = ['trigg', 'passed', 'passWeight', 'rawWeights',
        'interactionStrength', 'showerPnuEv', 'maxEField', 
        'maxEFieldFreq', 'nu_e', 'nu_m', 'nu_t', 'RFx', 'RFy', 
        'RFz', 'RFdirCosTheta', 'RFdirTheta', 'nuDirCosTheta', 
-       'nuDirTheta']
-
-
-#Create a multigraph for the signalAtDetector TGraphs
-#signalAtDetectorMother = ROOT.TMultiGraph()
-
+       'nuDirTheta', 'RFdir_localCosTheta', 'RFdir_localTheta']
 
 for x in var:
     var_dict['{0}'.format(x)] = []
@@ -84,7 +79,7 @@ def getFiles(source, energy, indiv):
     root = source
     print(root)
     all_tree_pattern = "IceFinal_allTree_*_{}_*.root".format(indiv)
-    pass_tree_pattern = "IceFinal_passTree_*_{}_*_1.root".format(indiv)
+    pass_tree_pattern = "IceFinal_passTree_*_{}_*_0.root".format(indiv)
 
     # Walk through the directory and find the root files
     for path, subdirs, files in os.walk(root):
@@ -132,8 +127,6 @@ def getFiles(source, energy, indiv):
                 passTree.GetEvent(0)
                 #Create a canvas for the TGraphs
                 c = ROOT.TCanvas("c", "c", 1000, 1000)
-                c.Divide(1, 2)
-                c.cd(1)
                 signalAtDetector = passTree.event.signalAtDetector
                 # Add titles and axes to the TGraph and then save as a png
                 signalAtDetector.SetTitle("Signal at Detector for {} EeV Neutrinos".format(g.energy))
@@ -145,17 +138,6 @@ def getFiles(source, energy, indiv):
                 signalAtDetector.SetMarkerSize(0.5)
                 signalAtDetector.SetMarkerColor(1)
                 signalAtDetector.Draw()
-                c.cd(2)
-                signalAtSource = passTree.event.signalAt1m
-                signalAtSource.SetTitle("Signal at 1m for {} EeV Neutrinos".format(g.energy))
-                signalAtSource.GetXaxis().SetTitle("Time (ns)")
-                signalAtSource.GetYaxis().SetTitle("Voltage (V)")
-                signalAtSource.SetLineColor(1)
-                signalAtSource.SetLineWidth(2)
-                signalAtSource.SetMarkerStyle(20)
-                signalAtSource.SetMarkerSize(0.5)
-                signalAtSource.SetMarkerColor(1)
-                signalAtSource.Draw()
                 c.Print("{}/signalPlots/{}_{}_signals_bestindiv.png".format(g.destination, g.indiv, counter))
                 counter += 1
                 c.Close()
@@ -196,7 +178,8 @@ def getFiles(source, energy, indiv):
                     RFdirTheta = passTree.event.RFdir.Theta()
                     nuDirCosTheta = passTree.event.neutrino.path.direction.CosTheta()
                     nuDirTheta = passTree.event.neutrino.path.direction.Theta()
-                    
+                    RFdir_localCosTheta = passTree.event.RFdir_local.CosTheta()
+                    RFdir_localTheta = passTree.event.RFdir_local.Theta()
                     
                     
                     if passTree.event.neutrino.flavor == 1:
@@ -211,7 +194,8 @@ def getFiles(source, energy, indiv):
                             interactionLength, interactionCrossSection, 
                             interactionStrength, showerPnuEv, maxEField,
                             maxEFieldFreq, nu_e, nu_m, nu_t, RFx, RFy, 
-                            RFz, RFdirCosTheta, RFdirTheta, nuDirCosTheta, nuDirTheta]
+                            RFz, RFdirCosTheta, RFdirTheta, nuDirCosTheta, 
+                            nuDirTheta, RFdir_localCosTheta, RFdir_localTheta]
                     
                     for k, v in enumerate(all_var):
                         var_dict[var[k]].append(v)
@@ -230,8 +214,7 @@ print("Plotting")
 ### Plotting ###
 mpl.rcParams['text.usetex'] = True
 # colorblind friendly colors
-plotting_colors = ['#00429d', '#4771b2', '#73a2c6', '#a5d5d8', '#ffffe0', 
-                   '#ffbcaf', '#f4777f', '#cf3759', '#93003a']
+plotting_colors = ['#00429d', '#4771b2', '#73a2c6', '#a5d5d8', '#ffffe0', '#ffbcaf', '#f4777f', '#cf3759', '#93003a']
 
 #plotting the number of each type of neutrino that passed
 #Note: 1 = nu_e, 2 = nu_mu, 3 = nu_tau
@@ -301,5 +284,26 @@ ax10.set_xticklabels(['0', '$\\frac{1}{2}\\pi$', '$\\pi$'])
 ax10.grid(True)
 fig10.savefig('{}/{}_nuDirTheta_bestindiv.png'.format(g.destination, g.indiv))
 
+#Plot a histogram of the RF local direction theta
+fig11 = plt.figure()
+ax11 = fig11.add_subplot(111)
+N, bins, patches = ax11.hist(var_dict['RFdir_localTheta'], bins=100,
+                                range=(0, 3.14), align='mid', rwidth=0.8, color = plotting_colors[0])
+ax11.set_xlabel('RF Local Direction $\\theta$ (rad)')
+ax11.set_ylabel('Number of Events')
+ax11.set_title('RF Local Direction $\\theta$ for {} EeV Neutrinos'.format(g.energy))
+ax11.set_xticks([0, 0.5*np.pi, np.pi])
+ax11.set_xticklabels(['0', '$\\frac{1}{2}\\pi$', '$\\pi$'])
+ax11.grid(True)
+fig11.savefig('{}/{}_RFdir_localTheta_bestindiv.png'.format(g.destination, g.indiv))
 
-
+#Plot a histogram of the RF local direction cosine theta
+fig12 = plt.figure()
+ax12 = fig12.add_subplot(111)
+N, bins, patches = ax12.hist(var_dict['RFdir_localCosTheta'], bins=100,
+                                range=(0, 1), align='mid', rwidth=0.8, color = plotting_colors[0])
+ax12.set_xlabel('RF Local Direction Cosine $\\theta$')
+ax12.set_ylabel('Number of Events')
+ax12.set_title('RF Local Direction Cosine $\\theta$ for {} EeV Neutrinos'.format(g.energy))
+ax12.grid(True)
+fig12.savefig('{}/{}_RFdir_localCosTheta_bestindiv.png'.format(g.destination, g.indiv))

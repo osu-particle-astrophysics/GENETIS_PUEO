@@ -42,8 +42,8 @@ def read_DNA(DNA_file):
         "H": DNA_csv.iloc[:, 1].values,
         "Xi": DNA_csv.iloc[:, 2].values,
         "Yi": DNA_csv.iloc[:, 3].values,
-        "Zf": DNA_csv.iloc[:, 4].values,
-        "Yf": DNA_csv.iloc[:, 5].values,
+        "Yf": DNA_csv.iloc[:, 4].values,
+        "Zf": DNA_csv.iloc[:, 5].values,
         "beta": DNA_csv.iloc[:, 6].values
     }
     DNA_list = []

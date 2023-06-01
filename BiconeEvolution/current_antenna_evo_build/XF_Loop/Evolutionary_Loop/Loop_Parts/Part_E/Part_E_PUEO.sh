@@ -52,6 +52,13 @@ do
 	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName
 done
 
+module load python/3.6-conda5.2
+
+if [ $gen -gt 0 ]
+then
+	python newCombineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
+fi
+
 cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
 echo "The Ohio State University GENETIS Data." > $WorkingDir/Generation_Data/fitnessScores.csv
 echo "Current generation's fitness scores:" >> $WorkingDir/Generation_Data/fitnessScores.csv
@@ -88,10 +95,9 @@ cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/Generat
 
 cd $WorkingDir/Antenna_Performance_Metric
 
-#Plotting software for Veff(for each individual) vs Generation
-module load python/3.6-conda5.2
+
 source set_plotting_env.sh
-##currently doesn't work as vEffective.csv files aren't being made.
+
 
 cd $WorkingDir
 

@@ -8,12 +8,12 @@ example usage: python physicsOfResultsPUEO.py /fs/ess/PAS1960/HornEvolutionOSC/G
 =======================
 '''
 
-
 # Imports
 import os
 import argparse
 from collections import defaultdict
 from fnmatch import fnmatch
+
 
 import numpy as np
 import matplotlib as mpl
@@ -32,10 +32,13 @@ parser.add_argument("indiv", help="individual number", type=int)
 parser.add_argument("energy", help="energy of neutrino", type=int)
 g = parser.parse_args()
 
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
+libPath = "/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib"
+#libPath = "/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib"
+
+ROOT.gSystem.Load(libPath + "/libNiceMC.so")
+ROOT.gSystem.Load(libPath + "/libAntarcticaRoot.so")
+ROOT.gSystem.Load(libPath + "/libAnitaEvent.so")
+ROOT.gSystem.Load(libPath + "/libPueoSim.so")
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
 
 '''
@@ -259,6 +262,19 @@ ax7.set_ylabel('Number of Events')
 ax7.set_title('RF Direction Cosine $\\theta$ for {} EeV Neutrinos'.format(g.energy))
 ax7.grid(True)
 fig7.savefig('{}/{}_RFdirCosTheta_bestindiv.png'.format(g.destination, g.indiv))
+
+#Plot a histogram of the RF direction theta
+fig8 = plt.figure()
+ax8 = fig8.add_subplot(111)
+N, bins, patches = ax8.hist(var_dict['RFdirTheta'], bins=100,
+                            range=(0, 3.14), align='mid', rwidth=0.8, color=plotting_colors[0])
+ax8.set_xlabel('RF Direction $\\theta$ (rad)')
+ax8.set_ylabel('Number of Events')
+ax8.set_title('RF Direction $\\theta$ for {} EeV Neutrinos'.format(g.energy))
+ax8.set_xticks([0, 0.5*np.pi, np.pi])
+ax8.set_xticklabels(['0', '$\\frac{1}{2}\\pi$', '$\\pi$'])
+ax8.grid(True)
+fig8.savefig('{}/{}_RFdirTheta_bestindiv.png'.format(g.destination, g.indiv))
 
 #Plot a histogram of the neutrino direction cosine theta
 fig9 = plt.figure()

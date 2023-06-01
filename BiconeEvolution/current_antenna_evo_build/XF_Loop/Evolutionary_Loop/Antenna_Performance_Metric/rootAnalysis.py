@@ -73,8 +73,8 @@ def EffectiveVolume2(thisColor,thisLabel):
                     TotalEvents[this_energy].append(allEvents)
                     
 
-                except:
-                    #print('error! skipping run')
+                except Exception as e:
+                    print('error! skipping run', e)
                     continue
                 success_runs.append(fileName)
                 #If you don't load libraries (or if you can't), you can load events with, e.g. allTree.GetLeaf("eventSummary.neutrino.flavor").GetValue()
@@ -94,8 +94,8 @@ def EffectiveVolume2(thisColor,thisLabel):
                     #passEvents = passTree.GetEntries()
                     skimTree = IceFinalFile.skimTree
                     passEvents = skimTree.GetEntries()
-                except:
-                    #print('error! skipping run')
+                except Exception as e:
+                    print('error! skipping run', e)
                     continue
                 
                 for i in range(passEvents):

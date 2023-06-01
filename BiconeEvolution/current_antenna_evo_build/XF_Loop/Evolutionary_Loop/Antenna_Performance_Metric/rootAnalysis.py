@@ -63,7 +63,7 @@ def EffectiveVolume2(thisColor,thisLabel):
                 # this_energy is leftover from Will's code,
                 # I'll keep it in case we ever decide to simulate
                 # multiple energies at once
-                this_energy=g.energy
+                this_energy = g.energy
 
                 try:
                     fileName = os.path.join(path,name)

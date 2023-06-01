@@ -15,7 +15,7 @@ import ROOT
 
 # Global Variables
 desc = 'Analyze the root files and output fitness scores and errors'
-parser = argparse.ArgumentParser(description = desc)
+parser = argparse.ArgumentParser(description=desc)
 parser.add_argument("gen", help="current gen", type=int)
 parser.add_argument("indiv", help="Individual", type=int)
 parser.add_argument("energy", help="Individual", type=int)

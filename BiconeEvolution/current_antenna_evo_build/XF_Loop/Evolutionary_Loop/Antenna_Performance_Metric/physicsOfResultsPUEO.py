@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import ROOT
 
 # Global Variables
-desc = ('Create the physics of results plots for the GENETIS Pueo project.'
+desc = ('Create the physics of results plots for the GENETIS Pueo project. '
         'This version is built for Python 2.7 and pueoSim v1.1.0')
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument("source", help="source directory of root files", type=str)

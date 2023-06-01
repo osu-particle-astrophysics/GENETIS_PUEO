@@ -26,10 +26,12 @@ g = parser.parse_args()
 
 
 
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
+lib_dir = '/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/'
+# lib_dir = '/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/'
+ROOT.gSystem.Load(lib_dir + 'libNiceMC.so')
+ROOT.gSystem.Load(lib_dir + 'libAntarcticaRoot.so')
+ROOT.gSystem.Load(lib_dir + 'libAnitaEvent.so')
+ROOT.gSystem.Load(lib_dir + 'libPueoSim.so')
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
 '''
 ROOT.gSystem.Load("/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")

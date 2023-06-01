@@ -104,8 +104,8 @@ def getFiles(source, energy, indiv):
                     print(allEvents)
                     TotalEvents[energy].append(allEvents)
                     
-                except:
-                    print("Error opening file")
+                except Exception as e:
+                    print("Error opening file:", e)
                     continue
                 
             elif fnmatch(name, pass_tree_pattern):

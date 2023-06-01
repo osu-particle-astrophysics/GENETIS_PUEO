@@ -54,7 +54,10 @@ done
 
 module load python/3.6-conda5.2
 
-python combineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen
+if [ $gen -gt 0 ]
+then
+	python newCombineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
+fi
 
 cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
 echo "The Ohio State University GENETIS Data." > $WorkingDir/Generation_Data/fitnessScores.csv

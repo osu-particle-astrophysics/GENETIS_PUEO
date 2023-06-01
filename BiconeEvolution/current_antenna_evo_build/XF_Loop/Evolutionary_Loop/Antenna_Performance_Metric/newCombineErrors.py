@@ -109,9 +109,11 @@ def calculateCombinations(matches):
     p_fitness_scores, p_err_plus, p_err_minus = load_csv(prev_fitness, prev_errors, parents)
     c_fitness_scores, c_err_plus, c_err_minus = load_csv(curr_fitness, curr_errors, children)
     
-    fitness_scores = p_fitness_scores + c_fitness_scores
-    err_plus = p_err_plus + c_err_plus
-    err_minus = p_err_minus + c_err_minus
+    # As the parents have already combined errors if there exist multiple of them,
+    # we only want to consider the values of one of them
+    fitness_scores = [p_fitness_scores[0]] + c_fitness_scores
+    err_plus = [p_err_plus[0]] + c_err_plus
+    err_minus = [p_err_minus[0]] + c_err_minus
     print(f"Fitness scores: {fitness_scores}")
     print(f"Errors: {err_plus}, {err_minus}")
     combined_fitness, combined_err_plus, combined_err_minus = combine_measurements(fitness_scores, err_plus, err_minus)
@@ -124,7 +126,7 @@ for key in identical_dict.keys():
     print(f"Combined fitness score of {key}: {combined_fitness} +{combined_err_plus} -{combined_err_minus}")
     
     #Now write the combined fitness score and errors to the fitness and error files
-    
+    '''
     fitness_csv = pd.read_csv(curr_fitness, header=None)
     errors_csv = pd.read_csv(curr_errors, header=None)
     
@@ -135,5 +137,5 @@ for key in identical_dict.keys():
     
     fitness_csv.to_csv(curr_fitness, header=False, index=False)
     errors_csv.to_csv(curr_errors, header=False, index=False)
-    
+    '''
 print("Finished writing combined fitness scores and errors to files!!")

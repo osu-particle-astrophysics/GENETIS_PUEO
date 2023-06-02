@@ -340,7 +340,7 @@ do
 				./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
 			fi
 		else
-			./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $exp
+			sbatch --export=ALL,gen=$gen,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp --job-name=Plotting_${RunName}_${gen} --output=$WorkingDir/Run_Outputs/$RunName/Plotting_Outputs/Plot_%a.output --error=$WorkingDir/Run_Outputs/$RunName/Plotting_Errors/Plot_%a.error ./Loop_Parts/Part_F/Part_F_PUEO.sh
 		fi
 		state=1
 		./SaveState_Prototype.sh $gen $state $RunName $indiv

@@ -124,4 +124,12 @@ mv -f Generation_Data/genes.csv Run_Outputs/$RunName/Generation_Data/${gen}_gene
 mv -f Generation_Data/mutations.csv Run_Outputs/$RunName/Generationa_Data/${gen}_mutations.csv
 mv -f Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_generators.csv
 
+cd $WorkingDir/Run_Outputs/$RunName
+if [ $gen -eq 0 ]
+then
+	mkdir -m775 Plotting_Outputs
+	mkdir -m775 Plotting_Errors
+fi
+
+
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

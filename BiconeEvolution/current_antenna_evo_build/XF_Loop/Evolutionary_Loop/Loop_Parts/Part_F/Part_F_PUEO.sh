@@ -1,27 +1,25 @@
+#!/bin/bash
+## This Job submits the plotting software for the PUEO loop
+## Here's the command:
+## sbatch --export=ALL,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp --job-name=Plotting_${RunName}_${gen} --output=$WorkingDir/Run_Outputs/$RunName/Plotting_Outputs/Plot_%a.output --error=$WorkingDir/Run_Outputs/$RunName/Plotting_Errors/Plot_%a.error ./Loop_Parts/Part_F/Part_F_PUEO.sh
+## Testing with:
+## sbatch --export=ALL,NPOP=50,WorkingDir=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop,RunName=2023_05_08,gen=7,Seeds=10,exp=19 --job-name=Plotting_Test_Run --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Run_Outputs/Test_Run/Plotting_Outputs/Plot_%a.output --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Run_Outputs/Test_Run/Plotting_Errors/Plot_%a.error ./Loop_Parts/Part_F/Part_F_PUEO.sh
+#SBATCH --account=PAS1960
+#SBATCH --time=10:00:00
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=40
+#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/Plotting_Outputs/Plot_%a.output
+#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/Plotting_Errors/Plot_%a.error
 
-########  Plotting (F)  ############################################################################################################################ 
-#
-#
-#      1. Plots in 3D and 2D of current and all previous generation's scores. Saves the 2D plots. Extracts data from $RunName folder in all of the i_generationDNA.csv files. Plots to same directory.
-#
-#
-#################################################################################################################################################### 
-# variables
-NPOP=$1
-WorkingDir=$2
-RunName=$3
-gen=$4
-Seeds=$5
-exp=$6
-#chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
-
-# Current Plotting Software
+#variables
+#NPOP=$1
+#WorkingDir=$2
+#RunName=$3
+#gen=$4
+#Seeds=$5
+#exp=$6
 
 cd $WorkingDir
-
-
-#cp AraOut_ActualBicone_10_18.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
-#cp ARA_Bicone_Data/AraOut_Actual_Bicone_Fixed_Polarity_2.9M_NNU.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
 
 cd Antenna_Performance_Metric
 
@@ -48,9 +46,9 @@ python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $Wor
 
 cd $WorkingDir/Run_Outputs/$RunName
 mail -s "FScore_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < FScorePlot2D.png
-mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fitness_Scores_RG.png
-mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
-mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
+#mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fitness_Scores_RG.png
+#mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
+#mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
 mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
 mv -f *.csv Generation_Data/
 

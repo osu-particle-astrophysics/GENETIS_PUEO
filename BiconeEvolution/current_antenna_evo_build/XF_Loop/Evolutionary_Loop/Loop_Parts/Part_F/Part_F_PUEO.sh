@@ -27,6 +27,10 @@ cd Antenna_Performance_Metric
 
 source set_plotting_env.sh
 
+next_gen=$(($gen+1))
+
+python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
+
 #this is for the rainbow plot
 module load python/3.9-2022.05
 

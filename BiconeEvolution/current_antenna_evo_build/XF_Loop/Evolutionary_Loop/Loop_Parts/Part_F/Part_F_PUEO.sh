@@ -3,13 +3,13 @@
 ## Here's the command:
 ## sbatch --export=ALL,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp --job-name=Plotting_${RunName}_${gen} --output=$WorkingDir/Run_Outputs/$RunName/Plotting_Outputs/Plot_%a.output --error=$WorkingDir/Run_Outputs/$RunName/Plotting_Errors/Plot_%a.error ./Loop_Parts/Part_F/Part_F_PUEO.sh
 ## Testing with:
-## sbatch --export=ALL,NPOP=50,WorkingDir=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop,RunName=2023_05_08,gen=7,Seeds=10,exp=19 --job-name=Plotting_Test_Run --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Run_Outputs/Test_Run/Plotting_Outputs/Plot_%a.output --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Run_Outputs/Test_Run/Plotting_Errors/Plot_%a.error ./Loop_Parts/Part_F/Part_F_PUEO.sh
+## sbatch --export=ALL,NPOP=50,WorkingDir="/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop",RunName="2023_05_08",gen=7,Seeds=10,exp=19,GeoFactor=1 --job-name=Plotting_Test_Run ./Loop_Parts/Part_F/Part_F_PUEO.sh
 #SBATCH --account=PAS1960
 #SBATCH --time=10:00:00
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
-#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/Plotting_Outputs/Plot_%a.output
-#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/Plotting_Errors/Plot_%a.error
+#SBATCH --cpus-per-task=8
+#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/Plot.output
+#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/Plot.error
 
 #variables
 #NPOP=$1
@@ -18,14 +18,18 @@
 #gen=$4
 #Seeds=$5
 #exp=$6
+#GeoFactor=$7
 
-cd $WorkingDir
+#d $WorkingDir
 
-cd Antenna_Performance_Metric
+#cd Antenna_Performance_Metric
+cd /users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric
 
 source set_plotting_env.sh
 
 next_gen=$(($gen+1))
+
+module load python/3.7-2019.10
 
 python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
 
@@ -40,8 +44,9 @@ module load python/3.7-2019.10
 # Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
 python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
-python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
+#python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
+echo 'Starting image maker portion...'
 ./image_maker.sh $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen} $WorkingDir/Run_Outputs/$RunName $gen $WorkingDir $RunName $NPOP $PSIMDIR $exp
 
 cd $WorkingDir/Run_Outputs/$RunName

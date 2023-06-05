@@ -7,16 +7,17 @@ Use `python physicsOfResultsPUEO.py --help` for usage instructions.
 example usage: python physicsOfResultsPUEO.py /fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/2023_05_08/Root_Files/10_Root_Files /users/PAS1960/dylanwells1629/plots 2 19
 =======================
 '''
-
+print("Importing")
 # Imports
 import os
 import argparse
 from collections import defaultdict
 from fnmatch import fnmatch
 
-
 import numpy as np
 import matplotlib as mpl
+mpl.use('Agg')
+
 import matplotlib.pyplot as plt
 
 import ROOT
@@ -32,13 +33,16 @@ parser.add_argument("indiv", help="individual number", type=int)
 parser.add_argument("energy", help="energy of neutrino", type=int)
 g = parser.parse_args()
 
+print(g.source, g.destination, g.indiv, g.energy)
+
 libPath = "/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib"
 #libPath = "/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib"
 
-ROOT.gSystem.Load(libPath + "/libNiceMC.so")
-ROOT.gSystem.Load(libPath + "/libAntarcticaRoot.so")
-ROOT.gSystem.Load(libPath + "/libAnitaEvent.so")
-ROOT.gSystem.Load(libPath + "/libPueoSim.so")
+print(libPath + "/libNiceMC.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
+ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
 
 '''
@@ -127,24 +131,7 @@ def getFiles(source, energy, indiv):
                 
                 
 
-                passTree.GetEvent(0)
-                #Create a canvas for the TGraphs
-                c = ROOT.TCanvas("c", "c", 1000, 1000)
-                signalAtDetector = passTree.event.signalAtDetector
-                # Add titles and axes to the TGraph and then save as a png
-                signalAtDetector.SetTitle("Signal at Detector for {} EeV Neutrinos".format(g.energy))
-                signalAtDetector.GetXaxis().SetTitle("Time (ns)")
-                signalAtDetector.GetYaxis().SetTitle("Voltage (V)")
-                signalAtDetector.SetLineColor(1)
-                signalAtDetector.SetLineWidth(2)
-                signalAtDetector.SetMarkerStyle(20)
-                signalAtDetector.SetMarkerSize(0.5)
-                signalAtDetector.SetMarkerColor(1)
-                signalAtDetector.Draw()
-                c.Print("{}/signalPlots/{}_{}_signals_bestindiv.png".format(g.destination, g.indiv, counter))
-                counter += 1
-                c.Close()
-                
+                passTree.GetEvent(0)             
                 
                 for i in range(passEvents):
                     j += 1
@@ -235,7 +222,7 @@ ax1.set_xticks([1, 2, 3])
 ax1.set_xticklabels(['$\\nu_e$', '$\\nu_\\mu$', '$\\nu_\\tau$'])
 ax1.grid(True)
 fig1.savefig('{}/{}_neutrinoFlavor_bestindiv.png'.format(g.destination, g.indiv))
-
+'''
 #plot a 2d histogram of the maximum electric field against the maximum electric field frequency
 fig5 = plt.figure()
 ax5 = fig5.add_subplot(111)
@@ -323,3 +310,4 @@ ax12.set_ylabel('Number of Events')
 ax12.set_title('RF Local Direction Cosine $\\theta$ for {} EeV Neutrinos'.format(g.energy))
 ax12.grid(True)
 fig12.savefig('{}/{}_RFdir_localCosTheta_bestindiv.png'.format(g.destination, g.indiv))
+'''

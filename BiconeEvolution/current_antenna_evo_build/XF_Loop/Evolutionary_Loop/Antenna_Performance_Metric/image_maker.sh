@@ -33,8 +33,7 @@ echo $photoSourceDir
 echo $destinationDir
 echo $RunName
 #
-#cd $WorkingDir/Antenna_Performance_Metric
-cd /users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric
+cd $WorkingDir/Antenna_Performance_Metric
 ### Creates a temporary file to hold the index of the best detector
 touch temp_best.csv
 touch temp_mid.csv
@@ -54,11 +53,16 @@ min_index=`cat temp_worst.csv`
 #make sure the correct python is loaded (default 2.7)
 module load python/3.7-2019.10
 module unload python/3.7-2019.10
-source $PSIMDIR/set_env.sh
+source /fs/ess/PAS1960/buildingPueoSim/set_env.sh
+#source $PSIMDIR/set_env.sh
 
 echo "starting PORP"
 ls -alrt
-python physicsOfResultsPUEO.py $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files $WorkingDir/Run_Outputs/$RunName/Plots/GenerationData $max_index $exp
+
+echo "max index: $max_index"
+echo "exp: $exp"
+
+python physicsOfResultsPUEO.py $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files $WorkingDir/Run_Outputs/$RunName/Generation_Data $max_index $exp
 
 mkdir ${destinationDir}/${gen}_detector_photos
 mv ${photoSourceDir}/${max_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${max_index}_detector_max.png

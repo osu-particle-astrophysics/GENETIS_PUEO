@@ -16,7 +16,7 @@ g = parser.parse_args()
 
 # The name of the plot that will be put into the destination folder, g.destination
 PlotName = "VariablePlot"
-variablePlotNames = ["S", "H", "Xi", "Yi", "Zf", "Yf", "beta"]
+variablePlotNames = ["S", "H", "Xi", "Yi", "Yf", "Zf", "beta"]
 
 #----------DEFINITIONS HERE----------DEFINITIONS HERE----------DEFINITIONS HERE----------DEFINITIONS HERE
 #----------STARTS HERE----------STARTS HERE----------STARTS HERE----------STARTS HERE 
@@ -69,8 +69,8 @@ variables = {
     "H": [runData[:,:, 1].flatten(), []],  
     "Xi": [runData[:,:, 2].flatten(), []],
     "Yi": [runData[:,:, 3].flatten(), []],
-    "Zf": [runData[:,:, 4].flatten(), []],
-    "Yf": [runData[:,:, 5].flatten(), []],
+    "Yf": [runData[:,:, 4].flatten(), []],
+    "Zf": [runData[:,:, 5].flatten(), []],
     "beta": [runData[:,:, 6].flatten(), []],
     "fitness": [runData[:,:, 7].flatten(), []]
 }
@@ -96,8 +96,8 @@ axS = fig.add_subplot(1,7,1)
 axH = fig.add_subplot(1,7,2)
 axXi = fig.add_subplot(1,7,3)
 axYi = fig.add_subplot(1,7,4)
-axZf = fig.add_subplot(1,7,5)
-axYf = fig.add_subplot(1,7,6)
+axYf = fig.add_subplot(1,7,5)
+axZf = fig.add_subplot(1,7,6)
 axBeta = fig.add_subplot(1,7,7)
 # increase the space between the subplots
 plt.subplots_adjust(wspace = 0.5)

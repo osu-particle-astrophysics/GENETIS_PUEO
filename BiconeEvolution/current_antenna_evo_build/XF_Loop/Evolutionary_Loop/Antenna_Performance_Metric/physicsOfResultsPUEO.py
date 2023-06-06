@@ -38,11 +38,10 @@ print(g.source, g.destination, g.indiv, g.energy)
 libPath = "/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib"
 #libPath = "/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib"
 
-print(libPath + "/libNiceMC.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libNiceMC.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAntarcticaRoot.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libAnitaEvent.so")
-ROOT.gSystem.Load("/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/libPueoSim.so")
+ROOT.gSystem.Load(libPath + "/libNiceMC.so")
+ROOT.gSystem.Load(libPath + "/libAntarcticaRoot.so")
+ROOT.gSystem.Load(libPath + "/libAnitaEvent.so")
+ROOT.gSystem.Load(libPath + "/libPueoSim.so")
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
 
 '''

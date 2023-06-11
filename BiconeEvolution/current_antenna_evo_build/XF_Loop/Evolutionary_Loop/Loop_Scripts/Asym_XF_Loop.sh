@@ -340,7 +340,7 @@ do
 				./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
 			fi
 		else
-			./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $exp
+			sbatch --export=ALL,gen=$gen,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp,GeoFactor=$ScaleFactor,PSIMDIR=$PSIMDIR --job-name=Plotting_${RunName}_${gen}  ./Loop_Parts/Part_F/Part_F_PUEO.sh
 		fi
 		state=1
 		./SaveState_Prototype.sh $gen $state $RunName $indiv

@@ -39,15 +39,31 @@ touch temp_best.csv
 touch temp_mid.csv
 touch temp_worst.csv
 #
+echo "touched temp files"
 ### Runs a Python script that identifies the index of the best detector
 python3 image_finder.py $fitnessSourceDir $gen
 #
+echo "past iamge finder"
 ### Stores the indices of the best, middle, and worst individuals in variables
 max_index=`cat temp_best.csv`
 mid_index=`cat temp_mid.csv`
 min_index=`cat temp_worst.csv`
 #
 ### Makes directory for this generation's photos, then moves the indicated photos into it
+#make sure the correct python is loaded (default 2.7)
+module load python/3.7-2019.10
+module unload python/3.7-2019.10
+source $PSIMDIR/set_env.sh
+#source $PSIMDIR/set_env.sh
+
+echo "starting PORP"
+ls -alrt
+
+echo "max index: $max_index"
+echo "exp: $exp"
+
+python physicsOfResultsPUEO.py $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files $WorkingDir/Run_Outputs/$RunName/Generation_Data $max_index $exp
+
 mkdir ${destinationDir}/${gen}_detector_photos
 mv ${photoSourceDir}/${max_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${max_index}_detector_max.png
 mv ${photoSourceDir}/${mid_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${mid_index}_detector_mid.png
@@ -64,14 +80,9 @@ freqNum=11
 
 mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots
 
-python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots $freqNum $doubleNPOP $gen
-
-#make sure the correct python is loaded (default 2.7)
 module load python/3.7-2019.10
-module unload python/3.7-2019.10
-source $PSIMDIR/set_env.sh
 
-python physicsOfResultsPUEO.py $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files $WorkingDir/Run_Outputs/$RunName/Plots/Generation_${gen} $max_index $exp
+python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots $freqNum $doubleNPOP $gen
 
 #
 ### Removes temporary files

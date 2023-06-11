@@ -1,31 +1,37 @@
+#!/bin/bash
+## This Job submits the plotting software for the PUEO loop
+#SBATCH --account=PAS1960
+#SBATCH --time=10:00:00
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8
+#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/Plot.output
+#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/Plot.error
 
-########  Plotting (F)  ############################################################################################################################ 
-#
-#
-#      1. Plots in 3D and 2D of current and all previous generation's scores. Saves the 2D plots. Extracts data from $RunName folder in all of the i_generationDNA.csv files. Plots to same directory.
-#
-#
-#################################################################################################################################################### 
-# variables
-NPOP=$1
-WorkingDir=$2
-RunName=$3
-gen=$4
-Seeds=$5
-exp=$6
-#chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
+#variables
+#NPOP=$1
+#WorkingDir=$2
+#RunName=$3
+#gen=$4
+#Seeds=$5
+#exp=$6
+#GeoFactor=$7
+#PSIMDIR=$8
 
-# Current Plotting Software
-
+echo "exp: $exp"
 cd $WorkingDir
-
-
-#cp AraOut_ActualBicone_10_18.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
-#cp ARA_Bicone_Data/AraOut_Actual_Bicone_Fixed_Polarity_2.9M_NNU.txt Run_Outputs/$RunName/AraOut_ActualBicone.txt
 
 cd Antenna_Performance_Metric
 
+echo 'Starting image maker portion...'
+./image_maker.sh $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen} $WorkingDir/Run_Outputs/$RunName $gen $WorkingDir $RunName $NPOP $PSIMDIR $exp
+
 source set_plotting_env.sh
+
+next_gen=$(($gen+1))
+
+module load python/3.7-2019.10
+
+python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
 
 #this is for the rainbow plot
 module load python/3.9-2022.05
@@ -38,15 +44,13 @@ module load python/3.7-2019.10
 # Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
 python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
-python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
-
-./image_maker.sh $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen} $WorkingDir/Run_Outputs/$RunName $gen $WorkingDir $RunName $NPOP $PSIMDIR $exp
+#python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
 cd $WorkingDir/Run_Outputs/$RunName
 mail -s "FScore_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < FScorePlot2D.png
-mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fitness_Scores_RG.png
-mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
-mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
+#mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fitness_Scores_RG.png
+#mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
+#mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
 mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
 mv -f *.csv Generation_Data/
 

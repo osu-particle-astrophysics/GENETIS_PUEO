@@ -114,19 +114,6 @@ fi
 #I have updated gensData to read from the run directory, as using the GenerationData directory didn't make much sense to me.
 python Antenna_Performance_Metric/gensDataPUEO.py $gen $WorkingDir/Run_Outputs/$RunName/Generation_Data  
 
-cd Antenna_Performance_Metric
-
-python Veff_Plotting_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
-
-next_gen=$(($gen+1))
-
-python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
-
-
-python3 avg_freq.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $gen $XFProj 131 $NPOP
-
-cd $XFProj
-mv -f gain_vs_freq.png gain_vs_freq_gen_$gen.png
 
 echo 'Congrats on getting a fitness score!'
 
@@ -136,5 +123,13 @@ mv -f Generation_Data/parents.csv Run_Outputs/$RunName/Generation_Data/${gen}_pa
 mv -f Generation_Data/genes.csv Run_Outputs/$RunName/Generation_Data/${gen}_genes.csv
 mv -f Generation_Data/mutations.csv Run_Outputs/$RunName/Generationa_Data/${gen}_mutations.csv
 mv -f Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_generators.csv
+
+cd $WorkingDir/Run_Outputs/$RunName
+if [ $gen -eq 0 ]
+then
+	mkdir -m775 Plotting_Outputs
+	mkdir -m775 Plotting_Errors
+fi
+
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

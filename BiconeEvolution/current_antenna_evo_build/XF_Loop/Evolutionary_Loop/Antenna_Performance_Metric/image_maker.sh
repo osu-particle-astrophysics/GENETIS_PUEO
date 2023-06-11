@@ -53,7 +53,7 @@ min_index=`cat temp_worst.csv`
 #make sure the correct python is loaded (default 2.7)
 module load python/3.7-2019.10
 module unload python/3.7-2019.10
-source /fs/ess/PAS1960/buildingPueoSim/set_env.sh
+source $PSIMDIR/set_env.sh
 #source $PSIMDIR/set_env.sh
 
 echo "starting PORP"

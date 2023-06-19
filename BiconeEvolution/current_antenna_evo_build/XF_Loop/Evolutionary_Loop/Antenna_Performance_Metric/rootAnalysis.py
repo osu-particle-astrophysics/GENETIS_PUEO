@@ -93,6 +93,7 @@ def EffectiveVolume2(thisColor,thisLabel):
                     this_energy=g.energy
                     
                     nuWeights = []
+                    nuPasses = []
                     
                     skimTree = IceFinalFile.skimTree
                     passEvents = skimTree.GetEntries()

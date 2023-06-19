@@ -25,7 +25,7 @@ sigma=${12}
 
 cd $WorkingDir
 
-g++ -std=c++11 GA/SourceFiles/New_GA.cpp -o GA/New_GA.exe
+g++ -std=c++11 GA/Shared-Code/GA/SourceFiles/New_GA.cpp -o GA/New_GA.exe
 ./GA/New_GA.exe PUEO $gen $NPOP $rank_no $roulette_no $tournament_no $reproduction_no $crossover_no $mutationRate $sigma
 
 cp Generation_Data/generationDNA.csv Run_Outputs/$RunName/Generation_Data/${gen}_generationDNA.csv

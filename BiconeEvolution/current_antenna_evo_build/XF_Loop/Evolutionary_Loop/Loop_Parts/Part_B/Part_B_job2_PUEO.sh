@@ -105,9 +105,9 @@ done
 cd $XmacrosDir
 chmod 775 *
 
-FinalIndex=$(($NPOP-1))
+#FinalIndex=$(($NPOP-1))
 
-mkdir -m775 $WorkingDir/Run_Outputs/$RunName/AntennaImages/${gen}
+mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
 for i in `seq $NPOP`
 do
 	mv ${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png

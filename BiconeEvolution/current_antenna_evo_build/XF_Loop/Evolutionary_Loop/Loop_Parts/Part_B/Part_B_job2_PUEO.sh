@@ -27,8 +27,8 @@ XmacrosDir=$6
 XFProj=$7
 GeoFactor=$8
 num_keys=$9
-NSECTIONS=$10
-XFCOUNT=$11
+NSECTIONS=$11
+XFCOUNT=${11}
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 
@@ -70,7 +70,7 @@ rm -f output.xmacro
 
 #echo "var m = $i;" >> output.xmacro
 echo "var NPOP = $NPOP;" >> output.xmacro
-echo "for (var k = $(($gen*$XFCOUNT + 1)); k <= $(($gen*$XFCOUNT+$XFCOUNT)); k++){" >> output.xmacro
+echo "for (var k = $(($gen * $XFCOUNT + 1)); k <= $(($gen * $XFCOUNT + $XFCOUNT)); k++){" >> output.xmacro
 
 if [ $NSECTIONS -eq 1 ] # if 1, then the cone is symmetric
 then

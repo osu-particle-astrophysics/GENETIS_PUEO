@@ -23,8 +23,11 @@ XmacrosDir=$6
 XFProj=$7
 GeoFactor=$8
 num_keys=$9
-SYMMETRY=$10
-XFCOUNT=$11
+SYMMETRY=${10}
+XFCOUNT=${11}
+
+echo $SYMMETRY
+echo $XFCOUNT
 
 ## If we're in the 0th generation, we need to make the directory for the XF jobs
 if [ ${gen} -eq 0 ]
@@ -144,9 +147,9 @@ cat PUEO_skeleton.txt >> simulation_PEC.xmacro
 # Annoying because we need to count to the the opposite of $SYMMETRY
 if [ $SYMMETRY -eq 1 ]
 then
-	vim -c ":%s/SYMMETRY/0" + -c ":wq!" simulation_PEC.xmacro
+	vim -c ':%s/SYMMETRY/0' + -c ':wq!' simulation_PEC.xmacro
 else
-	vim -c ":%s/SYMMETRY/1" + -c ":wq!" simulation_PEC.xmacro
+	vim -c ':%s/SYMMETRY/1' + -c ':wq!' simulation_PEC.xmacro
 fi
 #cat simulationPECmacroskeleton_PUEO.txt >> simulation_PEC.xmacro
 #cat simulationPECmacroskeleton2_PUEO.txt >> simulation_PEC.xmacro

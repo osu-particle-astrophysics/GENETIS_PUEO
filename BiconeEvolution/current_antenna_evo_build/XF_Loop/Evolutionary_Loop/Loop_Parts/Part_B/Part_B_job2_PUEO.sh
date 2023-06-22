@@ -27,7 +27,7 @@ XmacrosDir=$6
 XFProj=$7
 GeoFactor=$8
 num_keys=$9
-NSECTIONS=$11
+NSECTIONS=${11}
 XFCOUNT=${11}
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

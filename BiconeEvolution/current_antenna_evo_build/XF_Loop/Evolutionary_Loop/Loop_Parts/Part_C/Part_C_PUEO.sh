@@ -31,7 +31,7 @@ if [ $SYMMETRY -eq 0 ]
 then
 	python XFintoPUEO.py $NPOP $WorkingDir $RunName $gen $indiv
 else
-	python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $indiv
+	python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen 
 fi
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 

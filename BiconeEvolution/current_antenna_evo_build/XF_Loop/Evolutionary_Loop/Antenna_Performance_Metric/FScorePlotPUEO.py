@@ -9,12 +9,12 @@ import pandas as pd
  
 #---------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES
 
-# We need to grab the three arguments from the bash script or user. These arguments in order are [the name of the source folder of the fitness scores], [the name of the destination folder for the plots], and [the number of generations]
 parser = argparse.ArgumentParser()
 parser.add_argument("source", help="Name of source folder from home directory", type=str)
 parser.add_argument("destination", help="Name of destination folder from home directory (no end dash)", type=str)
 parser.add_argument("NPOP", help="Number of individuals per generation", type=int)
 parser.add_argument("numGens", help="Number of generations the code is running for (no end dash)", type=int)
+parser.add_argument("WorkingDir", help="Name of the working directory", type=str)
 g = parser.parse_args()
 
 # The name of the plot that will be put into the destination folder, g.destination
@@ -39,7 +39,7 @@ for i in range(g.NPOP):
 
 	gen_array.append(gen_num)
 
-#Load in the Fitnesses
+# Load in the Fitnesses (This is old code, but it works, so I'm keeping it)
 
 tempFitnesses = []
 FitnessesArray = []
@@ -93,10 +93,6 @@ for ind in range(0, g.NPOP):
     ErrorsArrayMinus.append(tempErrorsMinus)
     tempErrorsPlus = []
     tempErrorsMinus = []
-#print(ErrorsArrayPlus, ErrorsArrayMinus)
-print(len(ErrorsArrayPlus), len(ErrorsArrayMinus))
-
-
 
 
 # Load in the max, min, and max error
@@ -109,38 +105,33 @@ diffFit = maxFit - minFit
 
 genAxis = np.linspace(0,g.numGens,g.numGens+1,endpoint=True)
 genAxis = [int(i) for i in genAxis]
-''' Put in the average psim when we get it 
-Veff_ARA = []
-Err_plus_ARA = []
-Err_minus_ARA = []
-Veff_ARA_Ref = []
 
-filenameActual = "/AraOut_ActualBicone.txt"
-fpActual = open(g.source + filenameActual)
+#Importing the Toyon Data
+veff_toyon = 0
+veff_toyon_err_plus = 0
+veff_toyon_err_minus = 0
 
-for line in fpActual:
-    if "test Veff(ice) : " in line:
-        Veff_ARA = float(line.split()[5]) #changed from 3 to 5 for switching to km^3 from m^3
-        #print(Veff_ARA)
-    elif "And Veff(water eq.) error plus :" in line:
-        Err_plus_ARA = float(line.split()[6])
-        Err_minus_ARA = float(line.split()[11])
-#    line = fpActual.readline()
-    #print(line)
-'''
+with open(f"{g.WorkingDir}/Toyon_Outputs/0_fitnessScores.csv", "r") as fp:
+    # read in the value in the first line to veff_toyon
+    veff_toyon = float(fp.readline())
+    fp.close()
 
-## Adding line of average fitness score
+toyon_errors_file = pd.read_csv(f"{g.WorkingDir}/Toyon_Outputs/0_errorBars.csv", header=None)
+veff_toyon_err_plus = toyon_errors_file[0][0]
+veff_toyon_err_minus = toyon_errors_file[1][0]
+
+# Adding line of average fitness score
 MeanFitness = []
 MedianFitness = []
 FlippedFitness = np.transpose(FitnessesArray)
-#print(FlippedFitness)
+
 for ind in range(g.numGens+1):	
     mean = sum(FlippedFitness[ind])/g.NPOP
     MeanFitness.append(mean)	
     FlippedFitness[ind].sort()
     MedianFitness.append(FlippedFitness[ind][int(g.NPOP/2)])
 
-#Setting variables for the plots
+# Setting variables for the plots
 major = 5.0
 minor = 3.0
 
@@ -150,25 +141,39 @@ mpl.rcParams['text.usetex'] = True
 plt.figure(figsize=(10, 8))
 
 plt.style.use('seaborn')
-#plt.axhline(y=Veff_ARA, linestyle = '--', color = 'k')
 
 colors = cm.rainbow(np.linspace(0, 1, g.NPOP))
 
 # Testing our colorblind friendly colors
 colors2 = ['#00429d', '#3e67ae', '#618fbf', '#85b7ce', '#b1dfdb', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a']
-plt.axis([-1, g.numGens+1, minFit - maxError*1.2 , maxFit + maxError*1.2])
-plt.plot(genAxis, MeanFitness, linestyle='-', alpha = 1, markersize = 15)
-plt.plot(genAxis, MedianFitness, linestyle='dashed', alpha = 1, markersize = 15)
+
+# Scale to include the toyon data
+if veff_toyon > ( maxFit + (diffFit * 0.25)):
+    max_y = veff_toyon  + (diffFit * 0.25)
+else:
+    max_y = maxFit + (diffFit * 0.25)
+
+plt.axis([-1, g.numGens+1, minFit - (diffFit * 0.25) , max_y])
+plt.plot(genAxis, MeanFitness, linestyle='dotted', alpha = 1, markersize = 15, zorder=9)
+plt.plot(genAxis, MedianFitness, linestyle='dashed', alpha = 1, markersize = 15, zorder=9)
+
+# Plotting the Toyon Data
+plt.axhline(y=veff_toyon, color='black', linestyle='solid', alpha = 1, markersize = 15, zorder=9)
+# Plotting the Toyon Error Bars
+plt.axhline(y=veff_toyon + veff_toyon_err_plus, color='gray', linestyle='dotted', alpha = 1, markersize = 15, zorder=9)
+plt.axhline(y=veff_toyon - veff_toyon_err_minus, color='gray', linestyle='dotted', alpha = 1, markersize = 15, zorder=9)
 
 #plotting with small deviations in the x axis so we can see the data points
 for ind in range(g.NPOP):
     LabelName = "Individual {}".format(ind+1)
-    plt.errorbar(gen_array[ind], FitnessesArray[ind], yerr=[ErrorsArrayMinus[ind], ErrorsArrayPlus[ind]], label = LabelName, marker = 'o', color = colors2[ind%10], linestyle='', alpha = 0.6, markersize = 11, capsize=3, capthick=1)
+    plt.errorbar(gen_array[ind], FitnessesArray[ind], yerr=[ErrorsArrayMinus[ind], ErrorsArrayPlus[ind]], label = LabelName, marker = 'o', color = colors2[ind%10], linestyle='', alpha = 0.6, markersize = 7, capsize=3, capthick=1)
 
 
 plt.xlabel('Generation', size = 23)
 plt.ylabel('Fitness Score (km$^3$str)', size = 23)
-plt.legend(["Mean", "Median", "Individuals"], loc = 'upper left', prop={'size': 10})
+plt.legend(["Mean", "Median", "Toyon", "Toyon +Err", "Toyon -Err", "Individuals"], loc = 'upper left', prop={'size': 10}, framealpha=1, bbox_to_anchor=(1.05, 1), frameon=True, fancybox=True, shadow=True)
+plt.subplots_adjust(right=0.81)
+
 plt.xticks(genAxis, size = 12)
 plt.yticks(size = 12)
 plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 28)
@@ -181,10 +186,17 @@ plt.savefig(g.destination + Plot2DName)
 plt.figure(figsize=(10, 8))
 plt.style.use('seaborn')
 
-plt.axis([-1, g.numGens+1, minFit - (diffFit * 0.25) , maxFit + (diffFit * 0.25)])
-#Plot the mean and median fitnesses
-plt.plot(genAxis, MeanFitness, linestyle='-', alpha = 1, markersize = 25, color='#00429d')
+plt.axis([-1, g.numGens+1, minFit - (diffFit * 0.25) , max_y])
+
+plt.plot(genAxis, MeanFitness, linestyle='dotted', alpha = 1, markersize = 25, color='#00429d')
 plt.plot(genAxis, MedianFitness, linestyle='dashed', alpha = 1, markersize =20, color='#93003a')
+
+# Plotting the Toyon Data
+plt.axhline(y=veff_toyon, color='black', linestyle='solid', alpha = 1, markersize = 15, zorder=10)
+# Plotting the Toyon Error Bars
+plt.axhline(y=veff_toyon + veff_toyon_err_plus, color='gray', linestyle='dotted', alpha = 1, markersize = 15, zorder=10)
+plt.axhline(y=veff_toyon - veff_toyon_err_minus, color='gray', linestyle='dotted', alpha = 1, markersize = 15, zorder=10)
+
 #We need to create a dataframe in the form of (gen, fitness) for each individual fitness 
 violinArray = []
 for unit in FitnessesArray:
@@ -192,13 +204,15 @@ for unit in FitnessesArray:
         violinArray.append([j, unit[j]])
 violinArray = np.array(violinArray)
 df0 = pd.DataFrame(violinArray, columns = ['Generation','Fitness Score'])
-#add the violinplot to the figure
+df0['Generation'] = df0['Generation'].astype(int)
 violinplot = sns.violinplot(data=df0, x="Generation", y="Fitness Score", color='lightcyan', width=0.25)
 fig = violinplot.get_figure()
+
 plt.xlabel('Generation', size = 23)
 plt.ylabel('Fitness Score (km$^3$str)', size = 23)
 plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 28)
 plt.xticks(genAxis, size = 12)
 plt.yticks(size = 12)
-plt.legend(["Mean", "Median"])
+plt.legend(["Mean", "Median", "Toyon", "Toyon Errs"], loc = 'upper left', prop={'size': 10}, framealpha=1, bbox_to_anchor=(1.05, 1), frameon=True, fancybox=True, shadow=True)
+plt.subplots_adjust(right=0.81)
 fig.savefig(g.destination+ViolinPlotName) 

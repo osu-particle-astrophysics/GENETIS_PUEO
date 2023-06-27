@@ -70,6 +70,7 @@ parser.add_argument("WorkingDir", help="Evolutionary_Loop directory", type=Path)
 parser.add_argument("RunName", help="Run Name directory where everything will be stored", type=str)
 parser.add_argument("gen", help="The generation the loop is on", type=int)
 parser.add_argument("indiv", help="The individual in the population", type=int)
+parser.add_argument("XFCOUNT", help="The number of total XF jobs (NPOP or NPOP*2).", type=int)
 g = parser.parse_args()
 
 # Function to read in files

@@ -19,7 +19,7 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2023_06_19_Test_5'	## This is the name of the run. You need to make a unique name each time you run.
+RunName='2023_06_21_Test_11'	## This is the name of the run. You need to make a unique name each time you run.
 TotalGens=100			## number of generations (after initial) to run through
 NPOP=5			## number of individuals per generation; please keep this value below 99
 Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
@@ -32,6 +32,7 @@ num_keys=4			## how many XF keys we are letting this run use
 database_flag=0			## 0 if not using the database, 1 if using the database
 				## These next 3 define the symmetry of the cones.
 PUEO=1				## IF 1, we evolve the PUEO quad-ridged horn antenna, if 0, we evolve the Bicone
+SYMMETRY=1		## IF 1, then PUEO antenna is square symmetric and only simulate each antenna once
 RADIUS=1			## If 1, radius is asymmetric. If 0, radius is symmetric		
 LENGTH=1			## If 1, length is asymmetric. If 0, length is symmetric
 ANGLE=1				## If 1, angle is asymmetric. If 0, angle is symmetric
@@ -70,6 +71,13 @@ PSIMDIR="/fs/ess/PAS1960/buildingPueoSim/"
 if [ $PUEO -eq 1 ]
 then
 	source /fs/ess/PAS1960/buildingPueoSim/set_env.sh	
+	if [ $SYMMETRY -eq 0 ]
+	then
+		XFCOUNT=$((NPOP*2))
+	else
+		XFCOUNT=$NPOP
+	fi
+	echo "XF jobs: " $XFCOUNT
 else
 	source $WorkingDir/../../../../araenv.sh
 	source /fs/ess/PAS1960/BiconeEvolutionOSC/new_root/new_root_setup.sh
@@ -202,7 +210,7 @@ do
 	then
 		if [ $PUEO -eq 1 ]
 		then
-			./Loop_Parts/Part_B/Part_B_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+			./Loop_Parts/Part_B/Part_B_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $SYMMETRY $XFCOUNT
 		else
 			if [ $CURVED -eq 0 ]
 			then
@@ -241,7 +249,7 @@ do
 	then
 		if [ $PUEO -eq 1 ]
 		then
-			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys
+			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT
 		else
 			if [ $database_flag -eq 0 ]
 			then
@@ -262,7 +270,7 @@ do
 	  indiv=1
 	  if [ $PUEO -eq 1 ]
 	  then
-			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv
+			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv $SYMMETRY
 	  else
 			./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
 	  fi
@@ -282,7 +290,7 @@ do
 		then
 			./Loop_Parts/Part_D/Part_D1_Array.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		else
-			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $PSIMDIR $exp $NNT $RunName $Seeds $DEBUG_MODE $XFProj
+			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $PSIMDIR $exp $NNT $RunName $Seeds $DEBUG_MODE $XFProj $XFCOUNT
 		fi
 		state=6
 

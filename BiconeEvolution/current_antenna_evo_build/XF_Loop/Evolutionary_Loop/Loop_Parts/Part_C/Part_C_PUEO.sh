@@ -11,17 +11,28 @@ WorkingDir=$2
 RunName=$3
 gen=$4
 indiv=$5
-
+SYMMETRY=$6
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 
 module load python/3.7-2019.10
 
-cd $WorkingDir
-cd Antenna_Performance_Metric
+cd $WorkingDir/Test_Outputs
+## We need to remove the files in the Test_Outputs directory
+## I'm doing it very carefully to avoid deleting files in a different location
+##	in the event $WorkindDir has some issue
+rm vv*
+rm hh*
+rm vh*
+rm hv*
+cd ../Antenna_Performance_Metric
 
 chmod -R 777 $WorkingDir/Antenna_Performance_Metric
-python XFintoPUEO.py $NPOP $WorkingDir $RunName $gen $indiv
-
+if [ $SYMMETRY -eq 0 ]
+then
+	python XFintoPUEO.py $NPOP $WorkingDir $RunName $gen $indiv
+else
+	python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen 
+fi
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 
 ## Temporary fix for cross-pols being low!!!

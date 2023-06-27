@@ -23,6 +23,11 @@ XmacrosDir=$6
 XFProj=$7
 GeoFactor=$8
 num_keys=$9
+SYMMETRY=${10}
+XFCOUNT=${11}
+
+echo $SYMMETRY
+echo $XFCOUNT
 
 ## If we're in the 0th generation, we need to make the directory for the XF jobs
 if [ ${gen} -eq 0 ]
@@ -36,10 +41,10 @@ fi
 # the directories are the simulation directories from gen*NPOP+1 to gen*NPOP+10
 # Note that for PUEO, we need TWO XF simulation per individual
 # This is because we need to do the VPol and Hpol
-for i in `seq 1 $((NPOP*2))`
+for i in `seq 1 $XFCOUNT`
 do
         # first, declare the number of the individual we are checking
-	individual_number=$(($gen*$((NPOP*2)) + $i))
+	individual_number=$(($gen*$XFCOUNT + $i))
 
         # next, write the potential directories corresponding to that individual
 	if [ $individual_number -lt 10 ]
@@ -69,7 +74,7 @@ done
 
 if [[ $gen -ne 0 ]]
 then
-	echo $(($gen*$((2*NPOP)) + 1)) > $XFProj/Simulations/.nextSimulationNumber
+	echo $(($gen*$XFCOUNT + 1)) > $XFProj/Simulations/.nextSimulationNumber
 fi
 
 
@@ -138,6 +143,14 @@ fi
 #we cat things into the simulation_PEC.xmacro file, so we can just echo the list to it before catting other files
 
 cat PUEO_skeleton.txt >> simulation_PEC.xmacro
+# Replace the number of times we simulate based on the symmetry
+# Annoying because we need to count to the the opposite of $SYMMETRY
+if [ $SYMMETRY -eq 1 ]
+then
+	vim -c ':%s/SYMMETRY/0' + -c ':wq!' simulation_PEC.xmacro
+else
+	vim -c ':%s/SYMMETRY/1' + -c ':wq!' simulation_PEC.xmacro
+fi
 #cat simulationPECmacroskeleton_PUEO.txt >> simulation_PEC.xmacro
 #cat simulationPECmacroskeleton2_PUEO.txt >> simulation_PEC.xmacro
 
@@ -176,9 +189,9 @@ chmod -R 775 $WorkingDir/../Xmacros
 
 cd $WorkingDir
 
-if [ $((NPOP*2)) -lt $num_keys ]
+if [ $XFCOUNT -lt $num_keys ]
 then
-	batch_size=$((NPOP*2))
+	batch_size=$XFCOUNT
 else
 	batch_size=$num_keys
 fi
@@ -186,7 +199,7 @@ fi
 ## We'll make the run name the job name
 ## This way, we can use it in the SBATCH commands
 #I think this should work for PUEO too
-sbatch --array=1-$((NPOP*2))%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen} --job-name=${RunName} Batch_Jobs/GPU_XF_Job.sh
+sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen} --job-name=${RunName} Batch_Jobs/GPU_XF_Job.sh
 
 
 

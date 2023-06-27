@@ -20,6 +20,7 @@ RunName=$7
 Seeds=$8
 DEBUG_MODE=$9
 XFProj=${10}
+XFCOUNT=${11}
 SpecificSeed=32000
 
 echo "Entering Part D1 PUEO!"
@@ -131,7 +132,7 @@ fi
 
 cd $WorkingDir/Run_Outputs/${RunName}/uan_files
 mkdir -m775 ${gen}_uan_files
-for i in `seq 1 $((2*NPOP))`
+for i in `seq 1 $XFCOUNT`
 do
 	mkdir -m775 ${gen}_uan_files/${i}
 	mv ../${gen}_${i}_*.uan ${gen}_uan_files/${i}/

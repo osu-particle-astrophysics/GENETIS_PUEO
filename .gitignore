@@ -29,6 +29,10 @@ core.*
 
 /BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/*.txt
 
+/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/*.error
+
+/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/*.output
+
 /BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Database/*.txt
 
 /BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/*.txt
@@ -60,3 +64,9 @@ gitpushforce.sh
 /BiconeEvolution/current_antenna_evo_build/XF_Loop/Xmacros/simulation_PEC.xmacro
 
 /BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Test_Outputs/
+
+/BiconeEvolution/current_antenna_evo_build/XF_Loop/Xmacros/*.png
+
+/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/GA/Shared-Code
+
+*.exe

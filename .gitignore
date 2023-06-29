@@ -70,3 +70,6 @@ gitpushforce.sh
 /BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/GA/Shared-Code
 
 *.exe
+
+/BiconeEvolution/current_antenna_evo_build/XF_Loop/Xmacros/*/*.png
+

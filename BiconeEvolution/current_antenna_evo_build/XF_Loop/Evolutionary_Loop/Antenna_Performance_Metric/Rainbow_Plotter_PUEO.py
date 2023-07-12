@@ -22,6 +22,6 @@ minFit = minFits.min()
 data = pd.read_csv(g.location+"/testpara.csv")
 #We want the range of colors to be from the minimum fitness to the maximum fitness
 fig = px.parallel_coordinates(data, color = "Fitness", color_continuous_scale = px.colors.sequential.Turbo, dimensions = ["SideLength","Height","XInitial","YInital","YFinal","ZFinal","Beta","Generation"],labels={"SideLength": "Side Length (cm)","Height": "Height (cm)","XInitial": "Initial X (cm)","YInital": "Initial Y (cm)","YFinal": "Final Y (cm)","ZFinal": "Final Z (cm)","Beta": "Beta","Generation": "Generation"},color_continuous_midpoint=22500, range_color = [minFit, maxFit])
-fig.write_image(g.location+"/Rainbow_Plot.png")
+fig.write_image(g.location+"/Rainbow_Plot.png", width=1920, height=1080)
 
 

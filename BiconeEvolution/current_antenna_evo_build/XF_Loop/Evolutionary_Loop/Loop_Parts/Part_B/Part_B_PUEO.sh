@@ -153,6 +153,24 @@ else
 fi
 #cat simulationPECmacroskeleton_PUEO.txt >> simulation_PEC.xmacro
 #cat simulationPECmacroskeleton2_PUEO.txt >> simulation_PEC.xmacro
+# Would like to just be able to import to XF with a command in the xmacros
+# And then I only need to cat in a handful of scripts into simulation_PEC.xmacro
+# According Walter Janusz at Remcom, this isn't possible yet. So we'll just have to 
+# 	concatenate everything into a fil ourselves
+
+cat headerPUEO.xmacro >> simulation_PEC.xmacro
+cat functionCallsPUEO_reordered.xmacro >> simulation_PEC.xmacro
+#cat functionCallsPUEO.xmacro >> simulation_PEC.xmacro
+cat buildWalls.xmacro >> simulation_PEC.xmacro
+cat buildRidges.xmacro >> simulation_PEC.xmacro
+cat CreatePEC.xmacro >> simulation_PEC.xmacro
+cat CreateAntennaSource.xmacro >> simulation_PEC.xmacro
+cat CreateGrid.xmacro >> simulation_PEC.xmacro
+cat CreateSensors.xmacro >> simulation_PEC.xmacro
+cat CreateAntennaSimulationData.xmacro >> simulation_PEC.xmacro
+cat QueueSimulation.xmacro >> simulation_PEC.xmacro
+cat MakeImage.xmacro >> simulation_PEC.xmacro
+
 
 #we need to change the gridsize by the same factor as the antenna size
 #the gridsize in the macro skeleton is currently set to 0.1

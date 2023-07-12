@@ -43,8 +43,8 @@ def getGains(indiv):
     hpol_gains = []
 
     for freq in range(num_freq):
-        vpol_gains.append(readFile(indiv, freq+1, 2))
-        hpol_gains.append(readFile(indiv, freq+1, 3))
+        vpol_gains.append(read_file(indiv, freq+1, 2))
+        hpol_gains.append(read_file(indiv, freq+1, 3))
 
     return vpol_gains, hpol_gains
 

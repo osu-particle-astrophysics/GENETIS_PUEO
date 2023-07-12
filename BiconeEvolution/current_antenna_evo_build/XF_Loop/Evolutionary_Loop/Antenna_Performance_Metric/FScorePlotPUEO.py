@@ -18,8 +18,8 @@ parser.add_argument("numGens", help="Number of generations the code is running f
 g = parser.parse_args()
 
 # The name of the plot that will be put into the destination folder, g.destination
-Plot2DName = "/FScorePlot2D.png"
-ViolinPlotName="/ViolinPlot.png"
+Plot2DName = "/FScorePlot2D"
+ViolinPlotName="/ViolinPlot"
 
 
 #----------STARTS HERE----------STARTS HERE----------STARTS HERE----------STARTS HERE
@@ -174,7 +174,8 @@ plt.yticks(size = 12)
 plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 28)
 
 #plt.legend()
-plt.savefig(g.destination + Plot2DName)
+plt.savefig(g.destination + Plot2DName + ".png", dpi = 300)
+plt.savefig(g.destination + Plot2DName + ".pdf", dpi = 300)
 
 #create a violin plot of the fitness scores
 #Create a new figure
@@ -201,4 +202,5 @@ plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size
 plt.xticks(genAxis, size = 12)
 plt.yticks(size = 12)
 plt.legend(["Mean", "Median"])
-fig.savefig(g.destination+ViolinPlotName) 
+fig.savefig(g.destination + ViolinPlotName + ".png", dpi = 300)
+fig.savefig(g.destination + ViolinPlotName + ".pdf", dpi = 300) 

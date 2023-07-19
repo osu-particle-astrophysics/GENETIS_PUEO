@@ -69,8 +69,6 @@ then
 	exit 1
 fi
 
-
-
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
 BEOSC=/users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
@@ -287,7 +285,7 @@ do
 	  indiv=1
 	  if [ $PUEO -eq 1 ]
 	  then
-			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv $SYMMETRY
+			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv $SYMMETRY $PSIMDIR
 	  else
 			./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
 	  fi

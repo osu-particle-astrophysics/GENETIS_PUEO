@@ -4,8 +4,8 @@
 #SBATCH --time=10:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
-#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/Plot.output
-#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Antenna_Performance_Metric/Plot.error
+#SBATCH --output=Plot.output
+#SBATCH --error=Plot.error
 
 #variables
 #NPOP=$1

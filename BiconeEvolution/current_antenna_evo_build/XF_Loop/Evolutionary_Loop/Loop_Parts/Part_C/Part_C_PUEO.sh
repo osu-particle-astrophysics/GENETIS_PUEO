@@ -12,6 +12,7 @@ RunName=$3
 gen=$4
 indiv=$5
 SYMMETRY=$6
+PSIMDIR=$7
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
 
 module load python/3.7-2019.10
@@ -38,6 +39,6 @@ fi
 ## Temporary fix for cross-pols being low!!!
 for i in `seq 1 $NPOP`
 do
-	cp /fs/ess/PAS1960/buildingPueoSim/pueoBuilder/components/pueoSim/data/antennas/hv_0_toyon ../Test_Outputs/hv_0_${gen}_${i}
-	cp /fs/ess/PAS1960/buildingPueoSim/pueoBuilder/components/pueoSim/data/antennas/vh_0_toyon ../Test_Outputs/vh_0_${gen}_${i}
+	cp $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/hv_0_toyon ../Test_Outputs/hv_0_${gen}_${i}
+	cp $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/vh_0_toyon ../Test_Outputs/vh_0_${gen}_${i}
 done

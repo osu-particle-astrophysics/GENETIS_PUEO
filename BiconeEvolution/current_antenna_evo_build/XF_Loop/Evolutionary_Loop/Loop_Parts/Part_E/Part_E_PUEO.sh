@@ -77,9 +77,9 @@ echo 'Congrats on getting a fitness score!'
 cd $WorkingDir
 
 mv -f Generation_Data/parents.csv Run_Outputs/$RunName/Generation_Data/${gen}_parents.csv
-#mv -f Generation_Data/genes.csv Run_Outputs/$RunName/Generation_Data/${gen}_genes.csv
-#mv -f Generation_Data/mutations.csv Run_Outputs/$RunName/Generationa_Data/${gen}_mutations.csv
-#mv -f Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_generators.csv
+mv -f Generation_Data/genes.csv Run_Outputs/$RunName/Generation_Data/${gen}_genes.csv 2>/dev/null
+mv -f Generation_Data/mutations.csv Run_Outputs/$RunName/Generationa_Data/${gen}_mutations.csv 2>/dev/null
+mv -f Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_generators.csv 2>/dev/null
 
 cd $WorkingDir/Run_Outputs/$RunName
 if [ $gen -eq 0 ]

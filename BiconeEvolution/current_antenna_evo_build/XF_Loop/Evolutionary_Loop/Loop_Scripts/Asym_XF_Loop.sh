@@ -45,18 +45,34 @@ DEBUG_MODE=0			## 1 for testing (ex: send specific seeds), 0 for real runs
 				## These next variables are the values passed to the GA
 REPRODUCTION=5			## Number (not fraction!) of individuals formed through reproduction
 CROSSOVER=0 #84			## Number (not fraction!) of individuals formed through crossover
-MUTATION=0 #16 #1			## Probability of mutation (divided by 100)
+MUTATION=0 #16 #1		## Number (not fraction!) of individuals formed through crossover	
 SIGMA=0 #5				## Standard deviation for the mutation operation (divided by 100)
-ROULETTE=5 #20			## Percent of individuals selected through roulette (divided by 10)
-TOURNAMENT=0 #20			## Percent of individuals selected through tournament (divided by 10)
-RANK=0 #60				## Percent of individuals selected through rank (divided by 10)
+ROULETTE=5 #20			## Number (not fraction!) of individuals formed through crossover
+TOURNAMENT=0 #20		## Number (not fraction!) of individuals formed through crossover
+RANK=0 #60				## Number (not fraction!) of individuals formed through crossover
 ELITE=0				## Elite function on/off (1/0)
 
 #####################################################################################################################################################
 
+######## Check For Errors in Variables ################################################################################################################
+
+
+if [ $((REPRODUCTION + CROSSOVER + MUTATION)) -gt $NPOP ]
+then
+	echo "ERROR: reproduction + crossover + mutation must be less than or equal to NPOP"
+	exit 1
+fi
+
+if [ $((ROULETTE + TOURNAMENT + RANK)) -gt $NPOP ]
+then
+	echo "ERROR: roulette + tournament + rank must be less than or equal to NPOP"
+	exit 1
+fi
+
+
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
+BEOSC=/users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
 XmacrosDir=$WorkingDir/../Xmacros 

@@ -70,7 +70,7 @@ PSIMDIR="/fs/ess/PAS1960/buildingPueoSim/"
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 if [ $PUEO -eq 1 ]
 then
-	source /fs/ess/PAS1960/buildingPueoSim/set_env.sh	
+	source ${PSIMDIR}/set_env.sh	
 	if [ $SYMMETRY -eq 0 ]
 	then
 		XFCOUNT=$((NPOP*2))
@@ -175,6 +175,7 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Generation_Data
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
+		mkdir -m775 $PSIMDIR/outputs/${RunName}
 
 		head -n 53 Loop_Scripts/Asym_XF_Loop.sh | tail -n 33 > $WorkingDir/Run_Outputs/$RunName/run_details.txt
 		# Create the run's date and save it in the run's directory

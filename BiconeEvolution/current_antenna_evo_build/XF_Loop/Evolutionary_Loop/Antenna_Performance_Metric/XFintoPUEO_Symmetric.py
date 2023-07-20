@@ -31,7 +31,7 @@ g = parser.parse_args()
 ## Function Definitions
 ## Function to read in files
 def read_file(indiv, freq_num, col):
-    uanname = g.working_dir / 'Run_Outputs' / g.run_name / '{g.gen}_{indiv}_{freqNum}.uan'
+    uanname = g.working_dir / 'Run_Outputs' / g.run_name / f'{g.gen}_{indiv}_{freq_num}.uan'
     data = np.genfromtxt(uanname, unpack=True, skip_header=18).tolist()
 
     return data[col]  # Return the gain for the polarization being read
@@ -43,8 +43,8 @@ def getGains(indiv):
     hpol_gains = []
 
     for freq in range(num_freq):
-        vpol_gains.append(readFile(indiv, freq+1, 2))
-        hpol_gains.append(readFile(indiv, freq+1, 3))
+        vpol_gains.append(read_file(indiv, freq+1, 2))
+        hpol_gains.append(read_file(indiv, freq+1, 3))
 
     return vpol_gains, hpol_gains
 

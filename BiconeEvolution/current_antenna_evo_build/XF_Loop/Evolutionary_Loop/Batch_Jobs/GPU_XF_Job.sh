@@ -1,5 +1,4 @@
 #!/bin/bash
-
 ## We want to submit the XFsolver as a job array to GPUs
 ## We'll submit up to 4 at a time (based on number of XF keys)
 ## Here's the submission command:
@@ -9,9 +8,9 @@
 #SBATCH -N 1
 #SBATCH -n 40
 #SBATCH -G 2
-#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/XF_Outputs/XF_%a.output
-#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/XF_Errors/XF_%a.error
-##SBATCH --mem-per-gpu=178gb
+#SBATCH --output=Run_Outputs/%x/XF_Outputs/XF_%a.output
+#SBATCH --error=Run_Outputs/%x/XF_Errors/XF_%a.error
+#SBATCH --mem-per-gpu=178gb
 
 ## make sure we're in the right directory
 cd $WorkingDir

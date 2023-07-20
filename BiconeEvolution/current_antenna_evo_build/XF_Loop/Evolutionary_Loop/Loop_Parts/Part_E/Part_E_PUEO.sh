@@ -38,7 +38,7 @@ cd $WorkingDir/Antenna_Performance_Metric
 
 for i in `seq 1 $NPOP`
 do
-	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName
+	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName $WorkingDir
 done
 
 module load python/3.6-conda5.2
@@ -53,6 +53,8 @@ echo "The Ohio State University GENETIS Data." > $WorkingDir/Generation_Data/fit
 echo "Current generation's fitness scores:" >> $WorkingDir/Generation_Data/fitnessScores.csv
 cat ${gen}_fitnessScores.csv >> $WorkingDir/Generation_Data/fitnessScores.csv
 cd -
+
+cp $WorkingDir/Generation_Data/fitnessScores.csv $WorkingDir/fitnessScores.csv
 
 cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_generationDNA.csv
 

@@ -3,11 +3,11 @@
 ## Here's the command:
 ## sbatch --array=1-NPOP*SEEDS%max --export=ALL,(variables) PueoCall_Array.sh
 #SBATCH -A PAS1960
-#SBATCH -t 10:00:00
+#SBATCH -t 03:00:00
 #SBATCH -N 1
 #SBATCH -n 40
-#SBATCH --output=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/PUEO_Outputs/PUEOsim_%a.output
-#SBATCH --error=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Run_Outputs/%x/PUEO_Errors/PUEOsim_%a.error
+#SBATCH --output=Run_Outputs/%x/PUEO_Outputs/PUEOsim_%a.output
+#SBATCH --error=Run_Outputs/%x/PUEO_Errors/PUEOsim_%a.error
 
 #variables
 #gen=$1
@@ -54,9 +54,9 @@ echo "PSIMS finished"
 # move the root files
 for ((i=$run_num; i<$((threads + run_num)); i++))
 do
-    mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_skimmed_${gen}_${num}_${seed}.root
-    mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_allTree_${gen}_${num}_${seed}.root
-    mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${seed}_0.root
+    mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_skimmed_${gen}_${num}_${i}.root
+    mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_allTree_${gen}_${num}_${i}.root
+    mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${i}_0.root
 done
 
 # move pueoout for debugging

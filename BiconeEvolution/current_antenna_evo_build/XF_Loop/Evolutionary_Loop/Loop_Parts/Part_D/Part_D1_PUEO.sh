@@ -32,6 +32,8 @@ mkdir -m775 Run_Outputs/${RunName}/Root_Files/${gen}_Root_Files
 mkdir -m775 Run_Outputs/${RunName}/uan_files/${gen}_uan_files
 mkdir -m775 ${PSIMDIR}/outputs/${RunName}/${gen}_outputs
 
+chmod -R 777 $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/* 2>/dev/null
+
 #Move the gain files into the correct place for PSIM to read them in
 for i in `seq 1 $NPOP`
 do
@@ -45,6 +47,8 @@ do
 	cp Test_Outputs/vv_el_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_el_Toyon${run_num}
 	cp Test_Outputs/vv_az_${gen}_${i} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_az_Toyon${run_num}
 done
+
+chmod -R 777 $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/* 2>/dev/null
 
 #record the gain data
 cp Test_Outputs/* $XFProj/XF_models_${gen}/

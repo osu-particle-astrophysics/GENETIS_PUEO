@@ -21,11 +21,11 @@ cd $WorkingDir/Test_Outputs
 ## We need to remove the files in the Test_Outputs directory
 ## I'm doing it very carefully to avoid deleting files in a different location
 ##	in the event $WorkindDir has some issue
-rm vv*
-rm hh*
-rm vh*
-rm hv*
-cd ../Antenna_Performance_Metric
+rm vv* 2>/dev/null
+rm hh* 2>/dev/null
+rm vh* 2>/dev/null
+rm hv* 2>/dev/null
+cd $WorkingDir/Antenna_Performance_Metric
 
 chmod -R 777 $WorkingDir/Antenna_Performance_Metric
 if [ $SYMMETRY -eq 0 ]
@@ -42,3 +42,5 @@ do
 	cp $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/hv_0_toyon ../Test_Outputs/hv_0_${gen}_${i}
 	cp $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/vh_0_toyon ../Test_Outputs/vh_0_${gen}_${i}
 done
+
+chmod -R 777 $WorkingDir/Test_Outputs

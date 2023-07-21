@@ -69,6 +69,12 @@ then
 	exit 1
 fi
 
+if [ $((CROSSOVER % 2)) -ne 0 ]
+then
+	echo "ERROR: crossover must be even"
+	exit 1
+fi
+
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
 BEOSC=/users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop

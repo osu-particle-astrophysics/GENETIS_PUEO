@@ -52,7 +52,7 @@ def getGains(indiv):
 def writeGains(data, freq_list, file_name):
     with open(file_name, "a") as f:
         for i in range(num_freq):
-            f.write('{freq_list[i]} {data[i]}\n')
+            f.write(f'{freq_list[i]} {data[i]}\n')
 
 
 ## Function calls

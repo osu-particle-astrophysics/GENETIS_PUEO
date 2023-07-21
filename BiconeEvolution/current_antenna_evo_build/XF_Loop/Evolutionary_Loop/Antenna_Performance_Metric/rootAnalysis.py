@@ -55,7 +55,7 @@ def EffectiveVolume2(thisColor,thisLabel):
 
     for path, subdirs, files in os.walk(root):
         for name in files:
-            print(name)
+            #print(name)
             if fnmatch(name,allTreePattern):
                 print(os.path.join(path,name))
                

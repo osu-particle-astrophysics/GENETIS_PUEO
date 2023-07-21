@@ -38,13 +38,13 @@ cp pueoBuilder/build/components/pueoSim/simulatePueo $TMPDIR/simulatePueo
 cp pueoBuilder/components/pueoSim/config/pueo.conf $TMPDIR/pueo.conf
 
 cd $TMPDIR
-touch pueoout.txt
 
 echo "Running PSIM"
 for ((i=$run_num; i<$((threads + run_num)); i++))
 do
     # Run 40 processes of pueoSim 
-    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT -e $Exp > pueoout.txt &
+    touch pueoout${i}.txt
+    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT -e $Exp > pueoout${i}.txt &
 done
 
 echo "started PSIMs"
@@ -57,10 +57,9 @@ do
     mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_skimmed_${gen}_${num}_${i}.root
     mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_allTree_${gen}_${num}_${i}.root
     mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${i}_0.root
+    mkdir -p -m775 $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
+    mv peuoout${i}.txt $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
 done
-
-# move pueoout for debugging
-mv peuoout.txt $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
 
 echo $gen > $TMPDIR/${num}_${seed}.txt
 echo $num >> $TMPDIR/${num}_${seed}.txt

@@ -23,8 +23,8 @@ g = parser.parse_args()
 # Read maxFitnessScores.csv, generationDNA.csv, and fitnessScores.csv
 
 # We use loadtxt when we need to skip over the useless text
-genDNA = np.loadtxt(g.location + "/" + str(g.GenNumber)+"_generationDNA.csv", delimiter=',', skiprows=8)
-fScores = np.loadtxt(g.location + "/" + str(g.GenNumber)+"_fitnessScores.csv", delimiter=',', skiprows=0)
+genDNA = np.loadtxt(g.location + "/" + str(g.GenNumber) + "_generationDNA.csv", delimiter=',', skiprows=9)
+fScores = np.loadtxt(g.location + "/" + str(g.GenNumber) + "_fitnessScores.csv", delimiter=',', skiprows=0)
 
 
 # Create/Add to runData.csv

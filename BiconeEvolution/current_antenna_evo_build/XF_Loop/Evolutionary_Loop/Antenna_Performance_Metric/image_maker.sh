@@ -64,7 +64,7 @@ echo "exp: $exp"
 
 python physicsOfResultsPUEO.py $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files $WorkingDir/Run_Outputs/$RunName/Generation_Data $max_index $exp
 
-mkdir ${destinationDir}/${gen}_detector_photos
+mkdir -p ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos
 mv ${photoSourceDir}/${max_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${max_index}_detector_max.png
 mv ${photoSourceDir}/${mid_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${mid_index}_detector_mid.png
 mv ${photoSourceDir}/${min_index}_detector.png ${destinationDir}/${gen}_detector_photos/${gen}_${min_index}_detector_min.png

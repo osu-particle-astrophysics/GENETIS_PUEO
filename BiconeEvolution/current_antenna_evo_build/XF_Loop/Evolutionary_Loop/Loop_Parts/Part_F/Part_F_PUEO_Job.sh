@@ -1,18 +1,21 @@
-###########################################################################################
-#
-#    Part F: Plotting and visualizing the fitness scores
-#
-#
-##########################################################################################
-NPOP=$1
-WorkingDir=$2
-RunName=$3
-gen=$4
-Seeds=$5
-exp=$6
-GeoFactor=$7
-PSIMDIR=$8
+#!/bin/bash
+## This Job submits the plotting software for the PUEO loop
+#SBATCH --account=PAS1960
+#SBATCH --time=10:00:00
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8
+#SBATCH --output=Plot.output
+#SBATCH --error=Plot.error
 
+#variables
+#NPOP=$1
+#WorkingDir=$2
+#RunName=$3
+#gen=$4
+#Seeds=$5
+#exp=$6
+#GeoFactor=$7
+#PSIMDIR=$8
 
 echo "exp: $exp"
 cd $WorkingDir

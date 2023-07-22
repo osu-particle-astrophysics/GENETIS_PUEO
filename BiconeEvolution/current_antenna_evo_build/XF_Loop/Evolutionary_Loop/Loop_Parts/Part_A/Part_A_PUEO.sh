@@ -34,6 +34,7 @@ mv Generation_Data/generators.csv Run_Outputs/$RunName/Generation_Data/${gen}_ge
 
 if [ $gen -gt 0 ]
 then
+	cp parents.csv Generation_Data/parents.csv
 	mv Generation_Data/parents.csv Run_Outputs/$RunName/Generation_Data/${gen}_parents.csv
 fi
 chmod -R 775 Generation_Data/

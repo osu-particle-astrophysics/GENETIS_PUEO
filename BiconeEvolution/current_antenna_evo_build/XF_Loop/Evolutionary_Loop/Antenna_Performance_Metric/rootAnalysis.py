@@ -57,7 +57,7 @@ def EffectiveVolume2(thisColor,thisLabel):
         for name in files:
             #print(name)
             if fnmatch(name,allTreePattern):
-                print(os.path.join(path,name))
+                #print(os.path.join(path,name))
                
                 # this_energy is leftover from Will's code,
                 # I'll keep it in case we ever decide to simulate
@@ -84,7 +84,7 @@ def EffectiveVolume2(thisColor,thisLabel):
                 #If you don't load libraries (or if you can't), you can load events with, e.g. allTree.GetLeaf("eventSummary.neutrino.flavor").GetValue()
                 
             elif fnmatch(name,passTreePattern):
-                print(os.path.join(path,name))
+                #print(os.path.join(path,name))
                 
                 try: 
                     fileName = os.path.join(path,name)
@@ -176,20 +176,21 @@ def EffectiveVolume2(thisColor,thisLabel):
 
     with open("{}/{}_pueoOut.csv".format(g.opath, g.gen), 'a') as f:
         f.write("{},{},{},{}\n".format(g.indiv, effective_V[0], effective_V_p[0], effective_V_m[0]))
-        print("Writing to:", "{}/{}_pueoOut.csv".format(g.opath, g.gen))
+        #print("Writing to:", "{}/{}_pueoOut.csv".format(g.opath, g.gen))
     
     with open("{}/{}_fitnessScores.csv".format(g.opath, g.gen), 'a') as f:
         f.write("{}\n".format(effective_V[0]))
-        print("Writing to:", "{}/{}_fitnessScores.csv".format(g.opath, g.gen))
+        #print("Writing to:", "{}/{}_fitnessScores.csv".format(g.opath, g.gen))
     
     with open("{}/{}_vEffectives.csv".format(g.opath, g.gen), 'a') as f:
         f.write("{}\n".format(effective_V[0]))
-        print("Writing to:", "{}/{}_vEffectives.csv".format(g.opath, g.gen))
+       #print("Writing to:", "{}/{}_vEffectives.csv".format(g.opath, g.gen))
         
     with open("{}/{}_errorBars.csv".format(g.opath, g.gen), 'a') as f:
         f.write("{},{}\n".format(effective_V_p[0], effective_V_m[0]))
-        print("Writing to:", "{}/{}_errorBars.csv".format(g.opath, g.gen))
+        #print("Writing to:", "{}/{}_errorBars.csv".format(g.opath, g.gen))
 
+    print("Wrote individual {} fitness".format(g.indiv))
 
 def AddErrors(all_weights):
     bin_num = 10

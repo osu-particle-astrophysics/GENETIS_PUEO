@@ -21,7 +21,12 @@ module load cuda
 
 ## We need to get the individual number
 ## This will be based on the number in the array
-individual_number=$((${gen}*${NPOP}*2+${SLURM_ARRAY_TASK_ID}))
+if [ $SYMMETRY -eq 0 ]
+then
+	individual_number=$((${gen}*${NPOP}*2+${SLURM_ARRAY_TASK_ID}))
+else
+	individual_number=$((${gen}*${NPOP}+${SLURM_ARRAY_TASK_ID}))
+fi
 
 ## Based on the individual number, we need the right parent directory
 ## This involves checking the individual number being submitted

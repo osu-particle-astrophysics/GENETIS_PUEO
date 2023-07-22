@@ -19,12 +19,12 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2023_07_20_test6'	## This is the name of the run. You need to make a unique name each time you run.
+RunName='2023_07_22_test2'	## This is the name of the run. You need to make a unique name each time you run.
 TotalGens=100			## number of generations (after initial) to run through
 NPOP=5			## number of individuals per generation; please keep this value below 99
 Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
-NNT=40000			## Number of Neutrinos Thrown in AraSim   
+NNT=1000			## Number of Neutrinos Thrown in AraSim   
 exp=19				## exponent of the energy for the neutrinos in AraSim
 ScaleFactor=1.0			## ScaleFactor used when punishing fitness scores of antennae larger than the drilling holes
 GeoFactor=1			## This is the number by which we are scaling DOWN our antennas. This is passed to many files
@@ -88,6 +88,7 @@ echo $XFProj
 AraSimExec="${WorkingDir}/../../../../AraSim"
 #$BEOSC/AraSim ## Location of AraSim directory
 PSIMDIR="/fs/ess/PAS1960/buildingPueoSim" 
+#PSIMDIR="/users/PAS1960/dylanwells1629/buildingPueoSim"
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 if [ $PUEO -eq 1 ]
@@ -400,9 +401,9 @@ do
 		else
 			if [ $JobPlotting -eq 0 ]
 			then
-				./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $exp $ScaleFactor $PSIMDIR
+				./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $exp $ScaleFactor $PSIMDIR $SYMMETRY
 			else
-				sbatch --export=ALL,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp,GeoFactor=$ScaleFactor,PSIMDIR=$PSIMDIR --job-name=Plotting_${RunName}_${gen}  ./Loop_Parts/Part_F/Part_F_PUEO.sh
+				sbatch --export=ALL,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp,GeoFactor=$ScaleFactor,PSIMDIR=$PSIMDIR,SYMMETRY=$SYMMETRY --job-name=Plotting_${RunName}_${gen}  ./Loop_Parts/Part_F/Part_F_PUEO.sh
 			fi
 		fi
 		state=1

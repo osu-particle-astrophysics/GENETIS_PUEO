@@ -35,12 +35,17 @@ parser.add_argument("destination", help="Name of destination folder from home di
 parser.add_argument("freq_num", help="Frequency number (1-60) to plot", type=int)
 parser.add_argument("NPOP", help="Number of individuals in a generation (ex: 10)", type=int)
 parser.add_argument("gen", help="Generation number (ex: 0)", type=int)
+parser.add_argument("SYMMETRY", help="Symmetry of antenna (ex: 2)", type=int)
 g=parser.parse_args()
 
+if g.SYMMETRY == 0:
+    npop = g.NPOP * 2
+else:
+    npop = g.NPOP
 ## Loop over files
 # Declare list for each file's gain list
 gains = []
-for individual in range(0, g.NPOP):
+for individual in range(1, npop+1):
 	## Open the file to read
 	## NOTE: Looks for folder in source that contains a folder with name "gen_#"
 	with open(g.source + "/" + str(individual) + "/" + str(g.gen) + "_" + str(individual) + "_" + str(g.freq_num) + ".uan", "r") as f:
@@ -78,9 +83,14 @@ f3 = open("temp_worst.csv", "r")
 
 ### Saves these indices to variables
 ### Each individual has 2 files, so the index is multiplied by 2 and subtracted by 1
-max_index = (int(f1.readline())*2)-1
-mid_index = (int(f2.readline())*2)-1
-min_index = (int(f3.readline())*2)-1
+if g.SYMMETRY == 0:
+	max_index = (int(f1.readline())*2)-1
+	mid_index = (int(f2.readline())*2)-1
+	min_index = (int(f3.readline())*2)-1
+else:  
+	max_index = (int(f1.readline()))-1
+	mid_index = (int(f2.readline()))-1
+	min_index = (int(f3.readline()))-1
 
 ### Closes the temporary files
 f1.close()

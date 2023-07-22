@@ -12,7 +12,7 @@ Seeds=$5
 exp=$6
 GeoFactor=$7
 PSIMDIR=$8
-
+SYMMETRY=$9
 
 echo "exp: $exp"
 cd $WorkingDir
@@ -20,7 +20,7 @@ cd $WorkingDir
 cd Antenna_Performance_Metric
 
 echo 'Starting image maker portion...'
-./image_maker.sh $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen} $WorkingDir/Run_Outputs/$RunName $gen $WorkingDir $RunName $NPOP $PSIMDIR $exp
+./image_maker.sh $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen} $WorkingDir/Run_Outputs/$RunName $gen $WorkingDir $RunName $NPOP $PSIMDIR $exp $SYMMETRY
 
 source set_plotting_env.sh
 
@@ -44,15 +44,14 @@ python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $Worki
 #python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
 cd $WorkingDir/Run_Outputs/$RunName
-mail -s "FScore_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < FScorePlot2D.png
+#mail -s "FScore_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < FScorePlot2D.png
 #mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fitness_Scores_RG.png
 #mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
 #mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
-mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
+#mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
 mv -f *.csv Generation_Data/
 
-cd "$WorkingDir"
-#open permissions on the data files
+
 cd $WorkingDir/Run_Outputs/$RunName
 chmod -R 775 Generation_Data
 

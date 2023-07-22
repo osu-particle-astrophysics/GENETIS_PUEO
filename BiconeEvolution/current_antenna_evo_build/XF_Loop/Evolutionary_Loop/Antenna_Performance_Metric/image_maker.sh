@@ -57,7 +57,7 @@ source $PSIMDIR/set_env.sh
 #source $PSIMDIR/set_env.sh
 
 echo "starting PORP"
-ls -alrt
+#ls -alrt
 
 echo "max index: $max_index"
 echo "exp: $exp"

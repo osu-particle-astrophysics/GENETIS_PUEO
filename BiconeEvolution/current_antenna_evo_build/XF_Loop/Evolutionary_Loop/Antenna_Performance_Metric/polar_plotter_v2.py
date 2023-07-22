@@ -40,7 +40,7 @@ g=parser.parse_args()
 ## Loop over files
 # Declare list for each file's gain list
 gains = []
-for individual in range(1, g.NPOP+1):
+for individual in range(0, g.NPOP):
 	## Open the file to read
 	## NOTE: Looks for folder in source that contains a folder with name "gen_#"
 	with open(g.source + "/" + str(individual) + "/" + str(g.gen) + "_" + str(individual) + "_" + str(g.freq_num) + ".uan", "r") as f:

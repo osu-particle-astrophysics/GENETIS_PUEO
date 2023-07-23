@@ -2,18 +2,20 @@
 # Written on: 	Dec 21, 2018
 # Reads from: 	generationDNA.csv, fitnessScores.csv
 # Writes to: 	maxFitnessScores.csv, runData.csv (formerly gensData.csv)
-# Purpose:	Take data from fitness algorithm and record relevant data: the maximum fitness score and the total information for each antenna. Dynamically adjusts for any NPOP.
+# Purpose:	Take data from fitness algorithm and record relevant data: the 
+# maximum fitness score and the total information for each antenna. Dynamically adjusts for any NPOP.
 
 import numpy as np
 import argparse
+
+from pathlib import Path
 
 #---------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES
 
 # We need to grab the generation number this code is being run on from the bash script
 parser = argparse.ArgumentParser()
-
-parser.add_argument("GenNumber", help="Generation number the code is running on (for formatting purposes)", type=int)
-parser.add_argument("location", help="Location of runData.csv and fitness.csv", type=str)
+parser.add_argument("gen_num", help="generation number", type=int)
+parser.add_argument("location", help="Location of runData.csv and fitness.csv", type=Path)
 g = parser.parse_args()
 
 #----------STARTS HERE----------STARTS HERE----------STARTS HERE----------STARTS HERE 
@@ -23,9 +25,10 @@ g = parser.parse_args()
 # Read maxFitnessScores.csv, generationDNA.csv, and fitnessScores.csv
 
 # We use loadtxt when we need to skip over the useless text
-genDNA = np.loadtxt(g.location + "/" + str(g.GenNumber) + "_generationDNA.csv", delimiter=',', skiprows=9)
-fScores = np.loadtxt(g.location + "/" + str(g.GenNumber) + "_fitnessScores.csv", delimiter=',', skiprows=0)
-
+genDNA = np.loadtxt(g.location / f'{g.gen_num}_generationDNA.csv', 
+                    delimiter=',', skiprows=9)
+fScores = np.loadtxt(g.location / f'{g.gen_num}_fitnessScores.csv', 
+                     delimiter=',', skiprows=0)
 
 # Create/Add to runData.csv
 # This file contains every antenna's DNA and fitness score for each generation. 
@@ -51,8 +54,8 @@ Generation :1
 # First, stick genDNA with fScores to have the correct matrix format described above
 genDNAfScore = np.hstack(( genDNA, fScores.reshape((fScores.shape[0], 1)) ))
 # Open the file and append the relevant information
-with open(g.location + "/runData.csv", "a+") as runData:
-	runData.write('\n'+ "Generation :"+ str(g.GenNumber)+ '\n')
+with open(g.location / 'runData.csv', 'a+') as runData:
+	runData.write(f'\nGeneration :{g.gen_num}\n')
 	np.savetxt(runData, genDNAfScore, delimiter=",", fmt='%f')
 
 
@@ -62,28 +65,29 @@ with open(g.location + "/runData.csv", "a+") as runData:
 # First, we need to find the maximum fitness score
 maxFScore = fScores.max()
 # Then, append this onto the maxFitnessScores list
-with open(g.location + "/maxFitnessScores.csv", "a+") as maxFScores:
-	maxFScores.write("Generation "+str(g.GenNumber)+"'s Max Fitness Score: "+str(maxFScore)+ '\n')
+with open(g.location / 'maxFitnessScores.csv', 'a+') as maxFScores:
+	maxFScores.write(f"Generation {g.gen_num}'s Max Fitness Score:{maxFScore} \n")
 
 # First, we need to find the minimum fitness score
 minFScore = fScores.min()
 # Then, append this onto the minFitnessScores list
-with open(g.location + "/minFitnessScores.csv", "a+") as minFScores:
-	minFScores.write("Generation "+str(g.GenNumber)+"'s Min Fitness Score: "+str(minFScore)+ '\n')
+with open(g.location / "minFitnessScores.csv", "a+") as minFScores:
+	minFScores.write(f"Generation {g.gen_num}'s Min Fitness Score: g.{minFScore}\n")
 
 # errorBars are in format Plus, Minus
 # Load in the errorBars.csv file
-errorBarsPlus, errorBarsMinus = np.loadtxt(g.location + "/" + str(g.GenNumber) + "_errorBars.csv", delimiter=',', skiprows=0, unpack=True)
+errorBarsPlus, errorBarsMinus = np.loadtxt(g.location / f"{g.gen_num}_errorBars.csv",
+                                           delimiter=',', skiprows=0, unpack=True)
 
 maxErrorBarPlus = errorBarsPlus.max()
 maxErrorBarMinus = errorBarsMinus.max()
 maxErrorBar = max(maxErrorBarPlus, maxErrorBarMinus)
 
 #then, append this onto the maxErrorBars list
-with open(g.location + "/maxErrorBars.csv", "a+") as maxErrorBars:
-	maxErrorBars.write("Generation "+str(g.GenNumber)+"'s Max Error Bar: "+str(maxErrorBar)+ '\n')
+with open(g.location / "maxErrorBars.csv", "a+") as maxErrorBars:
+	maxErrorBars.write(f"Generation {g.gen_num}'s Max Error Bar: {maxErrorBar}\n")
 
 #Now add these values to the plottingData.csv file
-with open(g.location + "/plottingData.csv", "a+") as plottingData:
-	plottingData.write(str(maxFScore)+","+str(minFScore)+","+str(maxErrorBar)+"\n")
+with open(g.location / "plottingData.csv", "a+") as plottingData:
+	plottingData.write(f"{maxFScore},{minFScore},{maxErrorBar}\n")
 	

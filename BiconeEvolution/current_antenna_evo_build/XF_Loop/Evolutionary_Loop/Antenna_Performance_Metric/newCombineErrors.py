@@ -31,12 +31,12 @@ identical_indivs = []
 
 # Load in the DNA files from the previous and current generation
 # variables are S, H, Xi, Yi, Zf, Yf, beta 
-skiprows = 8
+intro_rows = 9
 
 def read_DNA(DNA_file):
     '''Return a list of tuples containing the DNA of each individual in the population'''
     DNA_csv = pd.read_csv(DNA_file, header=None, 
-                          delimiter=',', skiprows=skiprows)
+                          delimiter=',', skiprows=intro_rows)
     DNA = {
         "S": DNA_csv.iloc[:, 0].values,
         "H": DNA_csv.iloc[:, 1].values,

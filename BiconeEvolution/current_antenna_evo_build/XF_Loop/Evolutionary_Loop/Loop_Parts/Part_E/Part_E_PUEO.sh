@@ -24,7 +24,7 @@ IceMCExec=$9
 XFProj=${10}
 PSIMDIR=${11}
 exp=${12}
-
+ParallelXFPUEO=${13}
 
 echo 'Starting fitness function calculating portion...'
 

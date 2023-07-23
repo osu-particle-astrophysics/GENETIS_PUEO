@@ -53,6 +53,7 @@ RANK=3 #60				## Number (not fraction!) of individuals formed through crossover
 ELITE=0				## Elite function on/off (1/0)
 
 JobPlotting=0        ## 1 to submit a job to plot the fitness scores, 0 to not submit a job to plot the fitness scores
+ParallelXFPUEO=1	## 1 to run pueosim for each antenna as the XF jobs finish, 0 to not
 #####################################################################################################################################################
 
 ######## Check For Errors in Variables ################################################################################################################
@@ -77,8 +78,8 @@ then
 fi
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-#BEOSC=/users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/
-BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
+BEOSC=/users/PAS1960/dylanwells1629/developing/PUEO2/
+#BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
 XmacrosDir=$WorkingDir/../Xmacros 
@@ -87,8 +88,8 @@ echo $XFProj
 #AraSimExec="/fs/ess/PAS1960/BiconeEvolutionOSC/AraSim"  ##Location of AraSim.exe
 AraSimExec="${WorkingDir}/../../../../AraSim"
 #$BEOSC/AraSim ## Location of AraSim directory
-PSIMDIR="/fs/ess/PAS1960/buildingPueoSim" 
-#PSIMDIR="/users/PAS1960/dylanwells1629/buildingPueoSim"
+#PSIMDIR="/fs/ess/PAS1960/buildingPueoSim" 
+PSIMDIR="/users/PAS1960/dylanwells1629/buildingPueoSim"
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 if [ $PUEO -eq 1 ]
@@ -187,7 +188,7 @@ do
 	then
 	        read -p "Starting generation ${gen} at location ${state}. Press any key to continue... " -n1 -s
 		# Make the run name directory
-		mkdir -m777 $WorkingDir/Run_Outputs/$RunName
+		mkdir -p -m777 $WorkingDir/Run_Outputs/$RunName
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraSimFlags
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraSimConfirmed
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/GPUFlags
@@ -241,7 +242,7 @@ do
 		start=`date +%s`
 		if [ $PUEO -eq 1 ]
 		then
-			./Loop_Parts/Part_B/Part_B_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $SYMMETRY $XFCOUNT
+			./Loop_Parts/Part_B/Part_B_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $SYMMETRY $XFCOUNT $ParallelXFPUEO
 		else
 			if [ $CURVED -eq 0 ]
 			then
@@ -284,7 +285,12 @@ do
 		start=`date +%s`
 		if [ $PUEO -eq 1 ]
 		then
-			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT
+			if [ $ParallelXFPUEO -eq 0]
+			then
+				./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT
+			else
+				./Loop_Parts/Part_B/Part_B2_Parallel_Pueo.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT $PSIMDIR $SYMMETRY $exp $NNT 
+			fi
 		else
 			if [ $database_flag -eq 0 ]
 			then
@@ -305,19 +311,22 @@ do
 	## Part C ##
 	if [ $state -eq 4 ]
 	then
-	  start=`date +%s`
-	  indiv=1
-	  if [ $PUEO -eq 1 ]
-	  then
-			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv $SYMMETRY $PSIMDIR
-	  else
+		start=`date +%s`
+		indiv=1
+		if [ $PUEO -eq 0 ]
+		then
 			./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
-	  fi
+		else
+			if [ $ParallelXFPUEO -eq 0 ]
+			then
+				./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv $SYMMETRY $PSIMDIR
+			fi
+		fi
 		state=5
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
-	  end=`date +%s`
-	  runtime=$((end-start))
-	  echo "Part C took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part C took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 
 	## Part D1 ##
@@ -332,7 +341,10 @@ do
 		then
 			./Loop_Parts/Part_D/Part_D1_Array.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
 		else
-			./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $PSIMDIR $exp $NNT $RunName $Seeds $DEBUG_MODE $XFProj $XFCOUNT
+			if [ $ParallelXFPUEO -eq 0 ]
+			then
+				./Loop_Parts/Part_D/Part_D1_PUEO.sh $gen $NPOP $WorkingDir $PSIMDIR $exp $NNT $RunName $Seeds $DEBUG_MODE $XFProj $XFCOUNT
+			fi
 		fi
 		state=6
 
@@ -352,7 +364,10 @@ do
 			./Loop_Parts/Part_D/Part_D2_Array.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
 			#./Loop_Parts/Part_D/Part_D2_AraSeed_Notif.sh $gen $NPOP $WorkingDir $RunName $Seeds $AraSimExec
 		else
-			./Loop_Parts/Part_D/Part_D2_PUEO.sh $gen $NPOP $WorkingDir $RunName $Seeds $PSIMDIR
+			if [ $ParallelXFPUEO -eq 0 ]
+			then
+				./Loop_Parts/Part_D/Part_D2_PUEO.sh $gen $NPOP $WorkingDir $RunName $Seeds $PSIMDIR
+			fi
 		fi
 		state=7
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -377,7 +392,7 @@ do
 				./Loop_Parts/Part_E/Part_E_Curved.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $AraSimExec $XFProj $NSECTIONS $SEPARATION $CURVED
 			fi
 		else
-			./Loop_Parts/Part_E/Part_E_PUEO.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $PSIMDIR $XFProj $PSIMDIR $exp
+			./Loop_Parts/Part_E/Part_E_PUEO.sh $gen $NPOP $WorkingDir $RunName $ScaleFactor $indiv $Seeds $GeoFactor $PSIMDIR $XFProj $PSIMDIR $exp $ParallelXFPUEO
 		fi
 		state=8
 		./SaveState_Prototype.sh $gen $state $RunName $indiv 

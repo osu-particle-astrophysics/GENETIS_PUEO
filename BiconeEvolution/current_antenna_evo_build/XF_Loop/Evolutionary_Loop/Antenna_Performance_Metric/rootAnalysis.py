@@ -37,7 +37,7 @@ ROOT.gInterpreter.Declare('#include "Geoid.h"')
 def EffectiveVolume2(thisColor,thisLabel):
 
     #root = g.WorkingDir + "/Run_Outputs/" + g.RunName + "/Root_Files/" + str(g.gen) + "_Root_Files"
-    root = "{}/Run_Outputs/{}/Root_Files/{}_Root_Files".format(g.WorkingDir, g.RunName, g.gen)
+    root = "{}/Run_Outputs/{}/Root_Files/{}_Root_Files/{}".format(g.WorkingDir, g.RunName, g.gen, g.indiv)
     
     print(root)
     

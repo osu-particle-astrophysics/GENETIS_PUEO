@@ -94,6 +94,7 @@ do
 
 	sleep 1
 	# echo a progress bar to terminal
+	
 	num_bars=$(bc <<< "scale=0; $percent_gpu/4")
 	num_spaces=$(bc <<< "scale=0; 25-$num_bars")
 	GREEN='\033[0;32m'

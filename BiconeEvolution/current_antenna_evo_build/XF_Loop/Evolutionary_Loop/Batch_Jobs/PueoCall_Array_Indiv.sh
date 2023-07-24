@@ -85,5 +85,6 @@ then
     cd $WorkingDir/Antenna_Performance_Metric
     mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/Generation_Data/$num
     python rootAnalysis.py $gen $num $Exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data/$num $RunName $WorkingDir $NNT
+    touch $WorkingDir/Run_Outputs/$RunName/ROOTFlags/${num}.txt
     echo "finished rootAnalysis" >> $WorkingDir/Run_Outputs/$RunName/ROOTFlags/${num}.txt
 fi

@@ -228,7 +228,8 @@ if [ $ParallelXFPUEO -eq 1 ]
 then
 	cd $WorkingDir/Run_Outputs/$RunName
 	rm GPUFlags/*
-	rm PUEOFlags/*
+	# remove pueo flags recursively
+	rm -Rf PUEOFlags/*
 	rm ROOTFlags/*
 	cd $WorkingDir
 fi

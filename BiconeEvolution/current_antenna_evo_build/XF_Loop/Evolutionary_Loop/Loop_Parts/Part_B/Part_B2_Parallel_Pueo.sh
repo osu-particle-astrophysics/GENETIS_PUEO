@@ -141,19 +141,21 @@ echo "XF flags: $gpu_flags , $percent_gpu % - All XF jobs finished!"
 xf_finish_time=`date +%s`
 
 pueosim_start_time=`date +%s`
-# Now we need to wait until all the pueoSim jobs are finished
-while [[ $pueo_flags -lt $peuocount ]]
+# Now we need to wait until all the root analysis jobs are finished
+cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
+root_flags=$(find . -type f | wc -l)
+while [[ $root_flags -lt $NPOP ]]
 do
-	cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
-
-	pueo_flags=$(find . -type f | wc -l)
-	percent_pueo=$(bc <<< "scale=2; $pueo_flags/$peuocount")
-
-	echo "PUEO flags: $pueo_flags, $percent_pueo %"
+	cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
+	root_flags=$(find . -type f | wc -l)
+	
+	percent_root=$(bc <<< "scale=2; $root_flags/$NPOP")
+	percent_root=$(bc <<< "scale=2; $percent_root*100")
+	echo "ROOT flags: $root_flags, $percent_root %"
 	sleep 10
 done
 
-echo "PUEO flags: $pueo_flags, $percent_pueo % - All pueoSim jobs finished!"
+echo "ROOT flags: $root_flags, $percent_root % - All ROOT analysis finished!"
 
 pueo_finish_time=`date +%s`
 

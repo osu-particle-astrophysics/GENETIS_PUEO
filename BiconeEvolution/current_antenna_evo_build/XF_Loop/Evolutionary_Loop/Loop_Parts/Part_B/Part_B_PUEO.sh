@@ -229,6 +229,7 @@ then
 	cd $WorkingDir/Run_Outputs/$RunName
 	rm GPUFlags/*
 	rm PUEOFlags/*
+	rm ROOTFlags/*
 	cd $WorkingDir
 fi
 

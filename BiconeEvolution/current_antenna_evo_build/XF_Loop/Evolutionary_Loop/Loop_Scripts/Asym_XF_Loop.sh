@@ -204,6 +204,7 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEO_Outputs
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEO_Errors
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/ROOTFlags
 		mkdir -m775 $PSIMDIR/outputs/${RunName}
 		touch $WorkingDir/Run_Outputs/$RunName/time.txt
 

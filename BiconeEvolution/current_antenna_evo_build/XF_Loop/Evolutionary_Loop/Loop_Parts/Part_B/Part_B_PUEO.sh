@@ -25,6 +25,7 @@ GeoFactor=$8
 num_keys=$9
 SYMMETRY=${10}
 XFCOUNT=${11}
+ParallelXFPUEO=${12}
 
 echo $SYMMETRY
 echo $XFCOUNT

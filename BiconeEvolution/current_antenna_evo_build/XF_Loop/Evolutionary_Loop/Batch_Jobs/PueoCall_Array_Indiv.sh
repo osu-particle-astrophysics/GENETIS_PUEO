@@ -21,7 +21,7 @@
 
 threads=40
 
-seed=$((${SLURM_ARRAY_TASK_ID}-1))
+seed=$((SLURM_ARRAY_TASK_ID-1))
 num=$indiv
 
 

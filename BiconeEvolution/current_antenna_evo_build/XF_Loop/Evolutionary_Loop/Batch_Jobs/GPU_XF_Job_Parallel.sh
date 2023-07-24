@@ -67,9 +67,12 @@ echo "finished output.xmacro"
 
 cd $TMPDIR/Antenna_Performance_Metric
 
+echo "files in Antenna_Performance_Metric:"
+ls
+
 for freq in `seq 1 131`
 do
-	mv ${i}_${freq}.uan $WorkingDir/Run_Outputs/$RunName/${gen}_${pop_ind_num}_${freq}.uan
+	mv ${individual_number}_${freq}.uan $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_${freq}.uan
 done
 
 cp $WorkingDir/Antenna_Performance_Metric/XFintoPUEO_Symmetric.py $TMPDIR/Antenna_Performance_Metric/XFintoPUEO_Symmetric.py
@@ -77,6 +80,9 @@ cp $WorkingDir/Antenna_Performance_Metric/XFintoPUEO_Symmetric.py $TMPDIR/Antenn
 module load python/3.6-conda5.2
 mkdir -m775 $TMPDIR/gain_files
 python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $TMPDIR/gain_files --single=$individual_number
+
+mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
+cp $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_*.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
 
 cd $TMPDIR/gain_files
 run_num=$((NPOP * gen + individual_number))
@@ -92,5 +98,7 @@ cp vv_az_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/dat
 chmod -R 777 $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/* 2>/dev/null
 
 cd $WorkingDir/Run_Outputs/$RunName/TMPGPUFlags
+
+echo "done"
 
 echo "The GPU job is done!" >> Part_B_GPU_Flag_${individual_number}.txt 

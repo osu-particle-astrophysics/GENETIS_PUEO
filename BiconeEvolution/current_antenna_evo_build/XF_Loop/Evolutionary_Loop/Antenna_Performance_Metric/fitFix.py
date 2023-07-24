@@ -21,7 +21,7 @@ for i in range(g.npop):
     error_plus = df.iloc[0,2]
     error_minus = df.iloc[0,3]
     fitnesses[i] = fitness
-    errror_plusses[i] = error_plus
+    error_plusses[i] = error_plus
     error_minuses[i] = error_minus
     
 

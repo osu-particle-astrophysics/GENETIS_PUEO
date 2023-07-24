@@ -237,6 +237,7 @@ fi
 # make sure there are no stray jobs from previous runs
 scancel -n ${RunName}
 
+echo "Submitting XF jobs with batch size $batch_size"
 sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR --job-name=${RunName} $job_file 
 
 

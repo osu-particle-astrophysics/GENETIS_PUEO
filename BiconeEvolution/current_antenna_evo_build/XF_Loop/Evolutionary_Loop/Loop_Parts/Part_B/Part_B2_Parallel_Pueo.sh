@@ -141,6 +141,8 @@ do
 
 done
 
+echo "Done!"
+
 cd $WorkingDir/Run_Outputs/$RunName
 
 xf_total_time=$((xf_finish_time - start_time))

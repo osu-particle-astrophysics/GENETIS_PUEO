@@ -19,12 +19,12 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2023_07_23_test4'	## This is the name of the run. You need to make a unique name each time you run.
+RunName='2023_07_24_test1'	## This is the name of the run. You need to make a unique name each time you run.
 TotalGens=100			## number of generations (after initial) to run through
-NPOP=25			## number of individuals per generation; please keep this value below 99
+NPOP=10			## number of individuals per generation; please keep this value below 99
 Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
-NNT=4000			## Number of Neutrinos Thrown in AraSim   
+NNT=2000			## Number of Neutrinos Thrown in AraSim   
 exp=19				## exponent of the energy for the neutrinos in AraSim
 ScaleFactor=1.0			## ScaleFactor used when punishing fitness scores of antennae larger than the drilling holes
 GeoFactor=1			## This is the number by which we are scaling DOWN our antennas. This is passed to many files
@@ -44,12 +44,12 @@ NSECTIONS=2 			## The number of chromosomes
 DEBUG_MODE=0			## 1 for testing (ex: send specific seeds), 0 for real runs
 				## These next variables are the values passed to the GA
 REPRODUCTION=1			## Number (not fraction!) of individuals formed through reproduction
-CROSSOVER=20 #84			## Number (not fraction!) of individuals formed through crossover
-MUTATION=3 #16 #1		## Number (not fraction!) of individuals formed through crossover	
+CROSSOVER=8 #84			## Number (not fraction!) of individuals formed through crossover
+MUTATION=1 #16 #1		## Number (not fraction!) of individuals formed through crossover	
 SIGMA=5 #5				## Standard deviation for the mutation operation (divided by 100)
-ROULETTE=5 #20			## Number (not fraction!) of individuals formed through crossover
-TOURNAMENT=5 #20		## Number (not fraction!) of individuals formed through crossover
-RANK=15 #60				## Number (not fraction!) of individuals formed through crossover
+ROULETTE=1 #20			## Number (not fraction!) of individuals formed through crossover
+TOURNAMENT=1 #20		## Number (not fraction!) of individuals formed through crossover
+RANK=8 #60				## Number (not fraction!) of individuals formed through crossover
 ELITE=0				## Elite function on/off (1/0)
 
 JobPlotting=0        ## 1 to submit a job to plot the fitness scores, 0 to not submit a job to plot the fitness scores

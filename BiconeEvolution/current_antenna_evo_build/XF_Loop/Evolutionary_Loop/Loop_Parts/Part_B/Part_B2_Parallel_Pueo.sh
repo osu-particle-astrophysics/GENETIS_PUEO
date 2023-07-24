@@ -78,7 +78,7 @@ do
 	gpu_flags=$(ls | wc -l)
 
 	cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
-	pueo_flags=$(ls | wc -l)
+	pueo_flags=$(find . -type f | wc -l)
 
 	percent_gpu=$(bc <<< "scale=2; $gpu_flags/$XFCOUNT")
 	percent_gpu=$(bc <<< "scale=2; $percent_gpu*100")
@@ -90,7 +90,7 @@ do
 	tput cuu 2
 	echo "                                                                                            "
 	echo "                      												                      "
-	tput cuu 3
+	tput cuu 4
 
 	sleep 1
 	# echo a progress bar to terminal
@@ -146,7 +146,7 @@ while [[ $pueo_flags -lt $peuocount ]]
 do
 	cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 
-	pueo_flags=$(ls | wc -l)
+	pueo_flags=$(find . -type f | wc -l)
 	percent_pueo=$(bc <<< "scale=2; $pueo_flags/$peuocount")
 
 	echo "PUEO flags: $pueo_flags, $percent_pueo %"

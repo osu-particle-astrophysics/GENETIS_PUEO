@@ -224,6 +224,14 @@ then
 	job_file=$WorkingDir/Batch_Jobs/GPU_XF_Job_Parallel.sh
 fi
 
+if [ $ParallelXFPUEO -eq 1 ]
+then
+	cd $WorkingDir/Run_Outputs/$RunName
+	rm GPUFlags/*
+	rm PUEOFlags/*
+	cd $WorkingDir
+fi
+
 sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR --job-name=${RunName} $job_file 
 
 

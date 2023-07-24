@@ -19,12 +19,12 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2023_07_22_test2'	## This is the name of the run. You need to make a unique name each time you run.
+RunName='2023_07_23_test4'	## This is the name of the run. You need to make a unique name each time you run.
 TotalGens=100			## number of generations (after initial) to run through
-NPOP=5			## number of individuals per generation; please keep this value below 99
+NPOP=25			## number of individuals per generation; please keep this value below 99
 Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
-NNT=1000			## Number of Neutrinos Thrown in AraSim   
+NNT=4000			## Number of Neutrinos Thrown in AraSim   
 exp=19				## exponent of the energy for the neutrinos in AraSim
 ScaleFactor=1.0			## ScaleFactor used when punishing fitness scores of antennae larger than the drilling holes
 GeoFactor=1			## This is the number by which we are scaling DOWN our antennas. This is passed to many files
@@ -44,12 +44,12 @@ NSECTIONS=2 			## The number of chromosomes
 DEBUG_MODE=0			## 1 for testing (ex: send specific seeds), 0 for real runs
 				## These next variables are the values passed to the GA
 REPRODUCTION=1			## Number (not fraction!) of individuals formed through reproduction
-CROSSOVER=2 #84			## Number (not fraction!) of individuals formed through crossover
-MUTATION=1 #16 #1		## Number (not fraction!) of individuals formed through crossover	
+CROSSOVER=20 #84			## Number (not fraction!) of individuals formed through crossover
+MUTATION=3 #16 #1		## Number (not fraction!) of individuals formed through crossover	
 SIGMA=5 #5				## Standard deviation for the mutation operation (divided by 100)
-ROULETTE=1 #20			## Number (not fraction!) of individuals formed through crossover
-TOURNAMENT=1 #20		## Number (not fraction!) of individuals formed through crossover
-RANK=3 #60				## Number (not fraction!) of individuals formed through crossover
+ROULETTE=5 #20			## Number (not fraction!) of individuals formed through crossover
+TOURNAMENT=5 #20		## Number (not fraction!) of individuals formed through crossover
+RANK=15 #60				## Number (not fraction!) of individuals formed through crossover
 ELITE=0				## Elite function on/off (1/0)
 
 JobPlotting=0        ## 1 to submit a job to plot the fitness scores, 0 to not submit a job to plot the fitness scores
@@ -78,7 +78,8 @@ then
 fi
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-BEOSC=/users/PAS1960/dylanwells1629/developing/PUEO2/
+#BEOSC=/users/PAS1960/dylanwells1629/developing/PUEO2/
+BEOSC=/fs/ess/PAS1960/HornEvolutionTestingOSC/GENETIS_PUEO/
 #BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
@@ -192,6 +193,7 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraSimFlags
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraSimConfirmed
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/GPUFlags
+		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/TMPGPUFlags
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/XFGPUOutputs
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/uan_files
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Gain_Plots
@@ -199,6 +201,8 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraOut
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Generation_Data
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEOFlags
+		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEO_Outputs
+		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEO_Errors
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
 		mkdir -m775 $PSIMDIR/outputs/${RunName}
 		touch $WorkingDir/Run_Outputs/$RunName/time.txt
@@ -285,11 +289,11 @@ do
 		start=`date +%s`
 		if [ $PUEO -eq 1 ]
 		then
-			if [ $ParallelXFPUEO -eq 0]
+			if [ $ParallelXFPUEO -eq 0 ]
 			then
 				./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT
 			else
-				./Loop_Parts/Part_B/Part_B2_Parallel_Pueo.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT $PSIMDIR $SYMMETRY $exp $NNT 
+				./Loop_Parts/Part_B/Part_B2_Parallel_Pueo.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT $PSIMDIR $SYMMETRY $exp $NNT $Seeds
 			fi
 		else
 			if [ $database_flag -eq 0 ]

@@ -24,7 +24,6 @@ threads=40
 seed=$((SLURM_ARRAY_TASK_ID-1))
 num=$indiv
 
-
 # run number is the unique identifier for each pueoSim Process
 # 40 processes are run per generation per seed
 run_num=$(((NPOP * gen + num) * 10000 + seed * 40))

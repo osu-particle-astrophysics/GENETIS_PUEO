@@ -20,6 +20,7 @@ PSIMDIR=${12}
 SYMMETRY=${13}
 exp=${14}
 NNT=${15}
+Seeds=${16}
 
 start_time=`date +%s`
 
@@ -41,11 +42,11 @@ peuosimsperindiv=49
 peuocount=$((peuosimsperindiv * NPOP))
 max_jobs=250
 job_cutoff=$((max_jobs - peuosimsperindiv))
-echo "job cutoff: $job_cutoff"
-echo "peuosimsperindiv: $peuosimsperindiv"
-echo "max_jobs: $max_jobs"
-echo "peuocount: $peuocount"
-#echo "pueocount: $peuocount"
+UJSER=$(whoami)
+
+echo ""
+echo ""
+echo ""
 
 # We need to wait until all the XF jobs are finished
 while [[ $gpu_flags -lt $XFCOUNT ]]
@@ -61,9 +62,13 @@ do
 		for file in *
 		do
 			indiv=$(echo "$file" | cut -d'_' -f5)
+			# remove the .txt from the end of the file name
+			indiv=$(echo "$indiv" | cut -d'.' -f1)
 			# submit the pueoSim job
 			cd $WorkingDir
-			sbatch --array=1-49 --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT,Exp=$exp,indiv=$indiv --job-name=${RunName}_${indiv}_psim Batch_Jobs/PueoCall_Array_Indiv.sh
+			sbatch --array=1-49 --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT,Exp=$exp,indiv=$indiv --job-name=${RunName} Batch_Jobs/PueoCall_Array_Indiv.sh
+			# move the cursor up 1 line
+			tput cuu 1
 			# move the file to the GPUFlags directory
 			cd $WorkingDir/Run_Outputs/$RunName/TMPGPUFlags
 			mv $file $WorkingDir/Run_Outputs/$RunName/GPUFlags
@@ -80,8 +85,54 @@ do
 	percent_pueo=$(bc <<< "scale=2; $pueo_flags/$peuocount")
 	percent_pueo=$(bc <<< "scale=2; $percent_pueo*100")
 
-	echo "XF flags: $gpu_flags , $percent_gpu %"
-	echo "PUEO flags: $pueo_flags, $percent_pueo %"
+
+	# clear the previous 2 lines
+	tput cuu 2
+	echo "                                                                                            "
+	echo "                      												                      "
+	tput cuu 3
+
+	sleep 1
+	# echo a progress bar to terminal
+	num_bars=$(bc <<< "scale=0; $percent_gpu/4")
+	num_spaces=$(bc <<< "scale=0; 25-$num_bars")
+	GREEN='\033[0;32m'
+	NC='\033[0m'
+	echo -ne "XF   "
+	#flags: $gpu_flags, $percent_gpu % - ["
+	echo -ne "[${GREEN}"
+	for ((i=0; i<$num_bars; i++))
+	do
+		echo -ne "#"
+	done
+	echo -ne "${NC}"
+	for ((i=0; i<$num_spaces; i++))
+	do
+		echo -ne "#"
+	done
+	echo -ne "] - flags: $gpu_flags, $percent_gpu %"
+	# new line
+	echo -ne "\n"
+	# change color back to white
+	echo -ne "${NC}"
+	# make new bars and spaces for the pueoSim progress bar
+	num_bars=$(bc <<< "scale=0; $percent_pueo/4")
+	num_spaces=$(bc <<< "scale=0; 25-$num_bars")
+	echo -ne "PUEO "
+	#flags: $pueo_flags, $percent_pueo % - ["
+	echo -ne "[${GREEN}"
+	for ((i=0; i<$num_bars; i++))
+	do
+		echo -ne "#"
+	done
+	echo -ne "${NC}"
+	for ((i=0; i<$num_spaces; i++))
+	do
+		echo -ne "#"
+	done
+	echo -ne "] - flags: $pueo_flags, $percent_pueo %"
+	echo -ne "\n"
+
 done
 
 echo "XF flags: $gpu_flags , $percent_gpu % - All XF jobs finished!"

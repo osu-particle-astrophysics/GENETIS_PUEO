@@ -104,11 +104,11 @@ do
 		sleep 10
 	else
 		for file in *
-		do
+		do	
+			# get the antenna number from the file name
 			indiv=$(echo "$file" | cut -d'_' -f5)
-			# remove the .txt from the end of the file name
 			indiv=$(echo "$indiv" | cut -d'.' -f1)
-			# submit the pueoSim job
+			indiv=$(($indiv - $gen*$NPOP))
 			cd $WorkingDir
 			sbatch --array=1-49 --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT,Exp=$exp,indiv=$indiv --job-name=${RunName} Batch_Jobs/PueoCall_Array_Indiv.sh
 			# move the cursor up 1 line
@@ -141,7 +141,15 @@ do
 
 done
 
+pueo_finish_time=`date +%s`
+
 echo "Done!"
+
+mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
+for i in `seq $NPOP`
+do
+	mv $XmacrosDir/antenna_images/${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png
+done
 
 cd $WorkingDir/Run_Outputs/$RunName
 

@@ -57,18 +57,6 @@ def writeGains(data, freq_list, file_name):
         for i in range(num_freq):
             f.write(f'{freq_list[i]} {data[i]}\n')
 
-
-## Function calls
-## Here's the path to output to
-file_header = g.out_dir
-## Loop over the number of individuals
-if g.single:
-    callFunctions(g.single)
-    exit()
-
-for indiv in range(1, g.npop+1):
-    callFunctions(indiv)
-
 def callFunctions(indiv):
     ## Let's call the functions
     ## Start by getting the gain data
@@ -103,3 +91,14 @@ def callFunctions(indiv):
     for i in indices:
         writeGains(vpol_data_t[i], freq_list, v_el_file)
         writeGains(vpol_data_t[i], freq_list, h_el_file)
+
+## Function calls
+## Here's the path to output to
+file_header = g.out_dir
+## Loop over the number of individuals
+if g.single:
+    callFunctions(g.single)
+    exit()
+
+for indiv in range(1, g.npop+1):
+    callFunctions(indiv)

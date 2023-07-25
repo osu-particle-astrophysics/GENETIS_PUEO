@@ -49,7 +49,7 @@ cd $WorkingDir/Run_Outputs/$RunName
 #mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
 #mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
 #mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
-mv -f *.csv Generation_Data/
+mv -f *.csv Generation_Data/ 2> /dev/null
 
 
 cd $WorkingDir/Run_Outputs/$RunName

@@ -83,6 +83,7 @@ peuocount=$((peuosimsperindiv * NPOP))
 max_jobs=250
 job_cutoff=$((max_jobs - peuosimsperindiv))
 UJSER=$(whoami)
+already_checked=0
 
 echo "Waiting for XF and pueoSim jobs..."
 echo ""
@@ -129,8 +130,12 @@ do
 
 	if [ $gpu_flags -eq $XFCOUNT ]
 	then
-		xf_finish_time=`date +%s`
-		pueosim_start_time=`date +%s`
+	    if [ $already_checked -eq 0 ]
+	    then
+			xf_finish_time=`date +%s`
+			pueosim_start_time=`date +%s`
+			already_checked=1
+		fi
 	fi
 
 	tput cuu 3

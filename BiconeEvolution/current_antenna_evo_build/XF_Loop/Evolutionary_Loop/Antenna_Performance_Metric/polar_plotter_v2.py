@@ -33,21 +33,21 @@ parser = argparse.ArgumentParser()
 parser.add_argument("source", help="Name of source folder from home directory", type=str)
 parser.add_argument("destination", help="Name of destination folder from home directory", type=str)
 parser.add_argument("freq_num", help="Frequency number (1-60) to plot", type=int)
-parser.add_argument("NPOP", help="Number of individuals in a generation (ex: 10)", type=int)
+parser.add_argument("npop", help="Number of individuals in a generation (ex: 10)", type=int)
 parser.add_argument("gen", help="Generation number (ex: 0)", type=int)
-parser.add_argument("SYMMETRY", help="Symmetry of antenna (ex: 2)", type=int)
+parser.add_argument("symmetry", help="Symmetry of antenna (ex: 2)", type=int)
 g=parser.parse_args()
 
 sims_per_antenna = 1
-if g.SYMMETRY == 0:
+if g.symmetry == 0:
     sims_per_antenna = 2
 
-npop = g.NPOP * sims_per_antenna
+pop_size = g.npop * sims_per_antenna
 
 ## Loop over files
 # Declare list for each file's gain list
 gains = []
-for individual in range(1, npop+1):
+for individual in range(1, pop_size+1):
 	## Open the file to read
 	## NOTE: Looks for folder in source that contains a folder with name "gen_#"
 	with open(g.source + "/" + str(individual) + "/" + str(g.gen) + "_" + str(individual) + "_" + str(g.freq_num) + ".uan", "r") as f:
@@ -128,7 +128,7 @@ plt.title("Antennas at Frequency number {} MHz (Vertical Polarization)".format(r
 plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_Vpol.png")
 
 ## plot the second antenna ###################
-if g.SYMMETRY == 0:
+if g.symmetry == 0:
 	## Declare a figure
 	fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize = (10, 8))
 	ax.set_theta_zero_location("N")

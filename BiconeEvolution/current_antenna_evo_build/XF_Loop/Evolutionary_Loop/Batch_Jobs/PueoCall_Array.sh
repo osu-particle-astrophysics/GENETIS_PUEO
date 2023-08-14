@@ -26,7 +26,7 @@ seed=$(($((${SLURM_ARRAY_TASK_ID}-1))%${Seeds}+1))
 
 # run number is the unique identifier for each pueoSim Process
 # 40 processes are run per generation per seed
-run_num=$(((NPOP * gen + num) * 1000 + seed * 40))
+run_num=$(((NPOP * gen + num) * 1000 + seed * threads))
 
 
 # set up environment

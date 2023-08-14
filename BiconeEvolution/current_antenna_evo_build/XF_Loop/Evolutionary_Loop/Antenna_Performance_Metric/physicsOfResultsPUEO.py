@@ -33,7 +33,7 @@ parser.add_argument("indiv", help="individual number", type=int)
 parser.add_argument("energy", help="energy of neutrino", type=int)
 g = parser.parse_args()
 
-print(g.source, g.destination, g.indiv, g.energy)
+#print(g.source, g.destination, g.indiv, g.energy)
 
 libPath = "/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib"
 #libPath = "/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib"
@@ -83,7 +83,6 @@ def getFiles(source, energy, indiv):
     # The root files will be named IceFinal_$genNum_$indiv_$seed.root
 
     root = source
-    print(root)
     all_tree_pattern = "IceFinal_allTree_*_{}_*.root".format(indiv)
     pass_tree_pattern = "IceFinal_passTree_*_{}_*_0.root".format(indiv)
 
@@ -92,7 +91,7 @@ def getFiles(source, energy, indiv):
         j = 0
         for name in files:
             if fnmatch(name, all_tree_pattern):
-                print(os.path.join(path, name))
+                #print(os.path.join(path, name))
                 
                 try:
                     # Open the root file and assign the trees to variables
@@ -102,7 +101,7 @@ def getFiles(source, energy, indiv):
 
                     allTree = IceFinalFile.allTree
                     allEvents = allTree.GetEntries()
-                    print(allEvents)
+                    #print(allEvents)
                     TotalEvents[energy].append(allEvents)
                     
                 except Exception as e:
@@ -110,7 +109,7 @@ def getFiles(source, energy, indiv):
                     continue
                 
             elif fnmatch(name, pass_tree_pattern):
-                print(os.path.join(path, name))
+                #print(os.path.join(path, name))
                 
                 try:    
                     
@@ -122,7 +121,7 @@ def getFiles(source, energy, indiv):
                     
                     nuWeights = []
                     nuPasses = []
-                    print(passEvents)
+                    #print(passEvents)
                     
                 except Exception as e:
                     print("Error opening file", e)
@@ -199,7 +198,7 @@ getFiles(g.source, g.energy, g.indiv)
 
 
 
-print("Plotting")
+print("Plotting PORP")
 ### Plotting ###
 mpl.rcParams['text.usetex'] = True
 # colorblind friendly colors

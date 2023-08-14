@@ -110,7 +110,7 @@ chmod 775 *
 mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
 for i in `seq $NPOP`
 do
-	mv ${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png
+	mv antenna_images/${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png
 done
 
 #chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/

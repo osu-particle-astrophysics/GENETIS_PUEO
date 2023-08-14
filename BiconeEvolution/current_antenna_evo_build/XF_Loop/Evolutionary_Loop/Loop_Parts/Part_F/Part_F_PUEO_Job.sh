@@ -1,18 +1,22 @@
-###########################################################################################
-#
-#    Part F: Plotting and visualizing the fitness scores
-#
-#
-##########################################################################################
-NPOP=$1
-WorkingDir=$2
-RunName=$3
-gen=$4
-Seeds=$5
-exp=$6
-GeoFactor=$7
-PSIMDIR=$8
-SYMMETRY=$9
+#!/bin/bash
+## This Job submits the plotting software for the PUEO loop
+#SBATCH --account=PAS1960
+#SBATCH --time=10:00:00
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8
+#SBATCH --output=Plot.output
+#SBATCH --error=Plot.error
+
+#variables
+#NPOP=$1
+#WorkingDir=$2
+#RunName=$3
+#gen=$4
+#Seeds=$5
+#exp=$6
+#GeoFactor=$7
+#PSIMDIR=$8
+#SYMMETRY=$9
 
 echo "exp: $exp"
 cd $WorkingDir
@@ -39,7 +43,7 @@ python Rainbow_Plotter_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data
 module load python/3.7-2019.10
 
 # Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
-python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen $WorkingDir
+python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
 #python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
@@ -51,7 +55,7 @@ cd $WorkingDir/Run_Outputs/$RunName
 #mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
 mv -f *.csv Generation_Data/
 
-
+#open permissions on the data files
 cd $WorkingDir/Run_Outputs/$RunName
 chmod -R 775 Generation_Data
 

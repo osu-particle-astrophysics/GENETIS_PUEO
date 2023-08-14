@@ -37,12 +37,14 @@ else
 fi
 
 cp Generation_Data/generationDNA.csv Run_Outputs/$RunName/${gen}_generationDNA.csv
-mv Generation_Data/generators.csv Run_Outputs/$RunName/${gen}_generators.csv
+
+# redirect stderr to /dev/null to avoid error messages when the file doesn't exist
+mv Generation_Data/generators.csv Run_Outputs/$RunName/${gen}_generators.csv 2>/dev/null
 if [ $gen -gt 0 ]
 then
         mv Generation_Data/parents.csv Run_Outputs/$RunName/${gen}_parents.csv
-        mv Generation_Data/genes.csv Run_Outputs/$RunName/${gen}_genes.csv
-        mv Generation_Data/mutations.csv Run_Outputs/$RunName/${gen}_mutations.csv
+        mv Generation_Data/genes.csv Run_Outputs/$RunName/${gen}_genes.csv 2>/dev/null
+        mv Generation_Data/mutations.csv Run_Outputs/$RunName/${gen}_mutations.csv 2>/dev/null
 fi
 
 

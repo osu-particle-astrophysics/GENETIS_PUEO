@@ -142,7 +142,25 @@ fi
 
 #we cat things into the simulation_PEC.xmacro file, so we can just echo the list to it before catting other files
 
-cat PUEO_skeleton.txt >> simulation_PEC.xmacro
+#cat PUEO_skeleton.txt >> simulation_PEC.xmacro
+# Would like to just be able to import to XF with a command in the xmacros
+# And then I only need to cat in a handful of scripts into simulation_PEC.xmacro
+# According Walter Janusz at Remcom, this isn't possible yet. So we'll just have to 
+# 	concatenate everything into a fil ourselves
+
+cat headerPUEO.xmacro >> simulation_PEC.xmacro
+cat functionCallsPUEO_reordered.xmacro >> simulation_PEC.xmacro
+#cat functionCallsPUEO.xmacro >> simulation_PEC.xmacro
+cat buildWalls.xmacro >> simulation_PEC.xmacro
+cat buildRidges.xmacro >> simulation_PEC.xmacro
+cat CreatePEC.xmacro >> simulation_PEC.xmacro
+cat CreateAntennaSource.xmacro >> simulation_PEC.xmacro
+cat CreateGrid.xmacro >> simulation_PEC.xmacro
+cat CreateSensors.xmacro >> simulation_PEC.xmacro
+cat CreateAntennaSimulationData.xmacro >> simulation_PEC.xmacro
+cat QueueSimulation.xmacro >> simulation_PEC.xmacro
+cat MakeImage.xmacro >> simulation_PEC.xmacro
+
 # Replace the number of times we simulate based on the symmetry
 # Annoying because we need to count to the the opposite of $SYMMETRY
 if [ $SYMMETRY -eq 1 ]
@@ -151,8 +169,7 @@ then
 else
 	vim -c ':%s/SYMMETRY/1' + -c ':wq!' simulation_PEC.xmacro
 fi
-#cat simulationPECmacroskeleton_PUEO.txt >> simulation_PEC.xmacro
-#cat simulationPECmacroskeleton2_PUEO.txt >> simulation_PEC.xmacro
+
 
 #we need to change the gridsize by the same factor as the antenna size
 #the gridsize in the macro skeleton is currently set to 0.1
@@ -199,7 +216,7 @@ fi
 ## We'll make the run name the job name
 ## This way, we can use it in the SBATCH commands
 #I think this should work for PUEO too
-sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen} --job-name=${RunName} Batch_Jobs/GPU_XF_Job.sh
+sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen},SYMMETRY=$SYMMETRY --job-name=${RunName} Batch_Jobs/GPU_XF_Job.sh
 
 
 

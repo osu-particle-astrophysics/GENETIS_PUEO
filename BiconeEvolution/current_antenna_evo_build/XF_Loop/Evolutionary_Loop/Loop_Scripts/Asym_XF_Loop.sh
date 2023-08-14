@@ -19,12 +19,12 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2023_06_21_Test_11'	## This is the name of the run. You need to make a unique name each time you run.
+RunName='2023_07_22_test2'	## This is the name of the run. You need to make a unique name each time you run.
 TotalGens=100			## number of generations (after initial) to run through
 NPOP=5			## number of individuals per generation; please keep this value below 99
 Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
-NNT=400			## Number of Neutrinos Thrown in AraSim   
+NNT=1000			## Number of Neutrinos Thrown in AraSim   
 exp=19				## exponent of the energy for the neutrinos in AraSim
 ScaleFactor=1.0			## ScaleFactor used when punishing fitness scores of antennae larger than the drilling holes
 GeoFactor=1			## This is the number by which we are scaling DOWN our antennas. This is passed to many files
@@ -43,19 +43,41 @@ SEPARATION=0    		## If 1, separation evolves. If 0, separation is constant
 NSECTIONS=2 			## The number of chromosomes
 DEBUG_MODE=0			## 1 for testing (ex: send specific seeds), 0 for real runs
 				## These next variables are the values passed to the GA
-REPRODUCTION=5			## Number (not fraction!) of individuals formed through reproduction
-CROSSOVER=0 #84			## Number (not fraction!) of individuals formed through crossover
-MUTATION=0 #16 #1			## Probability of mutation (divided by 100)
-SIGMA=0 #5				## Standard deviation for the mutation operation (divided by 100)
-ROULETTE=5 #20			## Percent of individuals selected through roulette (divided by 10)
-TOURNAMENT=0 #20			## Percent of individuals selected through tournament (divided by 10)
-RANK=0 #60				## Percent of individuals selected through rank (divided by 10)
+REPRODUCTION=1			## Number (not fraction!) of individuals formed through reproduction
+CROSSOVER=2 #84			## Number (not fraction!) of individuals formed through crossover
+MUTATION=1 #16 #1		## Number (not fraction!) of individuals formed through crossover	
+SIGMA=5 #5				## Standard deviation for the mutation operation (divided by 100)
+ROULETTE=1 #20			## Number (not fraction!) of individuals formed through crossover
+TOURNAMENT=1 #20		## Number (not fraction!) of individuals formed through crossover
+RANK=3 #60				## Number (not fraction!) of individuals formed through crossover
 ELITE=0				## Elite function on/off (1/0)
 
+JobPlotting=0        ## 1 to submit a job to plot the fitness scores, 0 to not submit a job to plot the fitness scores
 #####################################################################################################################################################
 
+######## Check For Errors in Variables ################################################################################################################
+
+
+if [ $((REPRODUCTION + CROSSOVER + MUTATION)) -gt $NPOP ]
+then
+	echo "ERROR: reproduction + crossover + mutation must be less than or equal to NPOP"
+	exit 1
+fi
+
+if [ $((ROULETTE + TOURNAMENT + RANK)) -gt $NPOP ]
+then
+	echo "ERROR: roulette + tournament + rank must be less than or equal to NPOP"
+	exit 1
+fi
+
+if [ $((CROSSOVER % 2)) -ne 0 ]
+then
+	echo "ERROR: crossover must be even"
+	exit 1
+fi
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
+#BEOSC=/users/PAS1960/dylanwells1629/developing/GENETIS_PUEO/
 BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
@@ -65,12 +87,13 @@ echo $XFProj
 #AraSimExec="/fs/ess/PAS1960/BiconeEvolutionOSC/AraSim"  ##Location of AraSim.exe
 AraSimExec="${WorkingDir}/../../../../AraSim"
 #$BEOSC/AraSim ## Location of AraSim directory
-PSIMDIR="/fs/ess/PAS1960/buildingPueoSim/" 
+PSIMDIR="/fs/ess/PAS1960/buildingPueoSim" 
+#PSIMDIR="/users/PAS1960/dylanwells1629/buildingPueoSim"
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 if [ $PUEO -eq 1 ]
 then
-	source /fs/ess/PAS1960/buildingPueoSim/set_env.sh	
+	source ${PSIMDIR}/set_env.sh	
 	if [ $SYMMETRY -eq 0 ]
 	then
 		XFCOUNT=$((NPOP*2))
@@ -154,7 +177,8 @@ echo "${indiv}"
 #InitialGen=${gen}
 
 for gen in `seq $InitialGen $TotalGens`
-do
+do	
+	genstart=`date +%s`
 	#read -p "Starting generation ${gen} at location ${state}. Press any key to continue... " -n1 -s
 	
 
@@ -175,6 +199,8 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Generation_Data
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
+		mkdir -m775 $PSIMDIR/outputs/${RunName}
+		touch $WorkingDir/Run_Outputs/$RunName/time.txt
 
 		head -n 53 Loop_Scripts/Asym_XF_Loop.sh | tail -n 33 > $WorkingDir/Run_Outputs/$RunName/run_details.txt
 		# Create the run's date and save it in the run's directory
@@ -188,6 +214,8 @@ do
 	##Here, we are running the genetic algorithm and moving the outputs to csv files 
 	if [ $state -eq 1 ]
 	then
+		echo "Times for generation ${gen}" >> $WorkingDir/Run_Outputs/$RunName/time.txt
+		start=`date +%s`
 		if [ $PUEO -eq 0 ]
 		then
 			if [ $CURVED -eq 0 ] #Evolve straight sides
@@ -201,13 +229,16 @@ do
 		fi
 		state=2
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
-
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part A took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 
 
 	## Part B1 ##
 	if [ $state -eq 2 ]
 	then
+		start=`date +%s`
 		if [ $PUEO -eq 1 ]
 		then
 			./Loop_Parts/Part_B/Part_B_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $SYMMETRY $XFCOUNT
@@ -241,12 +272,16 @@ do
 		fi
 		state=3
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part B1 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 		
 
 	## Part B2 ##
 	if [ $state -eq 3 ]
 	then
+		start=`date +%s`
 		if [ $PUEO -eq 1 ]
 		then
 			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $indiv $gen $NPOP $WorkingDir $RunName $XmacrosDir $XFProj $GeoFactor $num_keys $NSECTIONS $XFCOUNT
@@ -262,26 +297,33 @@ do
 		state=4
 
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part B2 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 
 	## Part C ##
 	if [ $state -eq 4 ]
 	then
+	  start=`date +%s`
 	  indiv=1
 	  if [ $PUEO -eq 1 ]
 	  then
-			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv $SYMMETRY
+			./Loop_Parts/Part_C/Part_C_PUEO.sh $NPOP $WorkingDir $RunName $gen $indiv $SYMMETRY $PSIMDIR
 	  else
 			./Loop_Parts/Part_C/Part_C.sh $NPOP $WorkingDir $RunName $gen $indiv
 	  fi
 		state=5
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
-
+	  end=`date +%s`
+	  runtime=$((end-start))
+	  echo "Part C took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 
 	## Part D1 ##
 	if [ $state -eq 5 ]
 	then
+		start=`date +%s`
 	        #The reason here why Part_D1.sh is run after the save state is changed is because all Part_D1 does is submit AraSim jobs which are their own jobs and run on their own time
 		#We need to make a new AraSim job script which takes the runname as a flag 
 		#./Loop_Parts/Part_D/Part_D1_AraSeed.sh $gen $NPOP $WorkingDir $AraSimExec $exp $NNT $RunName $Seeds $DEBUG_MODE
@@ -295,12 +337,15 @@ do
 		state=6
 
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
-
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part D1 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 
 	## Part D2 ##
 	if [ $state -eq 6 ]
 	then
+		start=`date +%s`
 		#./Part_D2_AraSeed.sh 
 		if [ $PUEO -eq 0 ]
 		then
@@ -311,7 +356,9 @@ do
 		fi
 		state=7
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
-
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part D2 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 
 	## Part E ##
@@ -320,6 +367,7 @@ do
 	## moves the .uan files from Antenna Performance Metric to RunOutputs/$RunName folder
 	if [ $state -eq 7 ]
 	then
+		start=`date +%s`
 		if [ $PUEO -eq 0 ]
 		then
 			if [ $CURVED -eq 0 ]	# Evolve straight sides
@@ -333,12 +381,15 @@ do
 		fi
 		state=8
 		./SaveState_Prototype.sh $gen $state $RunName $indiv 
-
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part E took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
 
 	## Part F ##
 	if [ $state -eq 8 ]
 	then
+		start=`date +%s`
 		if [ $PUEO -eq 0 ]
 		then
 			if [ $CURVED -eq 0 ]
@@ -348,11 +399,22 @@ do
 				./Loop_Parts/Part_F/Part_F_Curved.sh $NPOP $WorkingDir $RunName $gen $Seeds $NSECTIONS
 			fi
 		else
-			sbatch --export=ALL,gen=$gen,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp,GeoFactor=$ScaleFactor,PSIMDIR=$PSIMDIR --job-name=Plotting_${RunName}_${gen}  ./Loop_Parts/Part_F/Part_F_PUEO.sh
+			if [ $JobPlotting -eq 0 ]
+			then
+				./Loop_Parts/Part_F/Part_F_PUEO.sh $NPOP $WorkingDir $RunName $gen $Seeds $exp $ScaleFactor $PSIMDIR $SYMMETRY
+			else
+				sbatch --export=ALL,NPOP=$NPOP,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen,Seeds=$Seeds,exp=$exp,GeoFactor=$ScaleFactor,PSIMDIR=$PSIMDIR,SYMMETRY=$SYMMETRY --job-name=Plotting_${RunName}_${gen}  ./Loop_Parts/Part_F/Part_F_PUEO.sh
+			fi
 		fi
 		state=1
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		end=`date +%s`
+		runtime=$((end-start))
+		echo "Part F took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
+	genend=`date +%s`
+	genruntime=$((genend-genstart))
+	echo "Generation ${gen} took ${genruntime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 done
 
 cp generationDNA.csv "$WorkingDir"/Run_Outputs/$RunName/FinalGenerationParameters.csv

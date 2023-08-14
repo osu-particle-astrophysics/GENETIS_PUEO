@@ -11,7 +11,7 @@ parser.add_argument("source", help="Name of source folder from home directory", 
 parser.add_argument("destination", help="Name of destination folder from home directory", type=str)
 parser.add_argument("numGens", help="Number of generations the code is running for", type=int)
 parser.add_argument("NPOP", help="Number of individuals in a population", type=int)
-parser.add_argument("GeoScalingFactor", help="The number by which we are scaling the antenna dimensions", type=int)
+parser.add_argument("GeoScalingFactor", help="The number by which we are scaling the antenna dimensions", type=float)
 g = parser.parse_args()
 
 # The name of the plot that will be put into the destination folder, g.destination

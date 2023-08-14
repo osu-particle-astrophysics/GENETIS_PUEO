@@ -33,14 +33,21 @@ parser = argparse.ArgumentParser()
 parser.add_argument("source", help="Name of source folder from home directory", type=str)
 parser.add_argument("destination", help="Name of destination folder from home directory", type=str)
 parser.add_argument("freq_num", help="Frequency number (1-60) to plot", type=int)
-parser.add_argument("NPOP", help="Number of individuals in a generation (ex: 10)", type=int)
+parser.add_argument("npop", help="Number of individuals in a generation (ex: 10)", type=int)
 parser.add_argument("gen", help="Generation number (ex: 0)", type=int)
+parser.add_argument("symmetry", help="Symmetry of antenna (ex: 2)", type=int)
 g=parser.parse_args()
+
+sims_per_antenna = 1
+if g.symmetry == 0:
+    sims_per_antenna = 2
+
+pop_size = g.npop * sims_per_antenna
 
 ## Loop over files
 # Declare list for each file's gain list
 gains = []
-for individual in range(1, g.NPOP+1):
+for individual in range(1, pop_size+1):
 	## Open the file to read
 	## NOTE: Looks for folder in source that contains a folder with name "gen_#"
 	with open(g.source + "/" + str(individual) + "/" + str(g.gen) + "_" + str(individual) + "_" + str(g.freq_num) + ".uan", "r") as f:
@@ -78,9 +85,9 @@ f3 = open("temp_worst.csv", "r")
 
 ### Saves these indices to variables
 ### Each individual has 2 files, so the index is multiplied by 2 and subtracted by 1
-max_index = (int(f1.readline())*2)-1
-mid_index = (int(f2.readline())*2)-1
-min_index = (int(f3.readline())*2)-1
+max_index = int(f1.readline()) * sims_per_antenna - 1
+mid_index = int(f2.readline()) * sims_per_antenna - 1
+min_index = int(f3.readline()) * sims_per_antenna - 1
 
 ### Closes the temporary files
 f1.close()
@@ -113,7 +120,7 @@ for i in range(len(indiv_list)):
     
     ### Plots the gain pattern for one individual
 	LabelName = "{}".format(str(rank_list[i]) + ": " + str(int((indiv_list[i]+1)/2)))
-	ax.plot(zenith_angles, gains[indiv_list[i]], color = colors[i], linestyle = linestyles[i], alpha = 0.6, linewidth=3, label = LabelName)
+	ax.plot(zenith_angles, gains[indiv_list[i]], color = colors[i%3], linestyle = linestyles[i%3], alpha = 0.6, linewidth=3, label = LabelName)
 
 ### Creates legend and title for plot, then saves as an image
 ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number (Gen ' + str(g.gen)+ ')', fontsize=17)
@@ -121,21 +128,21 @@ plt.title("Antennas at Frequency number {} MHz (Vertical Polarization)".format(r
 plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_Vpol.png")
 
 ## plot the second antenna ###################
+if g.symmetry == 0:
+	## Declare a figure
+	fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize = (10, 8))
+	ax.set_theta_zero_location("N")
+	ax.set_rlabel_position(225)
+	ax.tick_params(axis='both', which='major', labelsize=11.5)
 
-## Declare a figure
-fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize = (10, 8))
-ax.set_theta_zero_location("N")
-ax.set_rlabel_position(225)
-ax.tick_params(axis='both', which='major', labelsize=11.5)
+	### Iterates over the three individuals above (best, worst, and mid performing)
+	for i in range(len(indiv_list2)):
+		
+		### Plots the gain pattern for one individual
+		LabelName = "{}".format(str(rank_list[i]) + ": " + str(int((indiv_list2[i]+1)/2)))
+		ax.plot(zenith_angles, gains[indiv_list2[i]], color = colors[i%3], linestyle = linestyles[i%3], alpha = 0.6, linewidth=3, label = LabelName)
 
-### Iterates over the three individuals above (best, worst, and mid performing)
-for i in range(len(indiv_list2)):
-    
-    ### Plots the gain pattern for one individual
-	LabelName = "{}".format(str(rank_list[i]) + ": " + str(int((indiv_list2[i]+1)/2)))
-	ax.plot(zenith_angles, gains[indiv_list2[i]], color = colors[i], linestyle = linestyles[i], alpha = 0.6, linewidth=3, label = LabelName)
-
-### Creates legend and title for plot, then saves as an image
-ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number (Gen ' + str(g.gen)+ ')', fontsize=17)
-plt.title("Antennas at Frequency number {} MHz (Horizontal Polarization)".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
-plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_Hpol.png")
+	### Creates legend and title for plot, then saves as an image
+	ax.legend(loc = 'lower right', bbox_to_anchor=(1.27, -0.12), title='Individual Number (Gen ' + str(g.gen)+ ')', fontsize=17)
+	plt.title("Antennas at Frequency number {} MHz (Horizontal Polarization)".format(round(200 + 10*(g.freq_num-1), 6)), fontsize = 18)
+	plt.savefig(g.destination + "/polar_plot_" + str(round(200 + 10 * (g.freq_num-1), 3)) + "_Hpol.png")

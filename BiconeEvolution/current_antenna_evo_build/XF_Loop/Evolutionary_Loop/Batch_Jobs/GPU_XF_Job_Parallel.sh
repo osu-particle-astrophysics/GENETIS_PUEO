@@ -50,53 +50,6 @@ xfsolver --use-xstream=true --xstream-use-number=2 --num-threads=2 -v
 
 echo "finished XF solver"
 
-cd $TMPDIR
-mkdir -m775 $TMPDIR/Antenna_Performance_Metric
-
-touch output.xmacro
-echo "var NPOP = 1;" >> output.xmacro
-echo "for (var k = $individual_number; k <= $individual_number; k++){" >> output.xmacro
-
-cat $XmacrosDir/shortened_outputmacroskeleton.txt >> output.xmacro
-
-sed -i "s+fileDirectory+${TMPDIR}+" output.xmacro
-
-xfdtd $XFProj --execute-macro-script=$TMPDIR/output.xmacro || true --splash=false
-
-echo "finished output.xmacro"
-
-cd $TMPDIR/Antenna_Performance_Metric
-
-echo "files in Antenna_Performance_Metric:"
-ls
-
-for freq in `seq 1 131`
-do
-	mv ${individual_number}_${freq}.uan $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_${freq}.uan
-done
-
-cp $WorkingDir/Antenna_Performance_Metric/XFintoPUEO_Symmetric.py $TMPDIR/Antenna_Performance_Metric/XFintoPUEO_Symmetric.py
-
-module load python/3.6-conda5.2
-mkdir -m775 $TMPDIR/gain_files
-python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $TMPDIR/gain_files --single=$individual_number
-
-mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
-cp $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_*.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
-
-cd $TMPDIR/gain_files
-run_num=$((NPOP * gen + individual_number))
-cp hh_0_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_0_Toyon${run_num}
-cp hv_0_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hv_0_Toyon${run_num}
-cp vv_0_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_0_Toyon${run_num}
-cp vh_0_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vh_0_Toyon${run_num}
-cp hh_el_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_el_Toyon${run_num}
-cp hh_az_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_az_Toyon${run_num}
-cp vv_el_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_el_Toyon${run_num}
-cp vv_az_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_az_Toyon${run_num}
-
-chmod -R 777 $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/* 2>/dev/null
-
 cd $WorkingDir/Run_Outputs/$RunName/TMPGPUFlags
 
 echo "done"

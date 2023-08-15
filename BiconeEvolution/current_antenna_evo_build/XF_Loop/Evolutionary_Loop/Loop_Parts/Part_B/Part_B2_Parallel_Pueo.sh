@@ -109,7 +109,12 @@ do
 			# get the antenna number from the file name
 			indiv=$(echo "$file" | cut -d'_' -f5)
 			indiv=$(echo "$indiv" | cut -d'.' -f1)
-			indiv=$(($indiv - $gen*$NPOP))
+
+			# run the xmacro output script
+			cd $WorkingDir/Batch_Jobs
+			./single_XF_output_PUEO.sh $indiv $WorkingDir $XmacrosDir $XFProj $RunName $gen $NPOP $PSIMDIR
+			
+			indiv=$(($indiv % $NPOP))
 			cd $WorkingDir
 			sbatch --array=1-49 --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT,Exp=$exp,indiv=$indiv --job-name=${RunName} Batch_Jobs/PueoCall_Array_Indiv.sh
 			# move the cursor up 1 line

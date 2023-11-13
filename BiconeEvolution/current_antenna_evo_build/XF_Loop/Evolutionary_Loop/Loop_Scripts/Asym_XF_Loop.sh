@@ -79,9 +79,7 @@ then
 fi
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-#BEOSC=/users/PAS1960/dylanwells1629/developing/PUEO2/
-BEOSC=/fs/ess/PAS1960/HornEvolutionTestingOSC/GENETIS_PUEO/
-#BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
+BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
 WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
 XmacrosDir=$WorkingDir/../Xmacros 
@@ -90,8 +88,8 @@ echo $XFProj
 #AraSimExec="/fs/ess/PAS1960/BiconeEvolutionOSC/AraSim"  ##Location of AraSim.exe
 AraSimExec="${WorkingDir}/../../../../AraSim"
 #$BEOSC/AraSim ## Location of AraSim directory
-#PSIMDIR="/fs/ess/PAS1960/buildingPueoSim" 
-PSIMDIR="/users/PAS1960/dylanwells1629/buildingPueoSim"
+PSIMDIR="/fs/ess/PAS1960/buildingPueoSim" 
+#PSIMDIR="/users/PAS1960/dylanwells1629/buildingPueoSim"
 ##Source araenv.sh for AraSim libraries##
 #source /fs/ess/PAS1960/BiconeEvolutionOSC/araenv.sh
 if [ $PUEO -eq 1 ]
@@ -317,6 +315,7 @@ do
 	## Part C ##
 	if [ $state -eq 4 ]
 	then
+
 		start=`date +%s`
 		indiv=1
 		if [ $PUEO -eq 0 ]

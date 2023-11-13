@@ -39,7 +39,7 @@ python Rainbow_Plotter_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data
 module load python/3.7-2019.10
 
 # Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
-python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
+python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen $WorkingDir
 
 #python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 
@@ -49,8 +49,8 @@ cd $WorkingDir/Run_Outputs/$RunName
 #mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
 #mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
 #mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
-mv -f *.csv Generation_Data/ 2> /dev/null
 
+mv -f *.csv Generation_Data/ 2> /dev/null
 
 cd $WorkingDir/Run_Outputs/$RunName
 chmod -R 775 Generation_Data

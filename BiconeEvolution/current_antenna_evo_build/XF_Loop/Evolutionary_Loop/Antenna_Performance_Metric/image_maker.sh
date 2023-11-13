@@ -87,6 +87,7 @@ echo "starting gain plots"
 
 #python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots $freqNum $NPOP $gen $SYMMETRY
 
+
 echo "finished gain plots"
 #
 ### Removes temporary files

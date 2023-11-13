@@ -249,6 +249,3 @@ fi
 
 echo "Submitting XF jobs with batch size $batch_size"
 sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR,batch_size=$batch_size,SingleBatch=$SingleBatch --job-name=${RunName} --time=${job_time} $job_file 
-
-
-

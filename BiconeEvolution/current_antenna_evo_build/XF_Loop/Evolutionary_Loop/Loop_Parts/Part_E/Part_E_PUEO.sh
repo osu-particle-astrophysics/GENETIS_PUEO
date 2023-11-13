@@ -24,24 +24,36 @@ IceMCExec=$9
 XFProj=${10}
 PSIMDIR=${11}
 exp=${12}
-
+ParallelXFPUEO=${13}
 
 echo 'Starting fitness function calculating portion...'
 
-#The rootAnalysis script only works with the base python, so unload 3.6
 module load python/3.6-conda5.2
-module unload python/3.6-conda5.2
+if [ $ParallelXFPUEO -eq 0 ]
+then
+	#The rootAnalysis script only works with the base python, so unload 3.6
+	module unload python/3.6-conda5.2
 
-source $PSIMDIR/set_env.sh
+	source $PSIMDIR/set_env.sh
 
-cd $WorkingDir/Antenna_Performance_Metric
+	cd $WorkingDir/Antenna_Performance_Metric
 
-for i in `seq 1 $NPOP`
-do
-	python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName $WorkingDir
-done
+	for i in `seq 1 $NPOP`
+	do
+		python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName $WorkingDir
+	done
 
-module load python/3.6-conda5.2
+else
+	cd $WorkingDir/Antenna_Performance_Metric
+	python fitFix.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
+	cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
+	for i in `seq 1 $NPOP`
+	do
+		rm -Rf $i
+	done
+fi
+
+
 
 if [ $gen -gt 0 ]
 then

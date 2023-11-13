@@ -35,6 +35,7 @@ parser.add_argument("destination", help="Name of destination folder from home di
 parser.add_argument("freq_num", help="Frequency number (1-60) to plot", type=int)
 parser.add_argument("npop", help="Number of individuals in a generation (ex: 10)", type=int)
 parser.add_argument("gen", help="Generation number (ex: 0)", type=int)
+
 parser.add_argument("symmetry", help="Symmetry of antenna (ex: 2)", type=int)
 g=parser.parse_args()
 
@@ -47,6 +48,7 @@ pop_size = g.npop * sims_per_antenna
 ## Loop over files
 # Declare list for each file's gain list
 gains = []
+
 for individual in range(1, pop_size+1):
 	## Open the file to read
 	## NOTE: Looks for folder in source that contains a folder with name "gen_#"

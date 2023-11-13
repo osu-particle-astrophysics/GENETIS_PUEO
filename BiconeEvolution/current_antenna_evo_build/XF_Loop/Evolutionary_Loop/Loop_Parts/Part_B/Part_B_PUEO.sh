@@ -25,6 +25,8 @@ GeoFactor=$8
 num_keys=$9
 SYMMETRY=${10}
 XFCOUNT=${11}
+ParallelXFPUEO=${12}
+SingleBatch=${13}
 
 echo $SYMMETRY
 echo $XFCOUNT
@@ -216,7 +218,34 @@ fi
 ## We'll make the run name the job name
 ## This way, we can use it in the SBATCH commands
 #I think this should work for PUEO too
-sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen},SYMMETRY=$SYMMETRY --job-name=${RunName} Batch_Jobs/GPU_XF_Job.sh
 
+job_file=$WorkingDir/Batch_Jobs/GPU_XF_Job.sh
+if [ $ParallelXFPUEO -eq 1 ]
+then
+	job_file=$WorkingDir/Batch_Jobs/GPU_XF_Job_Parallel.sh
+fi
 
+if [ $ParallelXFPUEO -eq 1 ]
+then
+	cd $WorkingDir/Run_Outputs/$RunName
+	rm GPUFlags/* 2> /dev/null
+	# remove pueo flags recursively
+	rm -Rf PUEOFlags/* 2> /dev/null
+	rm ROOTFlags/* 2> /dev/null
+	cd $WorkingDir
+fi
 
+# make sure there are no stray jobs from previous runs
+scancel -n ${RunName}
+
+if [ $SingleBatch -eq 1 ]
+then
+	XFCOUNT=$batch_size
+	# set the job time limit to 15 hours
+	job_time="15:00:00"
+else
+	job_time="02:00:00"
+fi
+
+echo "Submitting XF jobs with batch size $batch_size"
+sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR,batch_size=$batch_size,SingleBatch=$SingleBatch --job-name=${RunName} --time=${job_time} $job_file 

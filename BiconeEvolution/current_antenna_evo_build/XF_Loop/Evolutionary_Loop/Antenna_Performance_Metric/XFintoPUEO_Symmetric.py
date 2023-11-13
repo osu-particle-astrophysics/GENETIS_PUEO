@@ -25,6 +25,9 @@ parser.add_argument("npop", help="Number of individuals per generation.", type=i
 parser.add_argument("working_dir", help="Base working directory; usually /path/to/Evolutionary_Loop.", type=Path)
 parser.add_argument("run_name", help="Name of current run; directory in /path/to/Run_Outputs where data is stored.", type=str)
 parser.add_argument("gen", help="The generation the loop is on.", type=int)
+parser.add_argument("out_dir", help="Directory to output to.", type=Path)
+# specific indiv is optional
+parser.add_argument("-s", "--single", help="If you want to run a single individual, enter the number of the individual here.", type=int, default=1)
 g = parser.parse_args()
 
 
@@ -54,43 +57,48 @@ def writeGains(data, freq_list, file_name):
         for i in range(num_freq):
             f.write(f'{freq_list[i]} {data[i]}\n')
 
+def callFunctions(indiv):
+    ## Let's call the functions
+    ## Start by getting the gain data
+    vpol_data, hpol_data = getGains(indiv)
+    vpol_data_t = np.transpose(vpol_data).tolist()
+    hpol_data_t = np.transpose(hpol_data).tolist()
+
+    ## We're treating vv and hh as the same and vh and hv as the same
+    ## So for the _0 files, it's pretty simple:
+    writeGains(vpol_data_t[0], freq_list, file_header / f'vv_0_{g.gen}_{indiv}')
+    writeGains(vpol_data_t[0], freq_list, file_header / f'hh_0_{g.gen}_{indiv}')
+    writeGains(hpol_data_t[0], freq_list, file_header / f'vh_0_{g.gen}_{indiv}')
+    writeGains(hpol_data_t[0], freq_list, file_header / f'hv_0_{g.gen}_{indiv}')
+    ## Now we need to be more careful for the az and el files
+    ## We want the angles 5, 10, 20, 30, 45, 90
+    ## For the azimuth, this is just counting through the phi at 0 theta
+    ## We just pick out the 2nd, 3rd, 5th, 7th, 10th, and 19th sublists
+    ## So we call the writeGains function for each of those lists
+    v_az_file = file_header / f'vv_az_{g.gen}_{indiv}'
+    h_az_file = file_header / f'hh_az_{g.gen}_{indiv}'
+    v_el_file = file_header / f'vv_el_{g.gen}_{indiv}'
+    h_el_file = file_header / f'hh_el_{g.gen}_{indiv}'
+    indices = [1, 2, 4, 6, 9, 18]
+    for i in indices:
+        writeGains(vpol_data_t[i], freq_list, v_az_file)
+        writeGains(hpol_data_t[i], freq_list, h_az_file)
+    ## For the elevation, we need to count through theta at 0 phi
+    ## These are trickier, because theta increments only after all of the phi increments
+    ## So if 0,0 (theta, phi) is in the 0th row, and 0,360 is in the 72nd row
+    ## then 5,0 is in the 73rd row, and we increment by adding 73 for each theta step
+    indices = [73, 146, 292, 438, 657, 1314]
+    for i in indices:
+        writeGains(vpol_data_t[i], freq_list, v_el_file)
+        writeGains(vpol_data_t[i], freq_list, h_el_file)
 
 ## Function calls
 ## Here's the path to output to
-file_header = g.working_dir / 'Test_Outputs' 
+file_header = g.out_dir
 ## Loop over the number of individuals
+if g.single:
+    callFunctions(g.single)
+    exit()
+
 for indiv in range(1, g.npop+1):
-        ## Let's call the functions
-        ## Start by getting the gain data
-        vpol_data, hpol_data = getGains(indiv)
-        vpol_data_t = np.transpose(vpol_data).tolist()
-        hpol_data_t = np.transpose(hpol_data).tolist()
-
-        ## We're treating vv and hh as the same and vh and hv as the same
-        ## So for the _0 files, it's pretty simple:
-        writeGains(vpol_data_t[0], freq_list, file_header / f'vv_0_{g.gen}_{indiv}')
-        writeGains(vpol_data_t[0], freq_list, file_header / f'hh_0_{g.gen}_{indiv}')
-        writeGains(hpol_data_t[0], freq_list, file_header / f'vh_0_{g.gen}_{indiv}')
-        writeGains(hpol_data_t[0], freq_list, file_header / f'hv_0_{g.gen}_{indiv}')
-        ## Now we need to be more careful for the az and el files
-        ## We want the angles 5, 10, 20, 30, 45, 90
-        ## For the azimuth, this is just counting through the phi at 0 theta
-        ## We just pick out the 2nd, 3rd, 5th, 7th, 10th, and 19th sublists
-        ## So we call the writeGains function for each of those lists
-        v_az_file = file_header / f'vv_az_{g.gen}_{indiv}'
-        h_az_file = file_header / f'hh_az_{g.gen}_{indiv}'
-        v_el_file = file_header / f'vv_el_{g.gen}_{indiv}'
-        h_el_file = file_header / f'hh_el_{g.gen}_{indiv}'
-        indices = [1, 2, 4, 6, 9, 18]
-        for i in indices:
-            writeGains(vpol_data_t[i], freq_list, v_az_file)
-            writeGains(hpol_data_t[i], freq_list, h_az_file)
-        ## For the elevation, we need to count through theta at 0 phi
-        ## These are trickier, because theta increments only after all of the phi increments
-        ## So if 0,0 (theta, phi) is in the 0th row, and 0,360 is in the 72nd row
-        ## then 5,0 is in the 73rd row, and we increment by adding 73 for each theta step
-        indices = [73, 146, 292, 438, 657, 1314]
-        for i in indices:
-            writeGains(vpol_data_t[i], freq_list, v_el_file)
-            writeGains(vpol_data_t[i], freq_list, h_el_file)
-
+    callFunctions(indiv)

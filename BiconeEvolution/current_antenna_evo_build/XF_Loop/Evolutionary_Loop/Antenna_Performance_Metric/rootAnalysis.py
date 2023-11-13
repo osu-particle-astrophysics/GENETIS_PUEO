@@ -22,6 +22,7 @@ parser.add_argument("energy", help="Energy exponent of simulated nus", type=int)
 parser.add_argument("opath", help="Output file path", type=str)
 parser.add_argument("RunName", help="Run Name", type=str)
 parser.add_argument("WorkingDir", help="Working Directory", type=str)
+parser.add_argument("nnu", help="Number of neutrinos", type=int)
 g = parser.parse_args()
 
 
@@ -37,7 +38,7 @@ ROOT.gInterpreter.Declare('#include "Geoid.h"')
 def EffectiveVolume2(thisColor,thisLabel):
 
     #root = g.WorkingDir + "/Run_Outputs/" + g.RunName + "/Root_Files/" + str(g.gen) + "_Root_Files"
-    root = "{}/Run_Outputs/{}/Root_Files/{}_Root_Files".format(g.WorkingDir, g.RunName, g.gen)
+    root = "{}/Run_Outputs/{}/Root_Files/{}_Root_Files/{}".format(g.WorkingDir, g.RunName, g.gen, g.indiv)
     
     print(root)
     
@@ -56,34 +57,35 @@ def EffectiveVolume2(thisColor,thisLabel):
     for path, subdirs, files in os.walk(root):
         for name in files:
             #print(name)
-            if fnmatch(name,allTreePattern):
+            #if fnmatch(name,allTreePattern):
                 #print(os.path.join(path,name))
                
                 # this_energy is leftover from Will's code,
                 # I'll keep it in case we ever decide to simulate
                 # multiple energies at once
-                this_energy = g.energy
+                #this_energy = g.energy
 
-                try:
-                    fileName = os.path.join(path,name)
-                    IceFinalFile = ROOT.TFile.Open(fileName)
+                #try:
+                #    fileName = os.path.join(path,name)
+                #    IceFinalFile = ROOT.TFile.Open(fileName)
 
-                    nuWeights = []
-                    nuPasses = []
+                #    nuWeights = []
+                #    nuPasses = []
 
-                    allTree = IceFinalFile.allTree
-                    allEvents = allTree.GetEntries()
+                #    allTree = IceFinalFile.allTree
+                #    allEvents = allTree.GetEntries()
 
-                    TotalEvents[this_energy].append(allEvents)
+                 #   TotalEvents[this_energy].append(allEvents)
                     
 
-                except Exception as e:
-                    print('error! skipping run', e)
-                    continue
-                success_runs.append(fileName)
+                #except Exception as e:
+                #    print('error! skipping run', e)
+                #    continue
+                #success_runs.append(fileName)
                 #If you don't load libraries (or if you can't), you can load events with, e.g. allTree.GetLeaf("eventSummary.neutrino.flavor").GetValue()
                 
-            elif fnmatch(name,passTreePattern):
+
+            if fnmatch(name,passTreePattern):
                 #print(os.path.join(path,name))
                 
                 try: 
@@ -92,6 +94,7 @@ def EffectiveVolume2(thisColor,thisLabel):
                     
                     this_energy=g.energy
                     
+                    TotalEvents[this_energy].append(g.nnu)
                     nuWeights = []
                     nuPasses = []
                     

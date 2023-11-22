@@ -1,6 +1,6 @@
 import argparse
 
-def parseArgs():
+def parse_args():
     '''Parse the command line arguments'''
     parser = argparse.ArgumentParser()
     parser.add_argument('jobs_running', type=int, 

@@ -35,6 +35,6 @@ def main(args):
 
     
 if __name__ == '__main__':
-    args = parseArgs()
+    args = parse_args()
     main(args)
     

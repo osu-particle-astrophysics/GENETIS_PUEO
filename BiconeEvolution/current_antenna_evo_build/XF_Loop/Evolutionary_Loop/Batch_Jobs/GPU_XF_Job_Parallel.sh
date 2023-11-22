@@ -38,7 +38,7 @@ symmetry_multiplier=1
 if [ $SYMMETRY -eq 1 ]
 then
 	symmetry_multiplier=2
-else
+fi
 
 indiv_in_pop=$SLURM_ARRAY_TASK_ID
 
@@ -52,7 +52,8 @@ else
 fi
 
 while [ $indiv_in_pop -le $upper_limit ]
-	individual_number=$((${gen}*${NPOP}*${symmetry_multiplier}+${indiv_in_pop}))
+do
+	individual_number=$((gen*NPOP*symmetry_multiplier+indiv_in_pop))
 
 	## Based on the individual number, we need the right parent directory
 	## This involves checking the individual number being submitted
@@ -89,11 +90,11 @@ while [ $indiv_in_pop -le $upper_limit ]
 	echo "The GPU job is done!" >> $flag_file
 
 	# iterate which individual we're on
-	indiv_in_pop=$(($indiv_in_pop+${batch_size}*${symmetry_multiplier}))
+	indiv_in_pop=$((indiv_in_pop+batch_size*symmetry_multiplier))
 
 	# if we go over tartget, the job doesn't need to wait for
 	# output xmacro and can terminate
-	if [ $indiv_in_pop -gt $target ]
+	if [ $indiv_in_pop -gt $upper_limit ]
 	then
 		exit 0
 	fi

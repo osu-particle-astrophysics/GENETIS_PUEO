@@ -22,7 +22,7 @@ exp=${14}
 NNT=${15}
 Seeds=${16}
 
-start_time=`date +%s`
+start_time=$(date +%s)
 
 function printProgressBar () {
 	#This function will create a progress bar based
@@ -47,12 +47,12 @@ function printProgressBar () {
 		done
 	fi
 	echo -ne "[${GREEN}"
-	for ((i=0; i<$num_bars; i++))
+	for ((i=0; i<num_bars; i++))
 	do
 		echo -ne "#"
 	done
 	echo -ne "${NC}"
-	for ((i=0; i<$num_spaces; i++))
+	for ((i=0; i<num_spaces; i++))
 	do
 		echo -ne "#"
 	done
@@ -72,17 +72,17 @@ mkdir -m775 ${PSIMDIR}/outputs/${RunName}/${gen}_outputs 2> /dev/null
 
 cd $WorkingDir/Run_Outputs/$RunName/GPUFlags
 gpu_flags=$(find . -type f | wc -l)
-cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
-pueo_flags=$(find . -type f | wc -l)
+#cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
+#pueo_flags=$(find . -type f | wc -l)
 cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
 root_flags=$(find . -type f | wc -l)
 
 
-peuosimsperindiv=49
-peuocount=$((peuosimsperindiv * NPOP))
+#peuosimsperindiv=49
+#peuocount=$((peuosimsperindiv * NPOP))
 max_jobs=250
-job_cutoff=$((max_jobs - peuosimsperindiv))
-UJSER=$(whoami)
+#job_cutoff=$((max_jobs - peuosimsperindiv))
+USER=$(whoami)
 already_checked=0
 
 echo "Waiting for XF and pueoSim jobs..."
@@ -100,7 +100,7 @@ do
 	# if there are no files in the TMPGPUFlags directory, 
 	# wait 10 seconds and then check again Or if the number of jobs submitted is greater than 250 - 49
 	jobs_submitted=$(squeue -u $USER | wc -l)
-	if [[ $(ls | wc -l) -eq 0 || $jobs_submitted -gt $job_cutoff ]]
+	if [[ $(ls | wc -l) -eq 0 || $jobs_submitted -gt $max_jobs ]]
 	then
 		sleep 10
 	else
@@ -114,9 +114,16 @@ do
 			cd $WorkingDir/Batch_Jobs
 			./single_XF_output_PUEO.sh $indiv $WorkingDir $XmacrosDir $XFProj $RunName $gen $NPOP $PSIMDIR
 			
-			indiv=$(($indiv % $NPOP))
+			indiv=$((indiv % NPOP))
 			cd $WorkingDir
-			sbatch --array=1-49 --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT,Exp=$exp,indiv=$indiv --job-name=${RunName} Batch_Jobs/PueoCall_Array_Indiv.sh
+
+			# Get the NNT and number of jobs from the python script Antenna_Performance_Metric/calculating_NNT.py
+			jobs_left=$((NPOP-root_flags))
+			parse=$(python Antenna_Performance_Metric/calculating_NNT.py $jobs_submitted $jobs_left $XFCOUNT $NNT $max_jobs)
+			NNT_per_sim=$(echo $parse | cut -d',' -f1)
+			num_jobs=$(echo $parse | cut -d',' -f2)
+
+			sbatch --array=1-$num_jobs --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT_per_sim,Exp=$exp,indiv=$indiv,num_jobs=$num_jobs --job-name=${RunName} Batch_Jobs/PueoCall_Array_Indiv.sh
 			# move the cursor up 1 line
 			tput cuu 1
 			# move the file to the GPUFlags directory
@@ -127,8 +134,8 @@ do
 	cd $WorkingDir/Run_Outputs/$RunName/GPUFlags
 	gpu_flags=$(ls | wc -l)
 
-	cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
-	pueo_flags=$(find . -type f | wc -l)
+	#cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
+	#pueo_flags=$(find . -type f | wc -l)
 
 	cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
 	root_flags=$(find . -type f | wc -l)
@@ -137,8 +144,8 @@ do
 	then
 	    if [ $already_checked -eq 0 ]
 	    then
-			xf_finish_time=`date +%s`
-			pueosim_start_time=`date +%s`
+			xf_finish_time=$(date +%s)
+			pueosim_start_time=$(date +%s)
 			already_checked=1
 		fi
 	fi
@@ -146,17 +153,17 @@ do
 	tput cuu 3
 
 	printProgressBar "GPU" $XFCOUNT
-	printProgressBar "PUEO" $peuocount
+	#printProgressBar "PUEO" $peuocount
 	printProgressBar "ROOT" $NPOP
 
 done
 
-pueo_finish_time=`date +%s`
+pueo_finish_time=$(date +%s)
 
 echo "Done!"
 
 mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
-for i in `seq $NPOP`
+for i in $(seq $NPOP)
 do
 	mv $XmacrosDir/antenna_images/${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png
 done

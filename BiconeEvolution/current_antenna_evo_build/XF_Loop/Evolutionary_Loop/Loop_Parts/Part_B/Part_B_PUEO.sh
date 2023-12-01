@@ -43,7 +43,7 @@ fi
 # the directories are the simulation directories from gen*NPOP+1 to gen*NPOP+10
 # Note that for PUEO, we need TWO XF simulation per individual
 # This is because we need to do the VPol and Hpol
-for i in `seq 1 $XFCOUNT`
+for i in $(seq 1 $XFCOUNT)
 do
         # first, declare the number of the individual we are checking
 	individual_number=$(($gen*$XFCOUNT + $i))
@@ -223,10 +223,6 @@ job_file=$WorkingDir/Batch_Jobs/GPU_XF_Job.sh
 if [ $ParallelXFPUEO -eq 1 ]
 then
 	job_file=$WorkingDir/Batch_Jobs/GPU_XF_Job_Parallel.sh
-fi
-
-if [ $ParallelXFPUEO -eq 1 ]
-then
 	cd $WorkingDir/Run_Outputs/$RunName
 	rm GPUFlags/* 2> /dev/null
 	# remove pueo flags recursively
@@ -248,4 +244,4 @@ else
 fi
 
 echo "Submitting XF jobs with batch size $batch_size"
-sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,indiv_dir=$indiv_dir,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR,batch_size=$batch_size,SingleBatch=$SingleBatch --job-name=${RunName} --time=${job_time} $job_file 
+sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR,batch_size=$batch_size,SingleBatch=$SingleBatch --job-name=${RunName} --time=${job_time} $job_file 

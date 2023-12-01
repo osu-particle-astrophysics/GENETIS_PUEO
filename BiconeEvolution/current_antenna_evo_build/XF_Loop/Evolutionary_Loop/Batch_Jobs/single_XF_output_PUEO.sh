@@ -32,7 +32,7 @@ cd $WorkingDir/Antenna_Performance_Metric
 #echo "files in Antenna_Performance_Metric:"
 #ls
 
-for freq in `seq 1 131`
+for freq in $(seq 1 131)
 do
 	mv ${individual_number}_${freq}.uan $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_${freq}.uan
 done
@@ -41,7 +41,7 @@ done
 module load python/3.6-conda5.2
 python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $WorkingDir/Test_Outputs --single=$individual_number
 
-chmod 777 * $WorkingDir/Test_Outputs/*
+chmod 777 $WorkingDir/Test_Outputs/*
 
 mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
 cp $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_*.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number

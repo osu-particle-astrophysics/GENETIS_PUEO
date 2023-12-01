@@ -54,7 +54,7 @@ echo "PSIMS finished"
 mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/$num
 mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/PUEOFlags/$num
 # move the root files
-for ((i=$run_num; i<$((threads + run_num)); i++))
+for ((i=run_num; i<$((threads + run_num)); i++))
 do
     mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/$num/IceFinal_skimmed_${gen}_${num}_${i}.root
     #mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/$num/IceFinal_allTree_${gen}_${num}_${i}.root
@@ -65,7 +65,7 @@ done
 
 echo $gen > $TMPDIR/${run_num}.txt
 echo $num >> $TMPDIR/${run_num}.txt
-echo $seed >> $TMPDIR/${run_numd}.txt
+echo $seed >> $TMPDIR/${run_num}.txt
 
 # move the flag file
 mv $TMPDIR/${run_num}.txt $WorkingDir/Run_Outputs/$RunName/PUEOFlags/$num
@@ -77,7 +77,7 @@ rm ${run_num}.txt.*
 
 #if there are 49 flags in the PUEOFlags/$num directory, run the root analysis
 flag_count=$(ls | wc -l)
-if [ $flag_count -eq 49 ]
+if [ $flag_count -eq $num_jobs ]
 then
     module load python/3.6-conda5.2
     module unload python/3.6-conda5.2

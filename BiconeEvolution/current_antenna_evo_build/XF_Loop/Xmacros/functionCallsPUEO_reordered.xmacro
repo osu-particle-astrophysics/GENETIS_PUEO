@@ -143,3 +143,6 @@ for(var j = indiv;j<=NPOP;j++)
 	MakeImage(j);
 } // uncomment?
 file.close();
+App.quit();
+
+/* ****************************** Function Definitions *******************************  */

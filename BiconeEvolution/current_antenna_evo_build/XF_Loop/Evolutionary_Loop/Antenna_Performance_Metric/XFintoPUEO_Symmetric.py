@@ -91,20 +91,19 @@ def callFunctions(indiv):
     h_el_file = file_header / f'hh_el_{g.gen}_{indiv}'
     indices = [1, 2, 4, 6, 9, 18]
     for i in indices:
-        writeGains(vpol_gain_t[i], vpol_phase_t[i],
-                   freq_list, v_az_file)
-        writeGains(hpol_gain_t[i], hpol_phase_t[i],
-                   freq_list, h_az_file)
+        writeGains(vpol_gain_t[i], vpol_phase_t[i], freq_list, v_az_file)
+        writeGains(hpol_gain_t[i], hpol_phase_t[i], freq_list, h_az_file)
     ## For the elevation, we need to count through theta at 0 phi
     ## These are trickier, because theta increments only after all of the phi increments
     ## So if 0,0 (theta, phi) is in the 0th row, and 0,360 is in the 72nd row
     ## then 5,0 is in the 73rd row, and we increment by adding 73 for each theta step
-    indices = [73, 146, 292, 438, 657, 1314]
+    
+    # Reference angles for pueoSim v1.1.0
+    reference_angles = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+    indices = [int(angle/5)*73 for angle in reference_angles]
     for i in indices:
-        writeGains(vpol_gain_t[i], vpol_phase_t[i],
-                   freq_list, v_el_file)
-        writeGains(hpol_gain_t[i], hpol_phase_t[i],
-                   freq_list, h_el_file)
+        writeGains(vpol_gain_t[i], vpol_phase_t[i], freq_list, v_el_file)
+        writeGains(hpol_gain_t[i], hpol_phase_t[i], freq_list, h_el_file)
 
 ## Function calls
 ## Here's the path to output to

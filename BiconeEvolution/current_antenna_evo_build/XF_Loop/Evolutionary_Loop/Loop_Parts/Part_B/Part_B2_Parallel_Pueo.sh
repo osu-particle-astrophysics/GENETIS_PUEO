@@ -150,7 +150,7 @@ do
 		fi
 	fi
 
-	tput cuu 3
+	tput cuu 2
 
 	printProgressBar "GPU" $XFCOUNT
 	#printProgressBar "PUEO" $peuocount

@@ -144,17 +144,18 @@ fi
 
 #we cat things into the simulation_PEC.xmacro file, so we can just echo the list to it before catting other files
 
-#cat PUEO_skeleton.txt >> simulation_PEC.xmacro
+#cat PUEO_skeleton_trapezoids.txt >> simulation_PEC.xmacro
 # Would like to just be able to import to XF with a command in the xmacros
 # And then I only need to cat in a handful of scripts into simulation_PEC.xmacro
 # According Walter Janusz at Remcom, this isn't possible yet. So we'll just have to 
 # 	concatenate everything into a fil ourselves
 
 cat headerPUEO.xmacro >> simulation_PEC.xmacro
-cat functionCallsPUEO_reordered.xmacro >> simulation_PEC.xmacro
-#cat functionCallsPUEO.xmacro >> simulation_PEC.xmacro
+cat functionCallsPUEO.xmacro >> simulation_PEC.xmacro
 cat buildWalls.xmacro >> simulation_PEC.xmacro
 cat buildRidges.xmacro >> simulation_PEC.xmacro
+cat buildWaveguide.xmacro >> simulation_PEC.xmacro
+cat extend_ridges_trapezoid.xmacro >> simulation_PEC.xmacro
 cat CreatePEC.xmacro >> simulation_PEC.xmacro
 cat CreateAntennaSource.xmacro >> simulation_PEC.xmacro
 cat CreateGrid.xmacro >> simulation_PEC.xmacro

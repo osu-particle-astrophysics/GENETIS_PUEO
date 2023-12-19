@@ -19,9 +19,9 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='OneBatchTest'	## This is the name of the run. You need to make a unique name each time you run.
-TotalGens=100			## number of generations (after initial) to run through
-NPOP=12			## number of individuals per generation; please keep this value below 99
+RunName='Test_2023_18_11'	## This is the name of the run. You need to make a unique name each time you run.
+TotalGens=2			## number of generations (after initial) to run through
+NPOP=5			## number of individuals per generation; please keep this value below 99
 Seeds=1			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FREQ=60				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 NNT=2000			## Number of Neutrinos Thrown in AraSim   
@@ -54,7 +54,7 @@ ELITE=0				## Elite function on/off (1/0)
 
 JobPlotting=0        ## 1 to submit a job to plot the fitness scores, 0 to not submit a job to plot the fitness scores
 ParallelXFPUEO=1	## 1 to run pueosim for each antenna as the XF jobs finish, 0 to not
-SingleBatch=1       ## 1 to submit a single batch for XF jobs (each job running for n antennas)
+SingleBatch=0       ## 1 to submit a single batch for XF jobs (each job running for n antennas)
 #####################################################################################################################################################
 
 ######## Check For Errors in Variables ################################################################################################################

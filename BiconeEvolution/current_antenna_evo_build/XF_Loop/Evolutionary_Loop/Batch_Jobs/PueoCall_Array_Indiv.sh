@@ -3,7 +3,7 @@
 ## Here's the command:
 ## sbatch --array=1-NPOP*SEEDS%max --export=ALL,(variables) PueoCall_Array.sh
 #SBATCH -A PAS1960
-#SBATCH -t 00:30:00
+#SBATCH -t 01:00:00
 #SBATCH -N 1
 #SBATCH -n 40
 #SBATCH --output=Run_Outputs/%x/PUEO_Outputs/PUEOsim_%a.output
@@ -18,6 +18,10 @@
 #NPOP=$6
 #NNT=$7
 #Exp=$8
+
+echo $num_jobs
+echo $indiv
+
 
 threads=40
 
@@ -43,6 +47,7 @@ echo "Running PSIM"
 for ((i=$run_num; i<$((threads + run_num)); i++))
 do
     # Run 40 processes of pueoSim 
+    echo "starting pueoSim ${i}"
     touch pueoout${i}.txt
     ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT -e $Exp > pueoout${i}.txt &
 done
@@ -77,6 +82,8 @@ rm ${run_num}.txt.*
 
 #if there are 49 flags in the PUEOFlags/$num directory, run the root analysis
 flag_count=$(ls | wc -l)
+echo $flag_count
+echo $num_jobs
 if [ $flag_count -eq $num_jobs ]
 then
     module load python/3.6-conda5.2

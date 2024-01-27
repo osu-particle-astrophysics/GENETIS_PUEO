@@ -122,8 +122,11 @@ do
 			parse=$(python Antenna_Performance_Metric/calculating_NNT.py $jobs_submitted $jobs_left $XFCOUNT $NNT $max_jobs)
 			NNT_per_sim=$(echo $parse | cut -d',' -f1)
 			num_jobs=$(echo $parse | cut -d',' -f2)
-
-			sbatch --array=1-$num_jobs --export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT_per_sim,Exp=$exp,indiv=$indiv,num_jobs=$num_jobs --job-name=${RunName} Batch_Jobs/PueoCall_Array_Indiv.sh
+			# set the output file to Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_$indiv_$SLURM_ARRAY_TASK_ID.output
+			sbatch --array=1-$num_jobs \
+				--export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT_per_sim,Exp=$exp,indiv=$indiv,num_jobs=$num_jobs \
+				--job-name=${RunName} --output=$WorkingDir/Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_${indiv}_%a.output  \
+				--error=$WorkingDir/Run_Outputs/$RunName/PUEO_Errors/PUEOsim_${indiv}_%a.error $WorkingDir/Batch_Jobs/PueoCall_Array_Indiv.sh
 			# move the cursor up 1 line
 			tput cuu 1
 			# move the file to the GPUFlags directory

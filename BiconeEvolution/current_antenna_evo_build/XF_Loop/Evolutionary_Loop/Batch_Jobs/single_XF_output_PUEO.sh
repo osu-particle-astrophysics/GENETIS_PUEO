@@ -20,7 +20,7 @@ cat shortened_outputmacroskeleton.txt >> output.xmacro
 
 sed -i "s+fileDirectory+${WorkingDir}+" output.xmacro
 
-module load xfdtd/7.9.2.2
+module load xfdtd/7.10.2.3 #7.9.2.2
 module load cuda
 
 xfdtd $XFProj --execute-macro-script=$XmacrosDir/output.xmacro || true --splash=false

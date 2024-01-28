@@ -76,9 +76,9 @@ def callFunctions(indiv):
                freq_list, file_header / f'vv_0_{g.gen}_{indiv}')
     writeGains(vpol_gain_t[0], vpol_phase_t[0],
                freq_list, file_header / f'hh_0_{g.gen}_{indiv}')
-    writeGains(hpol_data_t[0], hpol_phase_t[0],
+    writeGains(hpol_gain_t[0], hpol_phase_t[0],
                freq_list, file_header / f'vh_0_{g.gen}_{indiv}')
-    writeGains(hpol_data_t[0], hpol_phase_t[0],
+    writeGains(hpol_gain_t[0], hpol_phase_t[0],
                freq_list, file_header / f'hv_0_{g.gen}_{indiv}')
     ## Now we need to be more careful for the az and el files
     ## We want the angles 5, 10, 20, 30, 45, 90

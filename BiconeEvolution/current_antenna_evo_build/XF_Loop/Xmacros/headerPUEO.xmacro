@@ -1,7 +1,7 @@
 /**************************************** Set Global Variables **************************************************/
 var units = " cm";
 var num_ridges = 4; // either 2 or 4
-var path = "/fs/scratch/PAS1960/two_parameter_trapezoid.csv"
+var path = "/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/BiconeEvolution/current_antenna_evo_build/XF_Loop/Evolutionary_Loop/Generation_Data/generationDNA.csv" //"/fs/scratch/PAS1960/two_parameter_trapezoid.csv"
 //"/fs/scratch/PAS1960/trapezoid_grid_search.csv"; //"/fs/project/PAS0654/Machtay_XF_Tests/trapezoid_length_data.csv"; //"/users/PAS0654/machtay1/GENETIS_Stuff/test_pueo_data_3.csv";
 //var path = "/fs/project/PAS0654/Machtay_XF_Tests/test_pueo_data_big.csv"; //"/users/PAS0654/machtay1/GENETIS_Stuff/test_pueo_data_3.csv";
 // Order of genes:

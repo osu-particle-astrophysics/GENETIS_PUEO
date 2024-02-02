@@ -15,7 +15,7 @@ error_plusses = np.zeros(g.npop)
 error_minuses = np.zeros(g.npop)
 for i in range(g.npop):
     #get the single line of the csv file as a float
-    df = pd.read_csv(g.source / str(i+1) / f'{g.gen}_pueoOut.csv', header=None)
+    df = pd.read_csv(g.source / str(i) / f'{g.gen}_pueoOut.csv', header=None)
     #fitness is in the first row second column
     fitness = df.iloc[0,1]
     error_plus = df.iloc[0,2]

@@ -44,7 +44,7 @@ python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $WorkingDir/Test_
 chmod 777 $WorkingDir/Test_Outputs/*
 
 mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
-cp $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_*.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
+mv $WorkingDir/Run_Outputs/$RunName/${gen}_${individual_number}_*.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$individual_number
 
 cd $WorkingDir/Test_Outputs
 # mod individual_number by NPOP
@@ -60,7 +60,7 @@ cp vv_el_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/dat
 cp vv_az_${gen}_${individual_number} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_az_Toyon${run_num}
 
 cd $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated
-ls
+#ls
 
 chmod -R 777 $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/* 2>/dev/null
 

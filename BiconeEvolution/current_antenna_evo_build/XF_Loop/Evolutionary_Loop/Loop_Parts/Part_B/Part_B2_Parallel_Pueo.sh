@@ -119,9 +119,25 @@ do
 
 			# Get the NNT and number of jobs from the python script Antenna_Performance_Metric/calculating_NNT.py
 			jobs_left=$((NPOP-root_flags))
+
+			echo "jobs submitted: $jobs_submitted"
+			echo "jobs left: $jobs_left"
+			echo "XFCOUNT: $XFCOUNT"
+			echo "NNT: $NNT"
+			echo "max_jobs: $max_jobs"
+			echo " "
+			echo " " 
+			echo " " 
+
 			parse=$(python Antenna_Performance_Metric/calculating_NNT.py $jobs_submitted $jobs_left $XFCOUNT $NNT $max_jobs)
 			NNT_per_sim=$(echo $parse | cut -d',' -f1)
 			num_jobs=$(echo $parse | cut -d',' -f2)
+
+			echo "NNT per sim: $NNT_per_sim"
+			echo "num_jobs: $num_jobs"
+			echo " "
+			echo " "
+
 			# set the output file to Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_$indiv_$SLURM_ARRAY_TASK_ID.output
 			sbatch --array=1-$num_jobs \
 				--export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT_per_sim,Exp=$exp,indiv=$indiv,num_jobs=$num_jobs \

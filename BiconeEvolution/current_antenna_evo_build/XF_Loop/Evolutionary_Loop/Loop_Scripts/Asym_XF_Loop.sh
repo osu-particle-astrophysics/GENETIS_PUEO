@@ -19,7 +19,7 @@
 module load python/3.6-conda5.2
 
 ####### VARIABLES: LINES TO CHECK OVER WHEN STARTING A NEW RUN ###############################################################################################
-RunName='2024_01_22_PUEO_Test_2'	## This is the name of the run. You need to make a unique name each time you run.
+RunName='2024_02_12_test1'	## This is the name of the run. You need to make a unique name each time you run.
 TotalGens=100			## number of generations (after initial) to run through
 NPOP=4 #100			## number of individuals per generation; please keep this value below 99
 Seeds=2 #20			## This is how many AraSim jobs will run for each individual## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
@@ -48,7 +48,7 @@ CROSSOVER=0 #96			## Number (not fraction!) of individuals formed through crosso
 MUTATION=2 #4 #1		## Number (not fraction!) of individuals formed through crossover	
 SIGMA=5				## Standard deviation for the mutation operation (divided by 100)
 ROULETTE=2 #20			## Number (not fraction!) of individuals formed through crossover
-TOURNAMENT=0 #20		## Number (not fraction!) of individuals formed through crossover
+TOURNAMENT=2 #20		## Number (not fraction!) of individuals formed through crossover
 RANK=0 #60				## Number (not fraction!) of individuals formed through crossover
 ELITE=0				## Elite function on/off (1/0)
 
@@ -79,8 +79,8 @@ then
 fi
 
 ########  INITIALIZATION OF DIRECTORIES  ###############################################################################################################
-BEOSC=/fs/ess/PAS1960/HornEvolutionOSC/GENETIS_PUEO/
-WorkingDir=`pwd` ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
+BEOSC=/fs/ess/PAS1960/HornEvolutionTestingOSC/GENETIS_PUEO/
+WorkingDir=$(pwd) ## this is where the loop is; on OSC this is /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/current_antenna_evo_build_XF_Loop/Evolutionary_Loop
 echo $WorkingDir
 XmacrosDir=$WorkingDir/../Xmacros 
 XFProj=$WorkingDir/Run_Outputs/${RunName}/${RunName}.xf  ## Provide path to the project directory in the 'single quotes'
@@ -186,7 +186,7 @@ do
 	## This only runs if starting new run ##
 	if [[ $gen -eq 0 && $state -eq 0 ]]
 	then
-	        read -p "Starting generation ${gen} at location ${state}. Press any key to continue... " -n1 -s
+	    read -p "Starting generation ${gen} at location ${state}. Press any key to continue... " -n1 -s
 		# Make the run name directory
 		mkdir -p -m777 $WorkingDir/Run_Outputs/$RunName
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/AraSimFlags

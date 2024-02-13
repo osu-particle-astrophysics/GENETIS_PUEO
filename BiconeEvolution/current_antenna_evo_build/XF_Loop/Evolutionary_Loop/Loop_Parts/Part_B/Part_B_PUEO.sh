@@ -92,6 +92,7 @@ rm -f simulation_PEC.xmacro
 
 echo "var NPOP = $NPOP;" > simulation_PEC.xmacro
 echo "var indiv = $indiv;" >> simulation_PEC.xmacro
+echo "var workingdir = \"$WorkingDir\";" >> simulation_PEC.xmacro
 chmod -R 775 simulation_PEC.xmacro 2> /dev/null
 #now we can write the frequencies to simulation_PEC.xmacro
 #now let's change our frequencies by the scale factor (and then back down by 100)
@@ -241,7 +242,7 @@ then
 	# set the job time limit to 15 hours
 	job_time="15:00:00"
 else
-	job_time="04:00:00"
+	job_time="05:00:00"
 fi
 
 echo "Submitting XF jobs with batch size $batch_size"

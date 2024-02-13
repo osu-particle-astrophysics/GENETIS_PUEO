@@ -122,14 +122,14 @@ do
 
 			echo "jobs submitted: $jobs_submitted"
 			echo "jobs left: $jobs_left"
-			echo "XFCOUNT: $XFCOUNT"
+			echo "XFCOUNT: $num_keys"
 			echo "NNT: $NNT"
 			echo "max_jobs: $max_jobs"
 			echo " "
 			echo " " 
 			echo " " 
 
-			parse=$(python Antenna_Performance_Metric/calculating_NNT.py $jobs_submitted $jobs_left $XFCOUNT $NNT $max_jobs)
+			parse=$(python Antenna_Performance_Metric/calculating_NNT.py $jobs_submitted $jobs_left $num_keys $NNT $max_jobs)
 			NNT_per_sim=$(echo $parse | cut -d',' -f1)
 			num_jobs=$(echo $parse | cut -d',' -f2)
 

@@ -11,5 +11,5 @@ function MakeImage(i)
   }
   // Zooms out to include the entire detector, then saves as a .png
   View.zoomToExtents();
-  View.saveImageToFile("/fs/project/PAS0654/Machtay_XF_Tests/Horn_Images/" + i+"_"+"detector.png", -1, -1);
+  View.saveImageToFile("antenna_images/"+i+"_"+"detector.png", -1, -1);
 }

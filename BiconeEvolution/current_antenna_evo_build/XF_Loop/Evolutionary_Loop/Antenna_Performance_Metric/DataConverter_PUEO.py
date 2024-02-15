@@ -1,24 +1,22 @@
-import pandas as pd 
-import matplotlib.pyplot as plt
-from pandas.plotting import parallel_coordinates
-import numpy as np
 import argparse
 
-parser = argparse.ArgumentParser()
+import pandas as pd 
+import matplotlib.pyplot as plt
+import numpy as np
 
-#parser.add_argument("GenNumber", help="Generation number the code is running on (for formatting purposes)", type=int)
-parser.add_argument("location", help="Location of runData.csv and fitness.csv", type=str)
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument("location", help="Location of runData.csv and fitness.csv", type=Path)
 g = parser.parse_args()
 
 #This preps the data to become a pandas dataframe
 #dtypedict={'InnerRadius':np.float64, 'Length':np.float64,'OpeningAngle':np.float64,'Fitness':np.float64,'Generation':np.int64,'GenerationString':str}
-df0 = pd.read_csv(g.location+"/runData.csv",skiprows=1,
-                  names=["SideLength","Height","XInitial",
-                         "YInital","ZFinal","YFinal","Beta",
-                         "TLength", "THeight","Fitness","Generation"],
+df0 = pd.read_csv(g.location / "runData.csv", skiprows=1,
+                  names=["SideLength", "Height", "XInitial",
+                         "YInital", "ZFinal", "YFinal", "Beta",
+                         "TLength", "THeight", "Fitness", "Generation"],
                   index_col=False)
-#df1 = df1.replace(r'^\s*$', np.nan, regex=True)
-
 
 #This adds the Generation column to the file
 i = 0

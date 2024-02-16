@@ -60,7 +60,7 @@ runData = np.array(runDataRawOnlyNumb)
 runData = np.array(runDataRawOnlyNumb).astype(np.float)
 
 #8 is for NVars + 1 where the 1 is the fitness score
-runData = runData.reshape((g.numGens, g.NPOP, 8))
+runData = runData.reshape((g.numGens, g.NPOP, 10))
 
 # PLOT DATA
 # variables are S, H, Xi, Yi, Zf, Yf, beta 

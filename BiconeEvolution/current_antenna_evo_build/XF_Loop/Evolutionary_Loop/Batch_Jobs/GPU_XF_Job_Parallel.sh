@@ -33,11 +33,11 @@ module load cuda
 ## We need to get the individual number
 ## This will be based on the number in the array
 
-symmetry_multiplier=1
+symmetry_multiplier=2
 
 if [ $SYMMETRY -eq 1 ]
 then
-	symmetry_multiplier=2
+	symmetry_multiplier=1
 fi
 
 indiv_in_pop=$SLURM_ARRAY_TASK_ID

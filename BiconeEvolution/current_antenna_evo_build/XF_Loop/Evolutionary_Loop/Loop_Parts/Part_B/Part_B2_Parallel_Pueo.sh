@@ -114,7 +114,9 @@ do
 			cd $WorkingDir/Batch_Jobs
 			./single_XF_output_PUEO.sh $indiv $WorkingDir $XmacrosDir $XFProj $RunName $gen $NPOP $PSIMDIR
 
+			indiv=$((indiv-1))
 			indiv=$((indiv % NPOP))
+
 			cd $WorkingDir
 
 			# Get the NNT and number of jobs from the python script Antenna_Performance_Metric/calculating_NNT.py

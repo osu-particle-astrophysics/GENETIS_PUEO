@@ -40,22 +40,22 @@ then
 	symmetry_multiplier=1
 fi
 
-indiv_in_pop=$SLURM_ARRAY_TASK_ID
+sim_num=$SLURM_ARRAY_TASK_ID
 # correct for indiv_in_pop being 1-indexed
-indiv_in_pop=$((indiv_in_pop-1))
+indiv_in_pop=$((sim_num-1))
 
 # If we run a single batch of jobs, we run until we hit NPOP
 # Otherwise, run once
 if [ $SingleBatch -eq 1 ]
 then
-	upper_limit=$NPOP
+	upper_limit=$((NPOP*symmetry_multiplier-1))
 else
 	upper_limit=$indiv_in_pop
 fi
 
 while [ $indiv_in_pop -le $upper_limit ]
 do
-	individual_number=$((gen*NPOP*symmetry_multiplier+indiv_in_pop))
+	individual_number=$((gen*NPOP*symmetry_multiplier+sim_num))
 
 	## Based on the individual number, we need the right parent directory
 	## This involves checking the individual number being submitted
@@ -92,12 +92,17 @@ do
 	echo "The GPU job is done!" >> $flag_file
 
 	# iterate which individual we're on
-	indiv_in_pop=$((indiv_in_pop+batch_size*symmetry_multiplier))
+	sim_num=$((indiv_in_pop+batch_size*symmetry_multiplier))
+	indiv_in_pop=$((sim_num-1))
 
 	# if we go over tartget, the job doesn't need to wait for
 	# output xmacro and can terminate
 	if [ $indiv_in_pop -gt $upper_limit ]
 	then
+		# echo how long this bash script has been running
+		echo $SECONDS
+		# echo all job information about time
+		sacct -X -j $SLURM_JOB_ID --format=JobID,JobName,Partition,Elapsed,CPUTime,Reserved
 		exit 0
 	fi
 

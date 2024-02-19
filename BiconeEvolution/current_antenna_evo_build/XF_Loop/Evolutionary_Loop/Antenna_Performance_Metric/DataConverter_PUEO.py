@@ -42,4 +42,4 @@ df0[['Generation','Fitness']] = df0[['Fitness','Generation']]
 #swap the generation and fitness column names
 df0.rename(columns = {'Generation':'Fitness','Fitness':'Generation'}, inplace = True)
 
-df0.to_csv(g.location+"/testpara.csv",index=False)
+df0.to_csv(g.location / "testpara.csv",index=False)

@@ -113,7 +113,7 @@ do
 			# run the xmacro output script
 			cd $WorkingDir/Batch_Jobs
 			./single_XF_output_PUEO.sh $indiv $WorkingDir $XmacrosDir $XFProj $RunName $gen $NPOP $PSIMDIR
-			
+
 			indiv=$((indiv % NPOP))
 			cd $WorkingDir
 

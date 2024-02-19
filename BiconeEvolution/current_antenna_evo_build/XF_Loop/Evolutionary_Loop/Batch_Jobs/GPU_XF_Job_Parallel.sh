@@ -41,6 +41,8 @@ then
 fi
 
 indiv_in_pop=$SLURM_ARRAY_TASK_ID
+# correct for indiv_in_pop being 1-indexed
+indiv_in_pop=$((indiv_in_pop-1))
 
 # If we run a single batch of jobs, we run until we hit NPOP
 # Otherwise, run once
@@ -107,3 +109,12 @@ do
 	done
 
 done
+
+# echo how long this bash script has been running
+echo $SECONDS
+# echo all job information about time
+sacct -X -j $SLURM_JOB_ID --format=JobID,JobName,Partition,Elapsed,CPUTime,Reserved
+
+
+
+

@@ -27,7 +27,7 @@ parser.add_argument("run_name", help="Name of current run; directory in /path/to
 parser.add_argument("gen", help="The generation the loop is on.", type=int)
 parser.add_argument("out_dir", help="Directory to output to.", type=Path)
 # specific indiv is optional
-parser.add_argument("-s", "--single", help="If you want to run a single individual, enter the number of the individual here.", type=int, default=1)
+parser.add_argument("-s", "--single", help="If you want to run a single individual, enter the number of the individual here.", type=int, default=-1)
 g = parser.parse_args()
 
 
@@ -109,9 +109,9 @@ def callFunctions(indiv):
 ## Here's the path to output to
 file_header = g.out_dir
 ## Loop over the number of individuals
-if g.single:
+if g.single != -1:
     callFunctions(g.single)
     exit()
 
-for indiv in range(1, g.npop+1):
+for indiv in range(g.npop):
     callFunctions(indiv)

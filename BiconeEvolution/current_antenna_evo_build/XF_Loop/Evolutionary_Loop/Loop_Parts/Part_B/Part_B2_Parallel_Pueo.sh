@@ -80,7 +80,7 @@ root_flags=$(find . -type f | wc -l)
 
 #peuosimsperindiv=49
 #peuocount=$((peuosimsperindiv * NPOP))
-max_jobs=250
+max_jobs=230
 #job_cutoff=$((max_jobs - peuosimsperindiv))
 USER=$(whoami)
 already_checked=0
@@ -112,7 +112,7 @@ do
 
 			# run the xmacro output script
 			cd $WorkingDir/Batch_Jobs
-			./single_XF_output_PUEO.sh $indiv $WorkingDir $XmacrosDir $XFProj $RunName $gen $NPOP $PSIMDIR
+			./single_XF_output_PUEO.sh $indiv $WorkingDir $XmacrosDir $XFProj $RunName $gen $NPOP $PSIMDIR 1> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.output" 2> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.error"
 
 			indiv=$((indiv-1))
 			indiv=$((indiv % NPOP))

@@ -32,6 +32,7 @@ num=$indiv
 # 40 processes are run per generation per seed
 run_num=$(((NPOP * gen + num) * 10000 + seed * 40))
 
+echo "run_num: $run_num"
 
 # set up environment
 cd $PSIMDIR

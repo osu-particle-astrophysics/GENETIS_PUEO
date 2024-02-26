@@ -34,6 +34,8 @@ cd $WorkingDir/Antenna_Performance_Metric
 
 indiv_in_pop=$((individual_number - 1))
 indiv_in_pop=$((indiv_in_pop % NPOP))
+echo "indiv_in_pop: $indiv_in_pop"
+echo "individual_number: $individual_number"
 
 for freq in $(seq 1 131)
 do
@@ -44,7 +46,7 @@ done
 module load python/3.6-conda5.2
 python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $WorkingDir/Test_Outputs --single=$indiv_in_pop
 
-chmod 777 $WorkingDir/Test_Outputs/*
+chmod 777 $WorkingDir/Test_Outputs/* 2>/dev/null
 
 mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop
 mv $WorkingDir/Run_Outputs/$RunName/${gen}_${indiv_in_pop}_*.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop
@@ -52,6 +54,7 @@ mv $WorkingDir/Run_Outputs/$RunName/${gen}_${indiv_in_pop}_*.uan $WorkingDir/Run
 cd $WorkingDir/Test_Outputs
 # mod individual_number by NPOP
 run_num=$((NPOP * gen + indiv_in_pop))
+echo "run_num: $run_num"
 cp hh_0_${gen}_${indiv_in_pop} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hh_0_Toyon${run_num}
 cp hv_0_${gen}_${indiv_in_pop} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/hv_0_Toyon${run_num}
 cp vv_0_${gen}_${indiv_in_pop} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_0_Toyon${run_num}

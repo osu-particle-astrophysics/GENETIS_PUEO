@@ -38,7 +38,7 @@ then
 
 	cd $WorkingDir/Antenna_Performance_Metric
 
-	for i in `seq 1 $NPOP`
+	for i in $(seq 0 $((NPOP-1)))
 	do
 		python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName $WorkingDir
 	done
@@ -47,7 +47,8 @@ else
 	cd $WorkingDir/Antenna_Performance_Metric
 	python fitFix.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
 	cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
-	for i in `seq 1 $NPOP`
+	# 0 to npop-1
+	for i in $(seq 0 $((NPOP-1)))
 	do
 		rm -Rf $i
 	done
@@ -64,13 +65,11 @@ cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
 echo "The Ohio State University GENETIS Data." > $WorkingDir/Generation_Data/fitnessScores.csv
 echo "Current generation's fitness scores:" >> $WorkingDir/Generation_Data/fitnessScores.csv
 cat ${gen}_fitnessScores.csv >> $WorkingDir/Generation_Data/fitnessScores.csv
-cd -
 
 cp $WorkingDir/Generation_Data/fitnessScores.csv $WorkingDir/fitnessScores.csv
 
-cp ../Generation_Data/generationDNA.csv $WorkingDir/Run_Outputs/$RunName/Generation_Data/${gen}_generationDNA.csv
-
 cd $WorkingDir
+
 source Antenna_Performance_Metric/set_plotting_env.sh
 
 if [ $gen -eq 0 ]

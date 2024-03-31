@@ -1,4 +1,4 @@
-__author__ = 'Dylan Wells <wells.1629@osu.edu>'
+__author__ = 'Dylan Wells <wells.1629@osu.edu'
 
 # Imports
 import argparse
@@ -13,36 +13,68 @@ desc = ("This script will combine the errors and fitness scores "
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument("source", help="source directory for fitness files", type=Path)
 parser.add_argument("gen", help="Generation number.", type=int)
+parser.add_argument("NPOP", help="Number of individuals in the population.", type=int)
 
 g = parser.parse_args()
 
 source_dir = g.source
 curr_gen = g.gen
 prev_gen = g.gen - 1
-parents_csv = source_dir / f'{curr_gen}_parents.csv'
+prev_DNA_file = source_dir / f'{prev_gen}_generationDNA.csv'
+curr_DNA_file = source_dir / f'{curr_gen}_generationDNA.csv'
 prev_fitness = source_dir / f'{prev_gen}_fitnessScores.csv'
 curr_fitness = source_dir / f'{curr_gen}_fitnessScores.csv'
 prev_errors = source_dir / f'{prev_gen}_errorBars.csv'
 curr_errors = source_dir / f'{curr_gen}_errorBars.csv'
 
-# load in the parents.csv file to find inviduals made from reproduction
-skiprows = 4
-parents_csv = pd.read_csv(parents_csv, header=0, 
-                          delimiter=',', skiprows=skiprows)
-operators = parents_csv.iloc[:, 3].values
+identical_indivs = []
 
-reproduced = []
+# Load in the DNA files from the previous and current generation
+# variables are S, H, Xi, Yi, Zf, Yf, beta 
+intro_rows = 9
 
-for i, op in enumerate(operators):
-    if op == ' Reproduction':
-        reproduced.append(i)
-        
-parents = parents_csv.iloc[:, 1].values
-parents = [int(parents[i]) for i in reproduced]
+def read_DNA(DNA_file):
+    '''Return a list of tuples containing the DNA of each individual in the population'''
+    DNA_csv = pd.read_csv(DNA_file, header=None, 
+                          delimiter=',', skiprows=intro_rows)
+    DNA = {
+        "S": DNA_csv.iloc[:, 0].values,
+        "H": DNA_csv.iloc[:, 1].values,
+        "Xi": DNA_csv.iloc[:, 2].values,
+        "Yi": DNA_csv.iloc[:, 3].values,
+        "Yf": DNA_csv.iloc[:, 4].values,
+        "Zf": DNA_csv.iloc[:, 5].values,
+        "beta": DNA_csv.iloc[:, 6].values
+    }
+    DNA_list = []
+    for i in range(g.NPOP):
+        DNA_list.append((DNA["S"][i], DNA["H"][i], DNA["Xi"][i], 
+                         DNA["Yi"][i], DNA["Zf"][i], DNA["Yf"][i], 
+                         DNA["beta"][i]))
+    return DNA_list
 
-print(f"Combining errors and fitness scores of individuals {reproduced}")
+prev_DNA = read_DNA(prev_DNA_file)
+curr_DNA = read_DNA(curr_DNA_file)
+
+identical_dict = {}
+
+# Loop through the DNA of the two generations and find the individuals
+# that have identical DNA
+for i in range(g.NPOP):
+    for j in range(g.NPOP):
+        if prev_DNA[i] != curr_DNA[j]:
+            continue
+        print(f"Individual {i} in generation {prev_gen} has identical DNA to individual {j} in generation {curr_gen}")
+        try:
+            identical_dict[prev_DNA[i]][0].append(i) if i not in identical_dict[prev_DNA[i]][0] else print(f"Individual {i} already in list 0")
+            identical_dict[prev_DNA[i]][1].append(j) if j not in identical_dict[prev_DNA[i]][1] else print(f"Individual {j} already in list 1")
+        except KeyError:
+            identical_dict[prev_DNA[i]] = [[i], [j]]
+
+print(identical_dict)
 
 def load_csv(fitness_csv, error_csv, iterator):
+    '''Return the fitness scores and errors of the individuals in the iterator'''
     fitness_files = pd.read_csv(fitness_csv, header=None)
     error_file = pd.read_csv(error_csv, header=None)
     
@@ -56,49 +88,54 @@ def load_csv(fitness_csv, error_csv, iterator):
     
     return fitness_scores, err_plus, err_minus
 
-p_fitness_scores, p_err_plus, p_err_minus = load_csv(prev_fitness, prev_errors, parents)
-c_fitness_scores, c_err_plus, c_err_minus = load_csv(curr_fitness, curr_errors, reproduced)
 
-new_fitness_scores = []
-new_err_plus = []
-new_err_minus = []
-
-# combine the errors and fitnesses of parents and children
-def combine_measurements(m1, err1_plus, err1_minus, m2, err2_plus, err2_minus):
-    err1 = (err1_plus + err1_minus) / 2
-    err2 = (err2_plus + err2_minus) / 2
-    weight1 = 1 / (err1**2)
-    weight2 = 1 / (err2**2)
+def combine_measurements(measurements, plus_errs, minus_errs):
+    '''Return the combined measurement and errors of the measurements'''
+    errs = [(plus_errs[i] + minus_errs[i])/2 for i in range(len(plus_errs))]
+    weights = [1/(errs[i]**2) for i in range(len(errs))]
     
-    combined_measurement = (
-        (m1 * weight1 + m2 * weight2) /
-        (weight1 + weight2)
-    )
-    
-    combined_err_plus = math.sqrt(1/(1/(err1_plus**2) + 1/(err2_plus**2)))
-    combined_err_minus = math.sqrt(1/(1/(err1_minus**2) + 1/(err2_minus**2)))
+    combined_measurement = sum([measurements[i] * weights[i] for i in range(len(measurements))]) / sum(weights)
+    combined_err_plus = math.sqrt(1/sum([1/(plus_errs[i]**2) for i in range(len(plus_errs))]))
+    combined_err_minus = math.sqrt(1/sum([1/(minus_errs[i]**2) for i in range(len(minus_errs))]))
     
     return combined_measurement, combined_err_plus, combined_err_minus
     
-for i in range(len(p_fitness_scores)):
-    new_fitness, plus_err, minus_err = combine_measurements(p_fitness_scores[i], p_err_plus[i], 
-                                                            p_err_minus[i], c_fitness_scores[i], 
-                                                            c_err_plus[i], c_err_minus[i])
-    new_fitness_scores.append(new_fitness)
-    new_err_plus.append(plus_err)
-    new_err_minus.append(minus_err)
 
-fitness_csv = pd.read_csv(curr_fitness, header=None)
-errors_csv = pd.read_csv(curr_errors, header=None)
-
-# Reconstruct the fitness csv file with the new fitness scores at indexes of reproduction
-for i in reproduced:
-    fitness_csv.iloc[i, 0] = new_fitness_scores.pop(0)
-    errors_csv.iloc[i, 0] = new_err_plus.pop(0)
-    errors_csv.iloc[i, 1] = new_err_minus.pop(0)
-
-# Write the new fitness csv file
-fitness_csv.to_csv(f'{g.source}/{g.gen}_fitnessScores.csv', index=False, header=False)
-errors_csv.to_csv(f'{g.source}/{g.gen}_errorBars.csv', index=False, header=False)
-
-print("Done combining errors and fitness scores")
+def calculateCombinations(matches):
+    '''Return the combined fitness scores and errors of the individuals in the matches list'''
+    parents = matches[0]
+    children = matches[1]
+    print(f"Combining errors and fitness scores of parents: {parents} and children: {children}")
+    p_fitness_scores, p_err_plus, p_err_minus = load_csv(prev_fitness, prev_errors, parents)
+    c_fitness_scores, c_err_plus, c_err_minus = load_csv(curr_fitness, curr_errors, children)
+    
+    # As the parents have already combined errors if there exist multiple of them,
+    # we only want to consider the values of one of them
+    fitness_scores = [p_fitness_scores[0]] + c_fitness_scores
+    err_plus = [p_err_plus[0]] + c_err_plus
+    err_minus = [p_err_minus[0]] + c_err_minus
+    print(f"Fitness scores: {fitness_scores}")
+    print(f"Errors: {err_plus}, {err_minus}")
+    combined_fitness, combined_err_plus, combined_err_minus = combine_measurements(fitness_scores, err_plus, err_minus)
+    print("Combined fitness score: ", combined_fitness)
+    return combined_fitness, combined_err_plus, combined_err_minus
+        
+    
+for key in identical_dict.keys():
+    combined_fitness, combined_err_plus, combined_err_minus = calculateCombinations(identical_dict[key])
+    print(f"Combined fitness score of {key}: {combined_fitness} +{combined_err_plus} -{combined_err_minus}")
+    
+    #Now write the combined fitness score and errors to the fitness and error files
+    
+    fitness_csv = pd.read_csv(curr_fitness, header=None)
+    errors_csv = pd.read_csv(curr_errors, header=None)
+    
+    for i in identical_dict[key][1]:
+        fitness_csv.iloc[i, 0] = combined_fitness
+        errors_csv.iloc[i, 0] = combined_err_plus
+        errors_csv.iloc[i, 1] = combined_err_minus
+    
+    fitness_csv.to_csv(curr_fitness, header=False, index=False)
+    errors_csv.to_csv(curr_errors, header=False, index=False)
+    
+print("Finished writing combined fitness scores and errors to files!!")

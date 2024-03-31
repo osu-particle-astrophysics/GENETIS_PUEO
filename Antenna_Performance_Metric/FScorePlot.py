@@ -1,144 +1,180 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import argparse
 import csv
 import matplotlib.cm as cm
- 
-#---------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES----------GLOBAL VARIABLES
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import seaborn as sns
+import pandas as pd
 
-# We need to grab the three arguments from the bash script or user. These arguments in order are [the name of the source folder of the fitness scores], [the name of the destination folder for the plots], and [the number of generations]
+from pathlib import Path
+ 
+# Arguments
+
 parser = argparse.ArgumentParser()
-parser.add_argument("source", help="Name of source folder from home directory", type=str)
-parser.add_argument("destination", help="Name of destination folder from home directory (no end dash)", type=str)
-parser.add_argument("NPOP", help="Number of individuals per generation", type=int)
-parser.add_argument("numGens", help="Number of generations the code is running for (no end dash)", type=int)
+parser.add_argument("source", help="Path of source dir to data", type=Path)
+parser.add_argument("destination", help="Path of dest folder", type=Path)
+parser.add_argument("npop", help="Population size", type=int)
+parser.add_argument("num_gens", help="number of generations", type=int)
+parser.add_argument("working_dir", help="Path to working dir", type=Path)
 g = parser.parse_args()
 
-# The name of the plot that will be put into the destination folder, g.destination
-Plot2DName = "/FScorePlot2D.png"
-#Plot3DName = "/FScorePlot3D.png"
+# The name of the plot that will be put into the destination folder
+plot_name = "FScorePlot2D"
+violin_plot_name="ViolinPlot"
 
-#----------STARTS HERE----------STARTS HERE----------STARTS HERE----------STARTS HERE
-fileReadTemp = []
-fScoresGen = []
-fScoresInd = []
-"""
-#We may want to only have g.numGens and not g.numGens+1
-for gen in range(g.numGens+1):
-    filename = "/{}_fitnessScores.csv".format(gen)
-    #fileReadTemp = np.genfromtxt(g.source + filename, delimiter=',')
-    #The above comment was here orignally but the delimiter is no longer a comma so the next line should work with new line
-    #fileReadTemp = (line.rstrip('\n') for line in open(g.source + filename))
-    #fScoresGen.append(fileReadTemp[2:])
-    with open(g.source + filename, "r") as f:
-        fileReadTemp = [line.strip() for line in f]
-    fScoresGen.append(fileReadTemp[2:])
-fScoresInd = np.transpose(fScoresGen)
-NPOP = len(fScoresInd)
-"""
+# Create small deviations in the x axis so we can see the data points
+np.random.seed(1) 
+gen_array = []
+for i in range(g.npop):
+	gen_num = []
+	for j in range(g.num_gens+1):
+		gen_num.append(float(j+np.random.uniform(-2/10,2/10,1)))
+	gen_array.append(gen_num)
 
-#new way (similar to in VeffPlotting.py)
+# Load in the fitnesses and errors
+fit_df = pd.DataFrame()
+err_plus_df = pd.DataFrame()
+err_minus_df = pd.DataFrame()
+mean_fits = np.zeros(g.num_gens+1)
+median_fits = np.zeros(g.num_gens+1)
 
-tempFitnesses = []
-FitnessesArray = []
-for ind in range(1, g.NPOP+1):
-    lineNum = ind + 1 #the line in the csv files that the individual data is in 
-    #we need to loop over all the generations, since the gen is in the file names
-    for gen in range(0, g.numGens+1):
-        #we need to give the changeable filenames we're gonna read
-        fitnesses = "{}_fitnessScores.csv".format(gen)
-        #for each generation, we need to get all the fitnesses
-        with open(g.source + "/" + fitnesses, "r") as fr: #fr for fitnesses read
-            f_read = csv.reader(fr, delimiter=',') #reading fr as a csv
-            for i, row in enumerate(f_read): #loop over the rows 
-                if i == lineNum: #skipping the header
-                    fitness = float(row[0]) #lineNum contains the fitness score
-                    #print(fitness)
-        fr.close()
-        #fill the generation individual values into arrays to hold them temporarily
-        tempFitnesses.append(fitness)
-    #The temporary files contain the same individual at different generations
-    #we want to store these now in the arrays containing all the data
-    FitnessesArray.append(tempFitnesses)
-    tempFitnesses = []
+for gen in range(0, g.num_gens+1):
+    fits = np.loadtxt(g.source / f"{gen}_fitnessScores.csv", 
+                      delimiter=',', skiprows=0, unpack=True)
+    errs = np.loadtxt(g.source / f"{gen}_errorBars.csv", 
+                      delimiter=',', skiprows=0, unpack=True)
+    fit_df[gen] = fits
+    err_plus_df[gen] = errs[0]
+    err_minus_df[gen] = errs[1]
     
+    mean_fits[gen] = np.mean(fits)
+    median_fits[gen] = np.median(fits)
+    
+fit_df = fit_df.T
+err_plus_df = err_plus_df.T
+err_minus_df = err_minus_df.T
 
 
-genAxis = np.linspace(0,g.numGens,g.numGens+1,endpoint=True)
-
-Veff_ARA = []
-Err_plus_ARA = []
-Err_minus_ARA = []
-Veff_ARA_Ref = []
-
-filenameActual = "/AraOut_ActualBicone.txt"
-fpActual = open(g.source + filenameActual)
-
-for line in fpActual:
-    if "test Veff(ice) : " in line:
-        Veff_ARA = float(line.split()[5]) #changed from 3 to 5 for switching to km^3 from m^3
-        #print(Veff_ARA)
-    elif "And Veff(water eq.) error plus :" in line:
-        Err_plus_ARA = float(line.split()[6])
-        Err_minus_ARA = float(line.split()[11])
-#    line = fpActual.readline()
-    #print(line)
-
-## Adding line of average fitness score
-MeanFitness = []
-FlippedFitness = np.transpose(FitnessesArray)
-#print(FlippedFitness)
-for ind in range(g.numGens+1):	
-	mean = sum(FlippedFitness[ind])/g.NPOP
-	MeanFitness.append(mean)	
+# Load in the max, min, and max error
+max_fits, min_fits, max_errs = np.loadtxt(g.source / "plottingData.csv", 
+                                          delimiter=',', skiprows=0,
+                                          unpack=True)
+max_fit = max_fits.max()
+min_fit = min_fits.min()
+max_error = max_errs.max()
+diff_fit = max_fit - min_fit
 
 
-#Veff_ARA_Ref = Veff_ARA * np.ones(len(genAxis))
+gen_axis = np.linspace(0, g.num_gens, g.num_gens+1, endpoint=True)
+gen_axis = [int(i) for i in gen_axis]
 
+#Importing the Toyon Data
+veff_toyon = 0
+veff_toyon_err_plus = 0
+veff_toyon_err_minus = 0
+
+with open(g.working_dir / "Toyon_Outs_Skimmed" /
+          "0_fitnessScores.csv", "r") as fp:
+    # read in the value in the first line to veff_toyon
+    veff_toyon = float(fp.readline())
+
+toyon_errors_file = pd.read_csv(g.working_dir / "Toyon_Outs_Skimmed" / 
+                                "0_errorBars.csv", header=None)
+veff_toyon_err_plus = toyon_errors_file[0][0]
+veff_toyon_err_minus = toyon_errors_file[1][0]
+
+# Setting style variables for the plots
+major = 5.0
+minor = 3.0
+mpl.rcParams['text.usetex'] = True
 plt.figure(figsize=(10, 8))
-#plt.plot(genAxis, Veff_ARA_Ref, label = "ARA Reference", linestyle= '--', color = 'k')
-plt.axhline(y=Veff_ARA, linestyle = '--', color = 'k')
-#plt.axes([-1, g.numGens+1, -1, 6])
-#plt.xlabel('Generation', size = 22)
-#plt.ylabel('Fitness Score', size = 22)
-#plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 25)
-colors = cm.rainbow(np.linspace(0, 1, g.NPOP))
-plt.axis([-1, g.numGens+1, -0.5, np.max(FitnessesArray) + np.max(Err_plus_ARA) + 0.5])
+plt.style.use('seaborn')
+colors = cm.rainbow(np.linspace(0, 1, g.npop))
 
-for ind in range(g.NPOP):
-		LabelName = "Individual {}".format(ind+1)
-		plt.plot(genAxis, FitnessesArray[ind], label = LabelName, marker = 'o', color = colors[ind], linestyle='', alpha = 0.4, markersize = 11)
-		#plt.plot(genAxis, FitnessesArray[ind], label = LabelName, marker = 'o', color = 'k', linestyle='', alpha = 0.8, markersize = 9)
-		plt.plot(genAxis, MeanFitness, label = LabelName, linestyle='-', alpha = 1, markersize = 15)
-plt.xlabel('Generation', size = 26)
-plt.ylabel('Fitness Score (km$^3$str)', size = 26)
-plt.title("Fitness Score over Generations (0 - {})".format(int(g.numGens)), size = 30)
+# Testing our colorblind friendly colors
+colors2 = ['#00429d', '#3e67ae', '#618fbf', '#85b7ce', '#b1dfdb', 
+           '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a']
 
-#plt.legend()
-plt.savefig(g.destination + Plot2DName)
+# Scale to include the toyon data
+if veff_toyon > (max_fit + (diff_fit * 0.25)):
+    max_y = veff_toyon + (diff_fit * 0.25)
+else:
+    max_y = max_fit + (diff_fit * 0.25)
 
-#for x in range (len(fScoresInd[1])):
-    #print fScoresInd[1][x]
+# Plotting the mean and median fitness scores
+plt.axis([-1, g.num_gens+1, min_fit - (diff_fit * 0.25) , max_y])
+plt.plot(gen_axis, mean_fits, linestyle='dotted', 
+         alpha=1, markersize=15, zorder=9)
+plt.plot(gen_axis, median_fits, linestyle='dashed', 
+         alpha=1, markersize=15, zorder=9)
 
-##plt.show()
-# was commented out to prevent graph from popping up and block=False replaced it along with plt.pause
-# the pause functions for how many seconds to wait until it closes graph
-#plt.show(block=False)
-#plt.pause(15)
+styles = dict(alpha=1, markersize=15, zorder=10)
+# Plotting the Toyon Data
+plt.axhline(y=veff_toyon, color='black', linestyle='solid', **styles)
 
-#plt.figure(figsize=(10, 8))
-#indAxis = np.linspace(1,g.NPOP,g.NPOP)
-#genAxis, indAxis = np.meshgrid(genAxis, indAxis)
-#ax = plt.axes(projection='3d')
-#ax.plot_surface(genAxis, indAxis, fScoresInd, rstride=1, cstride=1, cmap='viridis', edgecolor='none')
-#ax.set_title('3D Fitness Score over Generations');
-#ax.set_xlabel('Generation')
-#ax.set_ylabel('Individual')
-#ax.set_zlabel('Fitness Score')
-#plt.savefig(g.destination + Plot3DName)
-##plt.show()
-# was commented out to prevent graph from popping up and block=False replaced it along with plt.pause
-# the pause functions for how many seconds to wait until it closes graph
-##plt.show(block=False)
-#plt.pause(15)
+# Plotting the Toyon Error Bars
+plt.axhline(y=veff_toyon + veff_toyon_err_plus, color='gray', 
+            linestyle='dotted', **styles)
+plt.axhline(y=veff_toyon - veff_toyon_err_minus, color='gray', 
+            linestyle='dotted', **styles)
+
+#plotting with small deviations in the x axis so we can see the data points
+for ind in range(g.npop):
+    plt.errorbar(gen_array[ind], fit_df[ind], 
+                 yerr=[err_plus_df[ind], err_minus_df[ind]], marker='o', 
+                 color=colors2[ind%10], linestyle='', alpha=0.6, 
+                 markersize=7, capsize=3, capthick=1)
+
+plt.xlabel('Generation', size=23)
+plt.ylabel('Fitness Score (km$^3$str)', size=23)
+plt.legend(["Mean", "Median", "Toyon", 
+            "Toyon +Err", "Toyon -Err", "Individuals"], 
+           loc='upper left', prop={'size': 10}, framealpha=1, 
+           bbox_to_anchor=(1.05, 1), frameon=True, fancybox=True, shadow=True)
+
+plt.subplots_adjust(right=0.81)
+plt.xticks(gen_axis, size=12)
+plt.yticks(size=12)
+plt.title(f"Fitness Score over Generations (0 - {g.num_gens})", size=28)
+plt.savefig(g.destination / f"{plot_name}.png", dpi=300)
+plt.savefig(g.destination / f"{plot_name}.pdf")
+
+
+#Create a new figure for the violin plot
+plt.figure(figsize=(10, 8))
+plt.style.use('seaborn')
+
+plt.axis([-1, g.num_gens+1, min_fit - (diff_fit * 0.25) , max_y])
+
+plt.plot(gen_axis, mean_fits, linestyle='dotted', 
+         alpha=1, markersize=25, color='#00429d')
+plt.plot(gen_axis, median_fits, linestyle='dashed', 
+         alpha=1, markersize=20, color='#93003a')
+
+# Plotting the Toyon Data
+plt.axhline(y=veff_toyon, color='black', linestyle='solid', 
+            alpha=1, markersize=15, zorder=10)
+
+# Plotting the Toyon Error Bars
+plt.axhline(y=veff_toyon + veff_toyon_err_plus, color='gray', 
+            linestyle='dotted', alpha=1, markersize=15, zorder=10)
+plt.axhline(y=veff_toyon - veff_toyon_err_minus, color='gray', 
+            linestyle='dotted', alpha=1, markersize=15, zorder=10)
+
+# Plotting the violin plot
+transposed_df = fit_df.T
+violinplot = sns.violinplot(data=transposed_df, color='lightcyan', width=0.25)
+fig = violinplot.get_figure()
+
+plt.xlabel('Generation', size=23)
+plt.ylabel('Fitness Score (km$^3$str)', size=23)
+plt.title(f"Fitness Score over Generations (0 - {g.num_gens})", size=28)
+plt.xticks(gen_axis, size=12)
+plt.yticks(size=12)
+plt.legend(["Mean", "Median", "Toyon", "Toyon Errs"], loc = 'upper left', 
+           prop={'size': 10}, framealpha=1, bbox_to_anchor=(1.05, 1), 
+           frameon=True, fancybox=True, shadow=True)
+plt.subplots_adjust(right=0.81)
+fig.savefig(g.destination / f"{violin_plot_name}.png", dpi=300)
+fig.savefig(g.destination / f"{violin_plot_name}.pdf")

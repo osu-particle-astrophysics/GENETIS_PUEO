@@ -1,0 +1,30 @@
+#load cmake/3.22.1
+export PATH=/fs/ess/PAS1960/buildingPueoSim/cmake/install/bin:$PATH
+#load gcc/11.1.0
+export PATH=/fs/ess/PAS1960/buildingPueoSim/gcc/bin:$PATH
+export LD_LIBRARY_PATH=/fs/ess/PAS1960/buildingPueoSim/gcc/lib64:$LD_LIBRARY_PATH
+export CC=/fs/ess/PAS1960/buildingPueoSim/gcc/bin/gcc-11.1
+export CXX=/fs/ess/PAS1960/buildingPueoSim/gcc/bin/g++-11.1
+export FC=/fs/ess/PAS1960/buildingPueoSim/gcc/bin/gfortran-11.1
+#load fftw
+export FFTWDIR=/fs/ess/PAS1960/buildingPueoSim/fftw/build
+export PATH=/fs/ess/PAS1960/buildingPueoSim/fftw/build:$PATH
+export LD_LIBRARY_PATH=/fs/ess/PAS1960/buildingPueoSim/fftw/build/lib64:$LD_LIBRARY_PATH
+#load gsl
+export GSL_ROOT_DIR=/fs/ess/PAS1960/buildingPueoSim/gsl/gsl-2.7.1
+export PATH=/fs/ess/PAS1960/buildingPueoSim/gsl/gsl-2.7.1/bin:$PATH
+export LD_LIBRARY_PATH=/fs/ess/PAS1960/buildingPueoSim/gsl/gsl-2.7.1/lib:$LD_LIBRARY_PATH
+#load root
+#export ROOTSYS=/fs/project/PAS0654/shared_software/anita/owens_pitzer/build/root
+#source /fs/project/PAS0654/shared_software/anita/owens_pitzer/build/root/bin/thisroot.sh
+
+#prepare pusoSim
+export PUEO_BUILD_DIR=/fs/ess/PAS1960/buildingPueoSim/pueoBuilder
+export PUEO_UTIL_INSTALL_DIR=/fs/ess/PAS1960/buildingPueoSim/pueoBuilder
+export NICEMC_SRC=${PUEO_BUILD_DIR}/components/nicemc
+export NICEMC_BUILD=${PUEO_BUILD_DIR}/build/components/nicemc
+export PUEOSIM_SRC=${PUEO_BUILD_DIR}/components/pueoSim
+export LD_LIBRARY_PATH=${PUEO_UTIL_INSTALL_DIR}/lib:$LD_LIBRARY_PATH
+
+source /fs/ess/PAS1960/buildingPueoSim/root/root/install/bin/thisroot.sh
+#source /cvmfs/ara.opensciencegrid.org/v2.0.0/centos7/setup.sh

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ########### XF Simulation Software #######################################
 #
 #      This script will:

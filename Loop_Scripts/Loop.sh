@@ -117,7 +117,7 @@ do
 		echo "Times for generation ${gen}" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 		start=$(date +%s)
 
-		./Loop_Parts/Part_A/Part_A_PUEO.sh $InputVars
+		./Loop_Parts/Part_A/Part_A.sh $InputVars
 
 		state=2
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -132,7 +132,7 @@ do
 	then
 		start=$(date +%s)
 
-		./Loop_Parts/Part_B/Part_B_PUEO.sh $InputVars
+		./Loop_Parts/Part_B/Part_B1.sh $InputVars
 		
 		state=3
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -149,9 +149,9 @@ do
 
 		if [ $ParallelXFPUEO -eq 0 ]
 		then
-			./Loop_Parts/Part_B/Part_B_job2_PUEO.sh $InputVars
+			./Loop_Parts/Part_B/Part_B2_Serial.sh $InputVars
 		else
-			./Loop_Parts/Part_B/Part_B2_Parallel_Pueo.sh $InputVars
+			./Loop_Parts/Part_B/Part_B2_Parallel.sh $InputVars
 		fi
 
 		state=4
@@ -171,7 +171,7 @@ do
 
 		if [ $ParallelXFPUEO -eq 0 ]
 		then
-			./Loop_Parts/Part_C/Part_C_PUEO.sh $InputVars
+			./Loop_Parts/Part_C/Part_C.sh $InputVars
 		fi
 
 		state=5
@@ -188,7 +188,7 @@ do
 
 		if [ $ParallelXFPUEO -eq 0]
 		then
-			./Loop_Parts/Part_D/Part_D1_PUEO.sh $InputVars
+			./Loop_Parts/Part_D/Part_D1.sh $InputVars
 		fi
 		state=6
 
@@ -204,7 +204,7 @@ do
 		start=$(date +%s)
 		if [ $ParallelXFPUEO -eq 0]
 		then
-			./Loop_Parts/Part_D/Part_D2_PUEO.sh $InputVars
+			./Loop_Parts/Part_D/Part_D2.sh $InputVars
 		fi
 		state=7
 		./SaveState_Prototype.sh $gen $state $RunName $indiv
@@ -221,7 +221,7 @@ do
 	then
 		start=$(date +%s)
 
-		./Loop_Parts/Part_E/Part_E_PUEO.sh $InputVars
+		./Loop_Parts/Part_E/Part_E.sh $InputVars
 
 		state=8
 		./SaveState_Prototype.sh $gen $state $RunName $indiv 
@@ -237,9 +237,9 @@ do
 
 		if [ $JobPlotting -eq 0 ]
 		then
-			./Loop_Parts/Part_F/Part_F_PUEO.sh $InputVars
+			./Loop_Parts/Part_F/Part_F.sh $InputVars
 		else
-			sbatch --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen --job-name=Plotting_${RunName}_${gen}  ./Loop_Parts/Part_F/Part_F_PUEO.sh
+			sbatch --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,gen=$gen --job-name=Plotting_${RunName}_${gen}  ./Loop_Parts/Part_F/Part_F_Job.sh
 		fi
 
 		state=1

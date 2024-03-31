@@ -37,9 +37,11 @@ indiv_in_pop=$((indiv_in_pop % NPOP))
 echo "indiv_in_pop: $indiv_in_pop"
 echo "individual_number: $individual_number"
 
+mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop
+
 for freq in $(seq 1 131)
 do
-	mv ${individual_number}_${freq}.uan $WorkingDir/Run_Outputs/$RunName/${gen}_${indiv_in_pop}_${freq}.uan
+	mv ${individual_number}_${freq}.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop/${gen}_${indiv_in_pop}_${freq}.uan
 done
 
 
@@ -47,9 +49,6 @@ module load python/3.6-conda5.2
 python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $WorkingDir/Test_Outputs --single=$indiv_in_pop
 
 chmod 777 $WorkingDir/Test_Outputs/* 2>/dev/null
-
-mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop
-mv $WorkingDir/Run_Outputs/$RunName/${gen}_${indiv_in_pop}_*.uan $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop
 
 cd $WorkingDir/Test_Outputs
 # mod individual_number by NPOP

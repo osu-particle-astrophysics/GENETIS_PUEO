@@ -132,7 +132,7 @@ do
 	then
 		start=$(date +%s)
 
-		./Loop_Parts/Part_B/Part_B1.sh $InputVars
+		./Loop_Parts/Part_B/Part_B1.sh $InputVars $indiv
 		
 		state=3
 		./SaveState_Prototype.sh $gen $state $RunName $indiv

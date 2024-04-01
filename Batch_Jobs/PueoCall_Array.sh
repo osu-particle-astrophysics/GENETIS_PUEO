@@ -19,6 +19,8 @@
 #NNT=$7
 #Exp=$8
 
+source $WorkingDir/RunData/$RunName/setup.sh
+
 threads=40
 
 num=$(($((${SLURM_ARRAY_TASK_ID}-1))/${Seeds}+1))

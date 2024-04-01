@@ -18,7 +18,6 @@
 
 ## Imports
 import argparse
-import csv
 
 ## Arguments
 parser = argparse.ArgumentParser()

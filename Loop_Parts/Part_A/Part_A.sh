@@ -10,18 +10,10 @@
 #
 ############################################################################
 #variables
-gen=$1
-NPOP=$2
-WorkingDir=$3
-RunName=$4
-GeoFactor=$5
-rank_no=$6
-roulette_no=$7
-tournament_no=$8
-reproduction_no=$9
-crossover_no=${10}
-mutationRate=${11}
-sigma=${12}
+WorkingDir=$1
+RunName=$2
+gen=$3
+source $WorkingDir/RunData/$RunName/setup.sh
 
 cd $WorkingDir
 

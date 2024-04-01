@@ -12,19 +12,10 @@
 #################################################################################################################################################### 
 
 #variables
-gen=$1
-NPOP=$2
-WorkingDir=$3
-RunName=$4
-ScaleFactor=$5
-indiv=$6
-Seeds=$7
-GeoFactor=$8
-IceMCExec=$9
-XFProj=${10}
-PSIMDIR=${11}
-exp=${12}
-ParallelXFPUEO=${13}
+WorkingDir=$1
+RunName=$2
+gen=$3
+source $WorkingDir/RunData/$RunName/setup.sh
 
 echo 'Starting fitness function calculating portion...'
 

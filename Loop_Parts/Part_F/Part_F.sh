@@ -4,15 +4,10 @@
 #
 #
 ##########################################################################################
-NPOP=$1
-WorkingDir=$2
-RunName=$3
-gen=$4
-Seeds=$5
-exp=$6
-GeoFactor=$7
-PSIMDIR=$8
-SYMMETRY=$9
+WorkingDir=$1
+RunName=$2
+gen=$3
+source $WorkingDir/RunData/$RunName/setup.sh
 
 echo "exp: $exp"
 cd $WorkingDir
@@ -20,7 +15,7 @@ cd $WorkingDir
 cd Antenna_Performance_Metric
 
 echo 'Starting image maker portion...'
-./image_maker.sh $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen} $WorkingDir/Run_Outputs/$RunName $gen $WorkingDir $RunName $NPOP $PSIMDIR $exp $SYMMETRY
+./image_maker.sh $WorkingDir $RunName $gen
 
 source set_plotting_env.sh
 
@@ -41,14 +36,7 @@ module load python/3.7-2019.10
 # Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
 python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen $WorkingDir
 
-#python3 color_plotsPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
-
 cd $WorkingDir/Run_Outputs/$RunName
-#mail -s "FScore_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < FScorePlot2D.png
-#mail -s "FScore_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Fitness_Scores_RG.png
-#mail -s "Veff_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veff_plot.png
-#mail -s "Veff_Color_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < Veffectives_RG.png
-#mail -s "Violin_Plot_${RunName}_Gen_${gen}" dropbox.2dwp1o@zapiermail.com < ViolinPlot.png
 
 mv -f *.csv Generation_Data/ 2> /dev/null
 
@@ -66,4 +54,4 @@ mv -f Generation_Data/*.png Plots/Generation_${gen}
 
 echo 'Congrats on getting some nice plots!'
 
-#chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
+

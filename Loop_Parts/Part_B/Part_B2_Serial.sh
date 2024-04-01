@@ -18,17 +18,10 @@
 #
 ###################################################################################################################################### 
 # varaibles
-indiv=$1
-gen=$2
-NPOP=$3
-WorkingDir=$4
-RunName=$5
-XmacrosDir=$6
-XFProj=$7
-GeoFactor=$8
-num_keys=$9
-NSECTIONS=${10}
-XFCOUNT=${11}
+WorkingDir=$1
+RunName=$2
+gen=$3
+source $WorkingDir/RunData/$RunName/setup.sh
 
 ## We need the loop to pause until all the XF jobs are done
 ## To do this, we'll just count the flag files

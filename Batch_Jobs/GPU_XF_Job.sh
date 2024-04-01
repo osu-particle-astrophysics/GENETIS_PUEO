@@ -13,7 +13,8 @@
 #SBATCH --mem-per-gpu=178gb
 
 ## make sure we're in the right directory
-cd $WorkingDir
+source $WorkingDir/RunData/$RunName/setup.sh
+
 cd Run_Outputs/$RunName/GPUFlags
 
 module load xfdtd/7.10.2.3 #7.9.2.2

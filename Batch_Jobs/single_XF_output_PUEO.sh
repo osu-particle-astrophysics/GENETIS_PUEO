@@ -2,12 +2,11 @@
 
 individual_number=$1
 WorkingDir=$2   
-XmacrosDir=$3
-XFProj=$4
-RunName=$5
-gen=$6
-NPOP=$7
-PSIMDIR=$8
+RunName=$3
+gen=$4
+
+
+source $WorkingDir/RunData/$RunName/setup.sh
 
 cd $XmacrosDir
 

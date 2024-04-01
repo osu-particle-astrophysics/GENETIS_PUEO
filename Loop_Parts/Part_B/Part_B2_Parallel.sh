@@ -5,22 +5,10 @@
 # The script waits until all XF and pueoSim jobs are finished
 
 # varaibles
-indiv=$1
-gen=$2
-NPOP=$3
-WorkingDir=$4
-RunName=$5
-XmacrosDir=$6
-XFProj=$7
-GeoFactor=$8
-num_keys=$9
-NSECTIONS=${10}
-XFCOUNT=${11}
-PSIMDIR=${12}
-SYMMETRY=${13}
-exp=${14}
-NNT=${15}
-Seeds=${16}
+WorkingDir=$1
+RunName=$2
+gen=$3
+source $WorkingDir/RunData/$RunName/setup.sh
 
 start_time=$(date +%s)
 
@@ -72,16 +60,12 @@ mkdir -m775 ${PSIMDIR}/outputs/${RunName}/${gen}_outputs 2> /dev/null
 
 cd $WorkingDir/Run_Outputs/$RunName/GPUFlags
 gpu_flags=$(find . -type f | wc -l)
-#cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
-#pueo_flags=$(find . -type f | wc -l)
 cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
 root_flags=$(find . -type f | wc -l)
 
 
-#peuosimsperindiv=49
-#peuocount=$((peuosimsperindiv * NPOP))
-max_jobs=230
-#job_cutoff=$((max_jobs - peuosimsperindiv))
+
+max_jobs=250
 USER=$(whoami)
 already_checked=0
 
@@ -112,7 +96,7 @@ do
 
 			# run the xmacro output script
 			cd $WorkingDir/Batch_Jobs
-			./single_XF_output_PUEO.sh $indiv $WorkingDir $XmacrosDir $XFProj $RunName $gen $NPOP $PSIMDIR 1> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.output" 2> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.error"
+			./single_XF_output_PUEO.sh $indiv $WorkingDir $RunName $gen 1> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.output" 2> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.error"
 
 			indiv=$((indiv-1))
 			indiv=$((indiv % NPOP))
@@ -142,7 +126,7 @@ do
 
 			# set the output file to Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_$indiv_$SLURM_ARRAY_TASK_ID.output
 			sbatch --array=1-$num_jobs \
-				--export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,Seeds=$Seeds,PSIMDIR=$PSIMDIR,NPOP=$NPOP,NNT=$NNT_per_sim,Exp=$exp,indiv=$indiv,num_jobs=$num_jobs \
+				--export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,NNT=$NNT_per_sim,indiv=$indiv,num_jobs=$num_jobs \
 				--job-name=${RunName} --output=$WorkingDir/Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_${indiv}_%a.output  \
 				--error=$WorkingDir/Run_Outputs/$RunName/PUEO_Errors/PUEOsim_${indiv}_%a.error $WorkingDir/Batch_Jobs/PueoCall_Array_Indiv.sh
 			# move the cursor up 1 line
@@ -154,9 +138,6 @@ do
 	fi
 	cd $WorkingDir/Run_Outputs/$RunName/GPUFlags
 	gpu_flags=$(ls | wc -l)
-
-	#cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
-	#pueo_flags=$(find . -type f | wc -l)
 
 	cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
 	root_flags=$(find . -type f | wc -l)
@@ -183,7 +164,6 @@ pueo_finish_time=$(date +%s)
 
 echo "Done!"
 
-mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
 for i in $(seq $NPOP)
 do
 	mv $XmacrosDir/antenna_images/${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png

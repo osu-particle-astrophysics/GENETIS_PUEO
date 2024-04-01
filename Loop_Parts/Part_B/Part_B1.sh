@@ -16,22 +16,11 @@
 #
 ###########################################################################
 # variables
-indiv=$1
-gen=$2
-NPOP=$3
-WorkingDir=$4
-RunName=$5
-XmacrosDir=$6
-XFProj=$7
-GeoFactor=$8
-num_keys=$9
-SYMMETRY=${10}
-XFCOUNT=${11}
-ParallelXFPUEO=${12}
-SingleBatch=${13}
-
-echo $SYMMETRY
-echo $XFCOUNT
+WorkingDir=$1
+RunName=$2
+gen=$3
+indiv=$4
+source $WorkingDir/RunData/$RunName/setup.sh
 
 ## If we're in the 0th generation, we need to make the directory for the XF jobs
 if [ ${gen} -eq 0 ]
@@ -47,23 +36,11 @@ fi
 # This is because we need to do the VPol and Hpol
 for i in $(seq 1 $XFCOUNT)
 do
-        # first, declare the number of the individual we are checking
+    # first, declare the number of the individual we are checking
 	individual_number=$(($gen*$XFCOUNT + $i))
 
-        # next, write the potential directories corresponding to that individual
-	if [ $individual_number -lt 10 ]
-	then
-		indiv_dir_parent=$XFProj/Simulations/00000$individual_number/
-	elif [[ $individual_number -ge 10 && $individual_number -lt 100 ]]
-	then
-		indiv_dir_parent=$XFProj/Simulations/0000$individual_number/
-	elif [[ $individual_number -ge 100 && $individual_number -lt 1000 ]]
-	then
-		indiv_dir_parent=$XFProj/Simulations/000$individual_number/
-	elif [ $individual_number -ge 1000 ]
-	then
-		indiv_dir_parent=$XFProj/Simulations/00$individual_number/
-	fi
+	indiv_dir_parent=$XFProj/Simulations/$(printf "%05d" $individual_number)
+
 
         # now delete the directory if it exists
 	if [ -d $indiv_dir_parent ]
@@ -85,10 +62,9 @@ fi
 chmod -R 777 $XmacrosDir 2> /dev/null
 
 cd $XmacrosDir
-# POSSIBLY CHANGE IF THIS IS ARA SPECIFIC
-#freqlist="8333 10000 11667 13333 15000 16667 18334 20000 21667 23334 25000 26667 28334 30000 31667 33334 35000 36667 38334 40001 41667 43334 45001 46667 48334 50001 51668 53334 55001 56668 58334 60001 61668 63334 65001 66668 68335 70001 71668 73335 75001 76668 78335 80001 81668 83335 85002 86668 88335 90002 91668 93335 95002 96668 98335 100000 101670 103340 105000 106670"
-#For PUEO
+
 freqlist="20000 21000 22000 23000 24000 25000 26000 27000 28000 29000 30000 31000 32000 33000 34000 35000 36000 37000 38000 39000 40000 41000 42000 43000 44000 45000 46000 47000 48000 49000 50000 51000 52000 53000 54000 55000 56000 57000 58000 59000 60000 61000 62000 63000 64000 65000 66000 67000 68000 69000 70000 71000 72000 73000 74000 75000 76000 77000 78000 79000 80000 81000 82000 83000 84000 85000 86000 87000 88000 89000 90000 91000 92000 93000 94000 95000 96000 97000 98000 99000 100000 101000 102000 103000 104000 105000 106000 107000 108000 109000 110000 111000 112000 113000 114000 115000 116000 117000 118000 119000 120000 121000 122000 123000 124000 125000 126000 127000 128000 129000 130000 131000 132000 133000 134000 135000 136000 137000 138000 139000 140000 141000 142000 143000 144000 145000 146000 147000 148000 149000 150000"
+
 #get rid of the simulation_PEC.xmacro that already exists
 rm -f simulation_PEC.xmacro
 
@@ -96,11 +72,7 @@ echo "var NPOP = $NPOP;" > simulation_PEC.xmacro
 echo "var indiv = $indiv;" >> simulation_PEC.xmacro
 echo "var workingdir = \"$WorkingDir\";" >> simulation_PEC.xmacro
 chmod -R 775 simulation_PEC.xmacro 2> /dev/null
-#now we can write the frequencies to simulation_PEC.xmacro
-#now let's change our frequencies by the scale factor (and then back down by 100)
 
-#first we need to declare the variable for the frequency lists
-#the below commands write the frequency scale factor and "var freq =" to simulation_PEC.xmacro
 echo "//Factor of $GeoFactor frequency" >> simulation_PEC.xmacro
 echo "var freq " | tr "\n" "=" >> simulation_PEC.xmacro
 
@@ -244,8 +216,10 @@ then
 	# set the job time limit to 15 hours
 	job_time="15:00:00"
 else
-	job_time="05:00:00"
+	job_time="04:00:00"
 fi
 
+mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
+
 echo "Submitting XF jobs with batch size $batch_size"
-sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,XmacrosDir=$XmacrosDir,XFProj=$XFProj,NPOP=$NPOP,indiv=$individual_number,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR,batch_size=$batch_size,SingleBatch=$SingleBatch --job-name=${RunName} --time=${job_time} $job_file 
+sbatch --array=1-${XFCOUNT}%${batch_size} --export=ALL,WorkingDir=$WorkingDir,RunName=$RunName,indiv=$individual_number,gen=${gen},SYMMETRY=$SYMMETRY,PSIMDIR=$PSIMDIR,batch_size=$batch_size,SingleBatch=$SingleBatch --job-name=${RunName} --time=${job_time} $job_file 

@@ -10,18 +10,10 @@
 #
 ################################################################################################################################################## 
 #variables
-gen=$1
-NPOP=$2
-WorkingDir=$3
-PSIMDIR=$4
-exp=$5
-NNT=$6
-RunName=$7
-Seeds=$8
-DEBUG_MODE=$9
-XFProj=${10}
-XFCOUNT=${11}
-SpecificSeed=32000
+WorkingDir=$1
+RunName=$2
+gen=$3
+source $WorkingDir/RunData/$RunName/setup.sh
 
 echo "Entering Part D1 PUEO!"
 

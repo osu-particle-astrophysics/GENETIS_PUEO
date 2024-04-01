@@ -6,14 +6,10 @@
 #
 ####################################################################################################################################
 #variables
-NPOP=$1
-WorkingDir=$2
-RunName=$3
-gen=$4
-indiv=$5
-SYMMETRY=$6
-PSIMDIR=$7
-#chmod -R 777 /fs/ess/PAS1960/BiconeEvolutionOSC/BiconeEvolution/
+WorkingDir=$1
+RunName=$2
+gen=$3
+source $WorkingDir/RunData/$RunName/setup.sh
 
 module load python/3.7-2019.10
 

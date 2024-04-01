@@ -63,52 +63,27 @@ chmod -R 777 $XmacrosDir 2> /dev/null
 
 cd $XmacrosDir
 
-freqlist="20000 21000 22000 23000 24000 25000 26000 27000 28000 29000 30000 31000 32000 33000 34000 35000 36000 37000 38000 39000 40000 41000 42000 43000 44000 45000 46000 47000 48000 49000 50000 51000 52000 53000 54000 55000 56000 57000 58000 59000 60000 61000 62000 63000 64000 65000 66000 67000 68000 69000 70000 71000 72000 73000 74000 75000 76000 77000 78000 79000 80000 81000 82000 83000 84000 85000 86000 87000 88000 89000 90000 91000 92000 93000 94000 95000 96000 97000 98000 99000 100000 101000 102000 103000 104000 105000 106000 107000 108000 109000 110000 111000 112000 113000 114000 115000 116000 117000 118000 119000 120000 121000 122000 123000 124000 125000 126000 127000 128000 129000 130000 131000 132000 133000 134000 135000 136000 137000 138000 139000 140000 141000 142000 143000 144000 145000 146000 147000 148000 149000 150000"
-
 #get rid of the simulation_PEC.xmacro that already exists
 rm -f simulation_PEC.xmacro
 
 echo "var NPOP = $NPOP;" > simulation_PEC.xmacro
 echo "var indiv = $indiv;" >> simulation_PEC.xmacro
 echo "var workingdir = \"$WorkingDir\";" >> simulation_PEC.xmacro
+echo "var RunName = \"$RunName\";" >> simulation_PEC.xmacro
+echo "var freq_start = $FreqStart;" >> simulation_PEC.xmacro
+echo "var freq_step = $FreqStep;" >> simulation_PEC.xmacro
+echo "var freq_count = $FREQS;" >> simulation_PEC.xmacro
+# bit flip SYMMETRY
+if [ $SYMMETRY -eq 1 ]
+then
+	sym_count=0
+else
+	sym_count=1
+fi
+echo "var sym_count = $sym_count;" >> simulation_PEC.xmacro
 chmod -R 775 simulation_PEC.xmacro 2> /dev/null
 
 echo "//Factor of $GeoFactor frequency" >> simulation_PEC.xmacro
-echo "var freq " | tr "\n" "=" >> simulation_PEC.xmacro
-
-###CHANGE IF FREQ LIST IS DIFFERENT FOR PUEO
-#here's how we change our frequencies and put them in simulation_PEC.xmacro
-for i in $freqlist; #iterating through all values in our list
-do
-	if [ $i -eq 20000 ] #we need to start with a bracket
-	then
-		echo " " | tr "\n" "[" >> simulation_PEC.xmacro
-                #whenever we append to a file, it adds what we append to a new line at the end
-                #the tr command replaces the new line (\n) with a bracket (there's a space at the start; that will separate the = from the list by a space)
-	fi
-
-        #now we're ready to start appending our new frequencies
-        #we start by changing our frequencies by the scale factor; we'll call this variable k
-	k=$(($GeoFactor*$i))
-        #now we'll append our frequencies
-        #the frequencies we're appending are divided by 100, since the original list was scaled up by 100
-        #IT'S IMPORTANT TO DO IT THIS WAY
-        #we can't just set k=$((scale*$i/100)) because of how bash handles float operations
-        #instead, we need to echo it with the | bc command to allow float quotients
-	if [ $i -ne 150000 ]
-	then
-		echo "scale=2 ; $k/100 " | bc | tr "\n" "," >> simulation_PEC.xmacro
-		echo "" | tr "\n" " " >> simulation_PEC.xmacro #gives spaces between commas and numbers
-        #we have to be careful! we want commas between numbers, but not after our last number
-        #hence why we replace \n with , above, but with "]" below
-	else
-		echo "scale=2 ; $k/100 " | bc | tr "\n" "]" >> simulation_PEC.xmacro
-		echo " " >> simulation_PEC.xmacro
-	fi
-
-done
-
-###
 
 if [[ $gen -eq 0 && $indiv -eq 1 ]]
 then

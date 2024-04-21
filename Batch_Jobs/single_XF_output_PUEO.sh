@@ -6,7 +6,7 @@ individual_number=$1
 WorkingDir=$2   
 RunName=$3
 gen=$4
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 cd $XmacrosDir
 mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop

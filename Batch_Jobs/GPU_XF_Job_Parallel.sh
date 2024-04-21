@@ -30,7 +30,7 @@
 module load xfdtd/7.10.2.3 #7.9.2.2
 module load cuda
 
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 ## We need to get the individual number
 ## This will be based on the number in the array

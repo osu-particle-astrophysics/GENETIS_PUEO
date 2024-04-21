@@ -9,7 +9,7 @@
 WorkingDir=$1
 RunName=$2
 gen=$3
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 module load python/3.7-2019.10
 

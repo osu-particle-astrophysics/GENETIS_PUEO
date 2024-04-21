@@ -8,7 +8,7 @@
 WorkingDir=$1
 RunName=$2
 gen=$3
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 start_time=$(date +%s)
 
@@ -80,10 +80,15 @@ while [[ $root_flags -lt $NPOP ]]
 do
 	# if there is an output file in the TMPGPUFlags directory, 
 	# submit a pueoSim job for that antenna and then move the file to the GPUFlags directory
-	cd $WorkingDir/Run_Outputs/$RunName/TMPGPUFlags
 	# if there are no files in the TMPGPUFlags directory, 
-	# wait 10 seconds and then check again Or if the number of jobs submitted is greater than 250 - 49
-	jobs_submitted=$(squeue -u $USER | wc -l)
+	# wait 10 seconds and then check again or if the number of jobs submitted is greater than 250 - 49
+
+	cd $WorkingDir/Run_Outputs/$RunName/TMPGPUFlags
+
+	# Count the number of jobs submitted. -f9 is the job ID
+	squeue_string=$(squeue -h -u $USER | cut -d' ' -f9)
+	jobs_submitted=$(python Antenna_Performance_Metric/count_jobs.py "$squeue_string")
+
 	if [[ $(ls | wc -l) -eq 0 || $jobs_submitted -gt $max_jobs ]]
 	then
 		sleep 10
@@ -155,7 +160,6 @@ do
 	tput cuu 2
 
 	printProgressBar "GPU" $XFCOUNT
-	#printProgressBar "PUEO" $peuocount
 	printProgressBar "ROOT" $NPOP
 
 done

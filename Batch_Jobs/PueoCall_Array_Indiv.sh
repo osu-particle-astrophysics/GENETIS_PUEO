@@ -19,7 +19,7 @@
 #NNT=$7
 #Exp=$8
 
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 echo $num_jobs
 echo $indiv

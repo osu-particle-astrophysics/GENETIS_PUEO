@@ -21,7 +21,7 @@
 WorkingDir=$1
 RunName=$2
 gen=$3
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 ## We need the loop to pause until all the XF jobs are done
 ## To do this, we'll just count the flag files

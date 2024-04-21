@@ -20,7 +20,7 @@ WorkingDir=$1
 RunName=$2
 gen=$3
 indiv=$4
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 # Create directories if not already created
 if [ ${gen} -eq 0 ]

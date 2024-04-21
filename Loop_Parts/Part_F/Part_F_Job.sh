@@ -18,7 +18,7 @@
 #PSIMDIR=$8
 #SYMMETRY=$9
 
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 echo "exp: $exp"
 cd $WorkingDir

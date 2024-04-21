@@ -13,7 +13,7 @@
 #SBATCH --mem-per-gpu=178gb
 
 ## make sure we're in the right directory
-source $WorkingDir/RunData/$RunName/setup.sh
+source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 cd Run_Outputs/$RunName/GPUFlags
 

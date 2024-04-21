@@ -9,41 +9,9 @@ RunName=$2
 gen=$3
 source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
-echo "exp: $exp"
-cd $WorkingDir
-
-cd Antenna_Performance_Metric
-
-echo 'Starting image maker portion...'
-./image_maker.sh $WorkingDir $RunName $gen
-
-source set_plotting_env.sh
-
-next_gen=$(($gen+1))
-
-module load python/3.7-2019.10
-
-python VariablePlots.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $next_gen $NPOP $GeoFactor
-
-#this is for the rainbow plot
-module load python/3.9-2022.05
-
-python DataConverter_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data
-python Rainbow_Plotter_PUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data
-
-module load python/3.7-2019.10
-
-# Format is source directory (where is generationDNA.csv), destination directory (where to put plots), npop
-python FScorePlotPUEO.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen $WorkingDir
-
+# Make Plotting Directories
 cd $WorkingDir/Run_Outputs/$RunName
 
-mv -f *.csv Generation_Data/ 2> /dev/null
-
-cd $WorkingDir/Run_Outputs/$RunName
-chmod -R 775 Generation_Data
-
-#Move the plots to the Plots folder and corresponding generation folder (could probably just make this the destination)
 if [ ${gen} -eq 0 ]
 then
     mkdir -m775 Plots 
@@ -52,6 +20,30 @@ fi
 mkdir -m775 Plots/Generation_${gen}
 mv -f Generation_Data/*.png Plots/Generation_${gen}
 
+# Define variables
+gendir=$WorkingDir/Run_Outputs/$RunName/Generation_Data
+plotdir=$WorkingDir/Run_Outputs/$RunName/Generation_Data/Plots/Generation_${gen}
+next_gen=$(($gen+1))
+
+# Make the physics/polar plots. Organize the best antenna pictures
+cd $WorkingDir/Antenna_Performance_Metric
+
+echo 'Starting max min plotter portion...'
+./max_min_plotter.sh.sh $WorkingDir $RunName $gen
+
+source $WorkingDir/Environments/set_plotting_env.sh
+
+# Make fscore and variable plots
+module load python/3.7-2019.10
+python VariablePlots.py $gendir $plotdir $next_gen $NPOP $GeoFactor
+python FScorePlotPUEO.py $gendir $plotdir $NPOP $gen $WorkingDir
+
+# Make Rainbow plots
+module load python/3.9-2022.05
+python DataConverter_PUEO.py $gendir
+python Rainbow_Plotter_PUEO.py $gendir $plotdir
+
+cd $WorkingDir/Run_Outputs/$RunName
+chmod -R 775 Generation_Data
+
 echo 'Congrats on getting some nice plots!'
-
-

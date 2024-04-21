@@ -59,11 +59,12 @@ rm -f simulation_PEC.xmacro
 # Create the simulation_PEC.xmacro
 echo "var NPOP = $NPOP;" > simulation_PEC.xmacro
 echo "var indiv = $indiv;" >> simulation_PEC.xmacro
+echo "var gen = $gen;" >> simulation_PEC.xmacro
 echo "var workingdir = \"$WorkingDir\";" >> simulation_PEC.xmacro
 echo "var RunName = \"$RunName\";" >> simulation_PEC.xmacro
 echo "var freq_start = $FreqStart;" >> simulation_PEC.xmacro
 echo "var freq_step = $FreqStep;" >> simulation_PEC.xmacro
-echo "var freq_count = $FREQS;" >> simulation_PEC.xmacro
+echo "var freqCoefficients = $FREQS;" >> simulation_PEC.xmacro
 
 # bit flip SYMMETRY to get symmetry count
 sym_count=$(((SYMMETRY-1)*-1))

@@ -29,7 +29,7 @@ else
 fi
 
 individual_number=$((gen*NPOP*symmetry_multiplier+sim_num))
-indiv_dir_parent=$XFProj/Simulations/$(printf "%05d" $individual_number)
+indiv_dir_parent=$XFProj/Simulations/$(printf "%06d" $individual_number)
 indiv_dir=$indiv_dir_parent/Run0001
 
 # Run the xsolver

@@ -44,7 +44,7 @@ echo "individual_number: $individual_number"
 
 module load python/3.6-conda5.2
 
-python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $WorkingDir/Run_Outputs/$RunName/GainFiles --single=$indiv_in_pop
+python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $WorkingDir/Run_Outputs/$RunName/Gain_Files --single=$indiv_in_pop
 
 cd $WorkingDir/Run_Outputs/$RunName/Gain_Files
 

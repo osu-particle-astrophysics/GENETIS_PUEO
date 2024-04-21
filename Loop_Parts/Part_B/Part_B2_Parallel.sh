@@ -87,7 +87,7 @@ do
 
 	# Count the number of jobs submitted. -f9 is the job ID
 	squeue_string=$(squeue -h -u $USER | cut -d' ' -f9)
-	jobs_submitted=$(python Antenna_Performance_Metric/count_jobs.py "$squeue_string")
+	jobs_submitted=$(python $WorkingDir/Antenna_Performance_Metric/count_jobs.py "$squeue_string")
 
 	if [[ $(ls | wc -l) -eq 0 || $jobs_submitted -gt $max_jobs ]]
 	then
@@ -99,12 +99,14 @@ do
 			indiv=$(echo "$file" | cut -d'_' -f5)
 			indiv=$(echo "$indiv" | cut -d'.' -f1)
 
+			indiv_in_pop=$((indiv-1))
+			indiv_in_pop=$((indiv_in_pop % NPOP))
+
 			# run the xmacro output script
 			cd $WorkingDir/Batch_Jobs
+			mkdir -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/${indiv_in_pop} 2> /dev/null
 			./single_XF_output_PUEO.sh $indiv $WorkingDir $RunName $gen 1> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.output" 2> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.error"
 
-			indiv=$((indiv-1))
-			indiv=$((indiv % NPOP))
 
 			cd $WorkingDir
 
@@ -131,9 +133,9 @@ do
 
 			# set the output file to Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_$indiv_$SLURM_ARRAY_TASK_ID.output
 			sbatch --array=1-$num_jobs \
-				--export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,NNT=$NNT_per_sim,indiv=$indiv,num_jobs=$num_jobs \
-				--job-name=${RunName} --output=$WorkingDir/Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_${indiv}_%a.output  \
-				--error=$WorkingDir/Run_Outputs/$RunName/PUEO_Errors/PUEOsim_${indiv}_%a.error $WorkingDir/Batch_Jobs/PueoCall_Array_Indiv.sh
+				--export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,NNT=$NNT_per_sim,indiv=$indiv_in_pop,num_jobs=$num_jobs \
+				--job-name=${RunName} --output=$WorkingDir/Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_${indiv_in_pop}_%a.output  \
+				--error=$WorkingDir/Run_Outputs/$RunName/PUEO_Errors/PUEOsim_${indiv_in_pop}_%a.error $WorkingDir/Batch_Jobs/PueoCall_Array_Indiv.sh
 			# move the cursor up 1 line
 			tput cuu 1
 			# move the file to the GPUFlags directory

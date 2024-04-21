@@ -1,3 +1,9 @@
+var NPOP = 1;
+var workingdir = "/fs/ess/PAS1960/HornEvoDev/GENETIS_PUEO";
+var run_name = "test8";
+var rundir = workingdir + "/Run_Outputs/" + run_name;
+var gen = 0;
+for (var k = 5; k <= 5; k++){
 var simNum = "00"
 if( k < 10){
 var simNum = simNum + "000" + k;
@@ -103,6 +109,7 @@ inputpower.getReasonWhyInvalid() );
 for (var i = 0; i <= 130; i++){
 var file = rundir + "/uan_files/" + gen + "_uan_files/" + indiv_in_pop;
 file = file + "/" + gen + "_" + indiv_in_pop + "_" + (i+1) + ".uan"
+Output.println(file);
 FarZoneUtils.exportToUANFile(thdata,thphase,phdata,phphase,inputpower,file, i);
 }
 }

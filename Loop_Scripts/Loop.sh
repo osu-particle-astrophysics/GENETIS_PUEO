@@ -103,6 +103,7 @@ do
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/ROOTFlags
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Gain_Files
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts
 		mkdir -m775 $PSIMDIR/outputs/${RunName}
 		touch $WorkingDir/Run_Outputs/$RunName/time.txt
 		date > $WorkingDir/Run_Outputs/$RunName/date.txt

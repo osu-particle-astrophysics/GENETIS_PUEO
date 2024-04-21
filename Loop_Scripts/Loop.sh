@@ -102,6 +102,7 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEO_Errors
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/ROOTFlags
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Gain_Files
 		mkdir -m775 $PSIMDIR/outputs/${RunName}
 		touch $WorkingDir/Run_Outputs/$RunName/time.txt
 		date > $WorkingDir/Run_Outputs/$RunName/date.txt
@@ -214,7 +215,7 @@ do
 	fi
 
 	## Part E ##
-	## Concatenates the AraSim data files into a string so that it's usable for getting scores
+	## Concatenates the Pueosim data files into a string so that it's usable for getting scores
 	## Gets important information on the fitness scores and generation DNA
 	## moves the .uan files from Antenna Performance Metric to RunOutputs/$RunName folder
 	if [ $state -eq 7 ]

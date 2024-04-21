@@ -116,7 +116,7 @@ for(var i = indiv - 1; i < NPOP; i++)
 
 		// Function calls
 		// We do it twice, first for horizontal source then for vertical
-		for(var k = 0; k <= SYMMETRY; k++)
+		for(var k = 0; k <= sym_count; k++)
 		{
 
 			if(k == 0)

@@ -57,47 +57,27 @@ fi
 
 while [ $indiv_in_pop -le $upper_limit ]
 do
+	# Get the Individuals's Simulation Directory
 	individual_number=$((gen*NPOP*symmetry_multiplier+sim_num))
-
-	## Based on the individual number, we need the right parent directory
-	## This involves checking the individual number being submitted
-	## This is complicated--the individual number should be the number in the job array
-	## To do this, we'll have to call the array number (see above)
-	if [ $individual_number -lt 10 ]
-	then
-		indiv_dir_parent=$XFProj/Simulations/00000$individual_number/
-	elif [[ $individual_number -ge 10 && $individual_number -lt 100 ]]
-	then
-		indiv_dir_parent=$XFProj/Simulations/0000$individual_number/
-	elif [[ $individual_number -ge 100 && $individual_number -lt 1000 ]]
-	then
-		indiv_dir_parent=$XFProj/Simulations/000$individual_number/
-	elif [ $individual_number -ge 1000 ]
-	then
-		indiv_dir_parent=$XFProj/Simulations/00$individual_number/
-	fi
-
-	## Now we need to get into the Run0001 directory inside the parent directory
+	indiv_dir_parent=$XFProj/Simulations/$(printf "%05d" $individual_number)
 	indiv_dir=$indiv_dir_parent/Run0001
 
+	# Run The xsolver
 	cd $indiv_dir
 	xfsolver --use-xstream=true --xstream-use-number=2 --num-threads=2 -v
 
 	echo "finished XF solver"
 
+	# Create a flag file to indicate that the GPU job is done
 	cd $WorkingDir/Run_Outputs/$RunName/TMPGPUFlags
-
-	echo "done"
-
 	flag_file=Part_B_GPU_Flag_${individual_number}.txt
-
 	echo "The GPU job is done!" >> $flag_file
 
 	# iterate which individual we're on
 	sim_num=$((indiv_in_pop+batch_size*symmetry_multiplier))
 	indiv_in_pop=$((sim_num-1))
 
-	# if we go over tartget, the job doesn't need to wait for
+	# if we go over target, the job doesn't need to wait for
 	# output xmacro and can terminate
 	if [ $indiv_in_pop -gt $upper_limit ]
 	then

@@ -1,18 +1,31 @@
-for (var k = 1; k <= NPOP; k++){
-var simNum = "0000"
+var simNum = "00"
 if( k < 10){
+var simNum = simNum + "000" + k;
+}
+else if ( k >= 10 && k < 100){
+var simNum = simNum + "00" + k;
+}
+else if ( k >= 100 && k < 1000){
 var simNum = simNum + "0" + k;
 }
 else{
 var simNum = simNum + k;
 }
-if( k==m){
+
+var indiv_in_pop = ((k - 1) % NPOP);
+
+var query = new ResultQuery();
+///////////////////////Get Theta and Phi Gain///////////////
+query.projectId = App.getActiveProject().getProjectDirectory();
+
+Output.println( App.getActiveProject().getProjectDirectory() );
+
 query.runId = "Run0001";
 query.simulationId = simNum;
 query.sensorType = ResultQuery.FarZoneSensor;
 query.sensorId = "Far Zone Sensor";
 query.timeDependence = ResultQuery.SteadyState;
-query.resultType = ResultQuery.Gain;
+query.resultType = ResultQuery.RealizedGain;
 query.fieldScatter = ResultQuery.TotalField;
 query.resultComponent = ResultQuery.Theta;
 query.dataTransform = ResultQuery.NoTransform;
@@ -88,11 +101,9 @@ Output.println( "5getCurrentDataSet() : " +
 inputpower.getReasonWhyInvalid() );
 }
 for (var i = 0; i <= 130; i++){
-var file = "fileDirectory/Antenna_Performance_Metric/";
-file = file + k + "_";
-file = file + (i+1) + ".uan";
+var file = rundir + "/uan_files/" + gen + "_uan_files/" + indiv_in_pop;
+file = file + "/" + gen + "_" + indiv_in_pop + "_" + (i+1) + ".uan"
 FarZoneUtils.exportToUANFile(thdata,thphase,phdata,phphase,inputpower,file, i);
-}
 }
 }
 App.quit();

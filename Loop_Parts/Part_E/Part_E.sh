@@ -35,18 +35,20 @@ then
 	done
 
 else
+	# Conglomerate the output files into one csv file
 	cd $WorkingDir/Antenna_Performance_Metric
-	python fitFix.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $NPOP $gen
+	python fitFix.py $WorkingDir/Run_Outputs/$RunName/Generation_Data/temp_gen_files $NPOP $gen
 	cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
-	# 0 to npop-1
+	
+	# Remove temporary directories
 	for i in $(seq 0 $((NPOP-1)))
 	do
-		rm -Rf $i
+		rm -Rf temp_gen_files/$i
 	done
 fi
 
 
-
+# Combine psim errors if necessary
 if [ $gen -gt 0 ]
 then
 	python newCombineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP

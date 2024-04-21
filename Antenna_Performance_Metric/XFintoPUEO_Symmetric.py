@@ -34,7 +34,7 @@ g = parser.parse_args()
 ## Function Definitions
 ## Function to read in files
 def read_file(indiv, freq_num, col):
-    uanname = g.working_dir / 'Run_Outputs' / g.run_name / 'uan_files' / f'{gen}_uan_files' / f'{g.gen}_{indiv}_{freq_num}.uan' 
+    uanname = g.working_dir / 'Run_Outputs' / g.run_name / 'uan_files' / f'{g.gen}_uan_files' / f'{g.gen}_{indiv}_{freq_num}.uan' 
     data = np.genfromtxt(uanname, unpack=True, skip_header=18).tolist()
 
     return data[col]  # Return the gain for the polarization being read
@@ -80,6 +80,8 @@ def callFunctions(indiv):
 
     ## We're treating vv and hh as the same and vh and hv as the same
     ## So for the _0 files, it's pretty simple:
+    
+    ## THIS SEEMS WRONG, DO WE STILL WANT TO COPY CROSS POL?
     writeGains(vpol_gain_t[0], vpol_phase_t[0],
                freq_list, file_header / f'vv_0_{g.gen}_{indiv}')
     writeGains(vpol_gain_t[0], vpol_phase_t[0],

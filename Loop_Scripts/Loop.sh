@@ -30,12 +30,15 @@ if ! [ -f "saveStates/${saveStateFile}" ]; then
 	mkdir -m777 $WorkingDir/Run_Outputs/$RunName
 
 	source $WorkingDir/$setupfile
+
 	cp $WorkingDir/$setupfile $WorkingDir/Run_Outputs/$RunName/setup.sh
+
 	XFProj=$WorkingDir/Run_Outputs/${RunName}/${RunName}.xf
 	XmacrosDir=$WorkingDir/XMacros
 	echo "" >> $WorkingDir/Run_Outputs/$RunName/setup.sh
 	echo "XFProj=${XFProj}" >> $WorkingDir/Run_Outputs/$RunName/setup.sh
 	echo "XmacrosDir=${XmacrosDir}" >> $WorkingDir/Run_Outputs/$RunName/setup.sh
+	
 	if [ $SYMMETRY -eq 0 ]
 	then
 		XFCOUNT=$((NPOP*2))
@@ -122,7 +125,7 @@ do
 		./Loop_Parts/Part_A/Part_A.sh $InputVars
 
 		state=2
-		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv
 		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part A took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
@@ -137,7 +140,7 @@ do
 		./Loop_Parts/Part_B/Part_B1.sh $InputVars $indiv
 		
 		state=3
-		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv
 		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part B1 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
@@ -158,7 +161,7 @@ do
 
 		state=4
 
-		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv
 		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part B2 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
@@ -177,7 +180,7 @@ do
 		fi
 
 		state=5
-		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv
 		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part C took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
@@ -188,13 +191,13 @@ do
 	then
 		start=$(date +%s)
 
-		if [ $ParallelXFPUEO -eq 0]
+		if [ $ParallelXFPUEO -eq 0 ]
 		then
 			./Loop_Parts/Part_D/Part_D1.sh $InputVars
 		fi
 		state=6
 
-		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv
 		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part D1 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
@@ -204,13 +207,13 @@ do
 	if [ $state -eq 6 ]
 	then
 		start=$(date +%s)
-		if [ $ParallelXFPUEO -eq 0]
+		if [ $ParallelXFPUEO -eq 0 ]
 		then
 			./Loop_Parts/Part_D/Part_D2.sh $InputVars
 		fi
 		state=7
-		./SaveState_Prototype.sh $gen $state $RunName $indiv
-		end==$(date +%s)
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv
+		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part D2 took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
 	fi
@@ -226,7 +229,7 @@ do
 		./Loop_Parts/Part_E/Part_E.sh $InputVars
 
 		state=8
-		./SaveState_Prototype.sh $gen $state $RunName $indiv 
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv 
 		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part E took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt
@@ -245,7 +248,7 @@ do
 		fi
 
 		state=1
-		./SaveState_Prototype.sh $gen $state $RunName $indiv
+		./Loop_Scripts/SaveState_Prototype.sh $gen $state $RunName $indiv
 		end=$(date +%s)
 		runtime=$((end-start))
 		echo "Part F took ${runtime} seconds" >> $WorkingDir/Run_Outputs/$RunName/time.txt

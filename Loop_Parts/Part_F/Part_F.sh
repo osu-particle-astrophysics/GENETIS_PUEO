@@ -36,12 +36,12 @@ source $WorkingDir/Environments/set_plotting_env.sh
 # Make fscore and variable plots
 module load python/3.7-2019.10
 python VariablePlots.py $gendir $plotdir $next_gen $NPOP $GeoFactor
-python FScorePlotPUEO.py $gendir $plotdir $NPOP $gen $WorkingDir
+python FScorePlot.py $gendir $plotdir $NPOP $gen $WorkingDir
 
 # Make Rainbow plots
 module load python/3.9-2022.05
-python DataConverter_PUEO.py $gendir
-python Rainbow_Plotter_PUEO.py $gendir $plotdir
+python DataConverter.py $gendir
+python Rainbow_Plotter.py $gendir $plotdir
 
 cd $WorkingDir/Run_Outputs/$RunName
 chmod -R 775 Generation_Data

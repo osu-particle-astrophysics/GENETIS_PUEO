@@ -45,6 +45,7 @@ else
 	done
 fi
 
+cd $WorkingDir/Antenna_Performance_Metric
 
 # Combine psim errors if necessary
 if [ $gen -gt 0 ]
@@ -52,7 +53,7 @@ then
 	python newCombineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
 fi
 
-python Antenna_Performance_Metric/gensDataPUEO.py $gen $WorkingDir/Run_Outputs/$RunName/Generation_Data  
+python gensData.py $gen $WorkingDir/Run_Outputs/$RunName/Generation_Data  
 
 if [ $gen -eq 0 ]
 then

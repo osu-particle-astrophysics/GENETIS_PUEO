@@ -2,14 +2,14 @@ var NPOP = 5;
 var indiv = 1;
 var gen = 0;
 var workingdir = "/fs/ess/PAS1960/HornEvoDev/GENETIS_PUEO";
-var RunName = "test20";
+var RunName = "testing9";
 var freq_start = 200.00;
 var freq_step = 10.0;
 var freqCoefficients = 131;
 var sym_count = 0;
 //Factor of 1.0 frequency
 if(indiv==1){
-App.saveCurrentProjectAs("/fs/ess/PAS1960/HornEvoDev/GENETIS_PUEO/Run_Outputs/test20/test20");
+App.saveCurrentProjectAs("/fs/ess/PAS1960/HornEvoDev/GENETIS_PUEO/Run_Outputs/testing9/testing9");
 }
 /**************************************** Set Global Variables **************************************************/
 var units = " cm";
@@ -791,5 +791,5 @@ function MakeImage(i)
   }
   // Zooms out to include the entire detector, then saves as a .png
   View.zoomToExtents();
-  View.saveImageToFile("antenna_images/"+i+"_"+"detector.png", -1, -1);
+  View.saveImageToFile(workingdir+"/Run_Outputs/"+RunName+"/Antenna_Images/"+gen+"/"+i+"_"+"detector.png", -1, -1);
 }

@@ -24,7 +24,7 @@ source $WorkingDir/Run_Outputs/$RunName/setup.sh
 echo $num_jobs
 echo $indiv
 echo $NNT_per_sim
-echo $Exp
+echo $exp
 
 
 threads=40
@@ -54,7 +54,7 @@ do
     # Run 40 processes of pueoSim 
     echo "starting pueoSim ${i}"
     touch pueoout${i}.txt
-    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT_per_sim -e $Exp > pueoout${i}.txt &
+    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT_per_sim -e $exp > pueoout${i}.txt &
 done
 
 echo "started PSIMs"
@@ -89,14 +89,20 @@ rm ${run_num}.txt.*
 flag_count=$(ls | wc -l)
 echo $flag_count
 echo $num_jobs
+
+
 if [ $flag_count -eq $num_jobs ]
 then
+    echo "--------------- running rootAnalysis ----------------------"
     module load python/3.6-conda5.2
     module unload python/3.6-conda5.2
     source $PSIMDIR/set_env.sh
     cd $WorkingDir/Antenna_Performance_Metric
     mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/Generation_Data/temp_gen_files/$num
-    python rootAnalysis.py $gen $num $Exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data/temp_gen_files/$num $RunName $WorkingDir $NNT
+    python rootAnalysis.py $gen $num $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data/temp_gen_files/$num $RunName $WorkingDir $NNT
     touch $WorkingDir/Run_Outputs/$RunName/ROOTFlags/${num}.txt
     echo "finished rootAnalysis" >> $WorkingDir/Run_Outputs/$RunName/ROOTFlags/${num}.txt
+
+else 
+    echo "Not all flags are present"
 fi

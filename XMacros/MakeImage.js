@@ -11,5 +11,5 @@ function MakeImage(i)
   }
   // Zooms out to include the entire detector, then saves as a .png
   View.zoomToExtents();
-  View.saveImageToFile("antenna_images/"+i+"_"+"detector.png", -1, -1);
+  View.saveImageToFile(workingdir+"/Run_Outputs/"+RunName+"/Antenna_Images/"+gen+"/"+i+"_"+"detector.png", -1, -1);
 }

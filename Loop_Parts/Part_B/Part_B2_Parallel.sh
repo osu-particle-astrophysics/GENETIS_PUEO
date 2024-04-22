@@ -175,11 +175,6 @@ pueo_finish_time=$(date +%s)
 
 echo "Done!"
 
-for i in $(seq $NPOP)
-do
-	mv $XmacrosDir/antenna_images/${i}_detector.png $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}/${i}_detector.png
-done
-
 cd $WorkingDir/Run_Outputs/$RunName
 
 xf_total_time=$((xf_finish_time - start_time))

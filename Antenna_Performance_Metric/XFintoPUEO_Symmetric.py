@@ -57,13 +57,15 @@ def getGains(indiv, args, num_freq=131):
         hpol_phases.append(read_file(indiv, freq+1, 5, args))
 
     #convert phases to radians
-    vpol_gains = np.radians(vpol_gains)
-    hpol_gains = np.radians(hpol_gains)
-
+    vpol_phases = np.radians(vpol_phases)
+    hpol_phases = np.radians(hpol_phases)
     
-    # convert gains from dB to linear
-    vpol_gains = [10**(gain/20) for gain in vpol_gains]
-    hpol_gains = [10**(gain/20) for gain in hpol_gains]
+    vpol_gains = np.array(vpol_gains)
+    hpol_gains = np.array(hpol_gains)
+    
+    # turn the gains from dB to absolute, every element in shape (131, 2701)
+    vpol_gains = 10**(vpol_gains/10)
+    hpol_gains = 10**(hpol_gains/10)
     
     return vpol_gains, hpol_gains, vpol_phases, hpol_phases
 

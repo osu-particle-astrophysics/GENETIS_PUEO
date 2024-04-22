@@ -29,6 +29,8 @@ then
 	mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XF_Errors
 fi
 
+mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
+
 # Delete Simulation directories if they exist
 for i in $(seq 1 $XFCOUNT)
 do
@@ -155,8 +157,6 @@ then
 else
 	job_time="04:00:00"
 fi
-	
-mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
 
 echo "Submitting XF jobs with batch size $batch_size"
 sbatch --array=1-${XFCOUNT}%${batch_size} \

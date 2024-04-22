@@ -1,10 +1,10 @@
 var NPOP = 1;
 var popsize = 5;
 var workingdir = "/fs/ess/PAS1960/HornEvoDev/GENETIS_PUEO";
-var run_name = "test20";
+var run_name = "testing8";
 var rundir = workingdir + "/Run_Outputs/" + run_name;
 var gen = 0;
-for (var k = 4; k <= 4; k++){
+for (var k = 2; k <= 2; k++){
 var simNum = "00"
 if( k < 10){
 var simNum = simNum + "000" + k;

@@ -1,5 +1,7 @@
 # Genetis PUEO Manual
 
+The GENETIS PUEO software utilizes Genetic Algorithms to automatically design Quad Ridged-Horn Antennas towards greater neutrino-sensitivity. 
+
 ## Installing the Loop
 
 * install the GENETIS_PUEO loop with `git clone git@github.com:osu-particle-astrophysics/GENETIS_PUEO.git`

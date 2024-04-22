@@ -3,7 +3,7 @@
 ## Here's the command:
 ## sbatch --array=1-NPOP*SEEDS%max --export=ALL,(variables) PueoCall_Array.sh
 #SBATCH -A PAS1960
-#SBATCH -t 02:00:00
+#SBATCH -t 01:00:00
 #SBATCH -N 1
 #SBATCH -n 40
 #SBATCH --output=Run_Outputs/%x/PUEO_Outputs/PUEOsim_%a.output
@@ -23,7 +23,7 @@ source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 echo $num_jobs
 echo $indiv
-echo $NNT
+echo $NNT_per_sim
 echo $Exp
 
 
@@ -54,8 +54,7 @@ do
     # Run 40 processes of pueoSim 
     echo "starting pueoSim ${i}"
     touch pueoout${i}.txt
-    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT -e $Exp & 
-    # > pueoout${i}.txt &
+    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT_per_sim -e $Exp > pueoout${i}.txt &
 done
 
 echo "started PSIMs"

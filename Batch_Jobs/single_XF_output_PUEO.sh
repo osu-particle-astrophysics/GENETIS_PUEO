@@ -16,6 +16,7 @@ rm -f output.xmacro
 
 # Create the output xmacro
 echo "var NPOP = 1;" >> output.xmacro
+echo "var popsize = $NPOP;" >> output.xmacro
 echo "var workingdir = \"$WorkingDir\";" >> output.xmacro
 echo "var run_name = \"$RunName\";" >> output.xmacro
 echo "var rundir = workingdir + \"/Run_Outputs/\" + run_name;" >> output.xmacro

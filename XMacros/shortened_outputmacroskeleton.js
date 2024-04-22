@@ -12,7 +12,7 @@ else{
 var simNum = simNum + k;
 }
 
-var indiv_in_pop = ((k - 1) % NPOP);
+var indiv_in_pop = ((k - 1) % popsize);
 
 var query = new ResultQuery();
 ///////////////////////Get Theta and Phi Gain///////////////

@@ -153,7 +153,7 @@ then
 	XFCOUNT=$batch_size
 	job_time="15:00:00"
 else
-	job_time="02:00:00"
+	job_time="04:00:00"
 fi
 	
 mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}

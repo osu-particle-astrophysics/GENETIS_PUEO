@@ -37,7 +37,7 @@ def main(args):
 ## Function Definitions
 ## Function to read in files
 def read_file(indiv, freq_num, col, args):
-    uanname = args.working_dir / 'Run_Outputs' / g.run_name / 'uan_files' / f'{args.gen}_uan_files' / f'{indiv}' / f'{args.gen}_{indiv}_{freq_num}.uan'
+    uanname = args.working_dir / 'Run_Outputs' / args.run_name / 'uan_files' / f'{args.gen}_uan_files' / f'{indiv}' / f'{args.gen}_{indiv}_{freq_num}.uan'
     data = np.genfromtxt(uanname, unpack=True, skip_header=18).tolist()
 
     return data[col]  # Return the gain for the polarization being read
@@ -57,8 +57,9 @@ def getGains(indiv, args, num_freq=131):
         hpol_phases.append(read_file(indiv, freq+1, 5, args))
 
     #convert phases to radians
-    vpol_phases = np.radians(vpol_phases)
-    hpol_phases = np.radians(hpol_phases)
+    vpol_gains = np.radians(vpol_gains)
+    hpol_gains = np.radians(hpol_gains)
+
     
     # convert gains from dB to linear
     vpol_gains = [10**(gain/20) for gain in vpol_gains]

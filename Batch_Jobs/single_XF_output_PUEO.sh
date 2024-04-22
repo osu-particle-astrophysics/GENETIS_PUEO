@@ -61,8 +61,6 @@ cp hh_az_${gen}_${indiv_in_pop} $PSIMDIR/pueoBuilder/components/pueoSim/data/ant
 cp vv_el_${gen}_${indiv_in_pop} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_el_Toyon${run_num}
 cp vv_az_${gen}_${indiv_in_pop} $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/vv_az_Toyon${run_num}
 
-cd $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated
-
 chmod -R 777 $PSIMDIR/pueoBuilder/components/pueoSim/data/antennas/simulated/* 2>/dev/null
 
 echo "Moved individual ${indiv_in_pop}'s gain files to pueoSim directory"

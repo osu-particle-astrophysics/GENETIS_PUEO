@@ -28,7 +28,7 @@ mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
 for i in $(seq 1 $XFCOUNT)
 do
 	individual_number=$(($gen*$XFCOUNT + $i))
-	indiv_dir_parent=$XFProj/Simulations/$(printf "%05d" $individual_number)
+	indiv_dir_parent=$XFProj/Simulations/$(printf "%06d" $individual_number)
 
 	if [ -d $indiv_dir_parent ]
 	then

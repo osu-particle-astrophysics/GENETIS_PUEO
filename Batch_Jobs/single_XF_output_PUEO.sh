@@ -12,24 +12,24 @@ cd $XmacrosDir
 mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop
 
 # Remove the output xmacro if it already exists
-rm -f output.xmacro
+rm -f $RunXMacrosDir/output.xmacro
 
 # Create the output xmacro
-echo "var NPOP = 1;" >> output.xmacro
-echo "var popsize = $NPOP;" >> output.xmacro
-echo "var workingdir = \"$WorkingDir\";" >> output.xmacro
-echo "var run_name = \"$RunName\";" >> output.xmacro
-echo "var rundir = workingdir + \"/Run_Outputs/\" + run_name;" >> output.xmacro
-echo "var gen = $gen;" >> output.xmacro
-echo "for (var k = $individual_number; k <= $individual_number; k++){" >> output.xmacro
-cat shortened_outputmacroskeleton.js >> output.xmacro
+echo "var NPOP = 1;" >> $RunXMacrosDir/output.xmacro
+echo "var popsize = $NPOP;" >> $RunXMacrosDir/output.xmacro
+echo "var workingdir = \"$WorkingDir\";" >> $RunXMacrosDir/output.xmacro
+echo "var run_name = \"$RunName\";" >> $RunXMacrosDir/output.xmacro
+echo "var rundir = workingdir + \"/Run_Outputs/\" + run_name;" >> $RunXMacrosDir/output.xmacro
+echo "var gen = $gen;" >> $RunXMacrosDir/output.xmacro
+echo "for (var k = $individual_number; k <= $individual_number; k++){" >> $RunXMacrosDir/output.xmacro
+cat shortened_outputmacroskeleton.js >> $RunXMacrosDir/output.xmacro
 
 
 # Run the output xmacro
 module load xfdtd/7.10.2.3 #7.9.2.2
 module load cuda
 
-xfdtd $XFProj --execute-macro-script=$XmacrosDir/output.xmacro || true --splash=false
+xfdtd $XFProj --execute-macro-script=$RunXMacrosDir/output.xmacro || true --splash=false
 
 echo "finished output.xmacro"
 

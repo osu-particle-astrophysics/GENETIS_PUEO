@@ -12,7 +12,7 @@ def parse_args():
 
 def main(args):
     # Read in the Fitness scores
-    fitness_scores = np.loadtxt(args.source / f'{g.gen}_fitnessScores.csv',
+    fitness_scores = np.loadtxt(args.source / f'{args.gen}_fitnessScores.csv',
                                 delimiter=',', skiprows=0, unpack=True)
     
     # Get the indices of the best, middle, and worst detectors

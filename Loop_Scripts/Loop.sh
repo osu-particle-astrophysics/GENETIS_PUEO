@@ -35,9 +35,11 @@ if ! [ -f "saveStates/${saveStateFile}" ]; then
 
 	XFProj=$WorkingDir/Run_Outputs/${RunName}/${RunName}.xf
 	XmacrosDir=$WorkingDir/XMacros
+	RunXMacrosDir=$WorkingDir/Run_Outputs/$RunName/XMacros
 	echo "" >> $WorkingDir/Run_Outputs/$RunName/setup.sh
 	echo "XFProj=${XFProj}" >> $WorkingDir/Run_Outputs/$RunName/setup.sh
 	echo "XmacrosDir=${XmacrosDir}" >> $WorkingDir/Run_Outputs/$RunName/setup.sh
+	echo "RunXMacrosDir=${RunXMacrosDir}" >> $WorkingDir/Run_Outputs/$RunName/setup.sh
 	
 	if [ $SYMMETRY -eq 0 ]
 	then
@@ -103,10 +105,16 @@ do
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEOFlags
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEO_Outputs
 		mkdir -m777 $WorkingDir/Run_Outputs/$RunName/PUEO_Errors
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XF_Outputs
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XF_Errors
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/ROOTFlags
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Gain_Files
 		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Plotting_Outputs
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Plotting_Errors
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Plots
+		mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XMacros
 		mkdir -m775 $PSIMDIR/outputs/${RunName}
 		touch $WorkingDir/Run_Outputs/$RunName/time.txt
 		date > $WorkingDir/Run_Outputs/$RunName/date.txt

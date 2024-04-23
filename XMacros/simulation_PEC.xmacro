@@ -1,16 +1,13 @@
 var NPOP = 5;
 var indiv = 1;
-var gen = 0;
+var gen = 2;
 var workingdir = "/fs/ess/PAS1960/HornEvoDev/GENETIS_PUEO";
-var RunName = "testing9";
+var RunName = "realtest1";
 var freq_start = 200.00;
 var freq_step = 10.0;
 var freqCoefficients = 131;
 var sym_count = 0;
 //Factor of 1.0 frequency
-if(indiv==1){
-App.saveCurrentProjectAs("/fs/ess/PAS1960/HornEvoDev/GENETIS_PUEO/Run_Outputs/testing9/testing9");
-}
 /**************************************** Set Global Variables **************************************************/
 var units = " cm";
 var num_ridges = 4; // either 2 or 4

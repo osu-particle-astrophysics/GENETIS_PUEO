@@ -19,7 +19,7 @@ def main(args):
     maxFit = maxFits.max()
     minFit = minFits.min()
 
-    data = pd.read_csv(g.location / "testpara.csv")
+    data = pd.read_csv(args.location / "testpara.csv")
 
     #We want the range of colors to be from the minimum fitness to the maximum fitness
     fig = px.parallel_coordinates(data, color = "Fitness", 

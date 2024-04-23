@@ -22,13 +22,6 @@ gen=$3
 indiv=$4
 source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
-# Create directories if not already created
-if [ ${gen} -eq 0 ]
-then
-	mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XF_Outputs
-	mkdir -m775 $WorkingDir/Run_Outputs/$RunName/XF_Errors
-fi
-
 mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
 
 # Delete Simulation directories if they exist
@@ -55,46 +48,46 @@ chmod -R 777 $XmacrosDir 2> /dev/null
 cd $XmacrosDir
 
 #get rid of the simulation_PEC.xmacro that already exists
-rm -f simulation_PEC.xmacro
+rm -f $RunXMacrosDir/simulation_PEC.xmacro
 
 
 # Create the simulation_PEC.xmacro
-echo "var NPOP = $NPOP;" > simulation_PEC.xmacro
-echo "var indiv = $indiv;" >> simulation_PEC.xmacro
-echo "var gen = $gen;" >> simulation_PEC.xmacro
-echo "var workingdir = \"$WorkingDir\";" >> simulation_PEC.xmacro
-echo "var RunName = \"$RunName\";" >> simulation_PEC.xmacro
-echo "var freq_start = $FreqStart;" >> simulation_PEC.xmacro
-echo "var freq_step = $FreqStep;" >> simulation_PEC.xmacro
-echo "var freqCoefficients = $FREQS;" >> simulation_PEC.xmacro
+echo "var NPOP = $NPOP;" > $RunXMacrosDir/simulation_PEC.xmacro
+echo "var indiv = $indiv;" >> $RunXMacrosDir/simulation_PEC.xmacro
+echo "var gen = $gen;" >> $RunXMacrosDir/simulation_PEC.xmacro
+echo "var workingdir = \"$WorkingDir\";" >> $RunXMacrosDir/simulation_PEC.xmacro
+echo "var RunName = \"$RunName\";" >> $RunXMacrosDir/simulation_PEC.xmacro
+echo "var freq_start = $FreqStart;" >> $RunXMacrosDir/simulation_PEC.xmacro
+echo "var freq_step = $FreqStep;" >> $RunXMacrosDir/simulation_PEC.xmacro
+echo "var freqCoefficients = $FREQS;" >> $RunXMacrosDir/simulation_PEC.xmacro
 
 # bit flip SYMMETRY to get symmetry count
 sym_count=$(((SYMMETRY-1)*-1))
-echo "var sym_count = $sym_count;" >> simulation_PEC.xmacro
-chmod -R 775 simulation_PEC.xmacro 2> /dev/null
+echo "var sym_count = $sym_count;" >> $RunXMacrosDir/simulation_PEC.xmacro
+chmod -R 775 $RunXMacrosDir/simulation_PEC.xmacro 2> /dev/null
 
-echo "//Factor of $GeoFactor frequency" >> simulation_PEC.xmacro
+echo "//Factor of $GeoFactor frequency" >> $RunXMacrosDir/simulation_PEC.xmacro
 
 if [[ $gen -eq 0 && $indiv -eq 1 ]]
 then
-	echo "if(indiv==1){" >> simulation_PEC.xmacro
-	echo "App.saveCurrentProjectAs(\"$WorkingDir/Run_Outputs/$RunName/$RunName\");" >> simulation_PEC.xmacro
-	echo "}" >> simulation_PEC.xmacro
+	echo "if(indiv==1){" >> $RunXMacrosDir/simulation_PEC.xmacro
+	echo "App.saveCurrentProjectAs(\"$WorkingDir/Run_Outputs/$RunName/$RunName\");" >> $RunXMacrosDir/simulation_PEC.xmacro
+	echo "}" >> $RunXMacrosDir/simulation_PEC.xmacro
 fi
 
-cat headerPUEO.js >> simulation_PEC.xmacro
-cat functionCallsPUEO.js >> simulation_PEC.xmacro
-cat buildWalls.js >> simulation_PEC.xmacro
-cat buildRidges.js >> simulation_PEC.xmacro
-cat buildWaveguide.js >> simulation_PEC.xmacro
-cat extend_ridges_trapezoid.js >> simulation_PEC.xmacro
-cat CreatePEC.js >> simulation_PEC.xmacro
-cat CreateAntennaSource.js >> simulation_PEC.xmacro
-cat CreateGrid.js >> simulation_PEC.xmacro
-cat CreateSensors.js >> simulation_PEC.xmacro
-cat CreateAntennaSimulationData.js >> simulation_PEC.xmacro
-cat QueueSimulation.js >> simulation_PEC.xmacro
-cat MakeImage.js >> simulation_PEC.xmacro
+cat headerPUEO.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat functionCallsPUEO.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat buildWalls.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat buildRidges.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat buildWaveguide.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat extend_ridges_trapezoid.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat CreatePEC.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat CreateAntennaSource.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat CreateGrid.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat CreateSensors.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat CreateAntennaSimulationData.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat QueueSimulation.js >> $RunXMacrosDir/simulation_PEC.xmacro
+cat MakeImage.js >> $RunXMacrosDir/simulation_PEC.xmacro
 
 
 # Remove the extra simulations
@@ -117,7 +110,7 @@ echo '3. Close XF'
 
 module load xfdtd/7.10.2.3
 
-xfdtd $XFProj --execute-macro-script=$XmacrosDir/simulation_PEC.xmacro || true
+xfdtd $XFProj --execute-macro-script=$RunXMacrosDir//simulation_PEC.xmacro || true
 
 chmod -R 775 $WorkingDir/../Xmacros 2> /dev/null
 

@@ -69,3 +69,6 @@ gitpushforce.sh
 /GA/Shared-Code
 
 *.exe
+
+Xmacros/output.xmacro
+Xmacros/simulation_PEC.xmacro

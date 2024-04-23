@@ -50,16 +50,7 @@ cd $WorkingDir/Antenna_Performance_Metric
 # Combine psim errors if necessary
 if [ $gen -gt 0 ]
 then
-	python newCombineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
+	python combineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
 fi
 
 python gensData.py $gen $WorkingDir/Run_Outputs/$RunName/Generation_Data  
-
-if [ $gen -eq 0 ]
-then
-	cd $WorkingDir/Run_Outputs/$RunName
-	mkdir -m775 Plotting_Outputs
-	mkdir -m775 Plotting_Errors
-fi
-
-

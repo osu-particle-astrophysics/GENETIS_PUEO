@@ -71,7 +71,7 @@ for i in range(g.NPOP):
         except KeyError:
             identical_dict[prev_DNA[i]] = [[i], [j]]
 
-print(identical_dict)
+#print(identical_dict)
 
 def load_csv(fitness_csv, error_csv, iterator):
     '''Return the fitness scores and errors of the individuals in the iterator'''
@@ -114,16 +114,16 @@ def calculateCombinations(matches):
     fitness_scores = [p_fitness_scores[0]] + c_fitness_scores
     err_plus = [p_err_plus[0]] + c_err_plus
     err_minus = [p_err_minus[0]] + c_err_minus
-    print(f"Fitness scores: {fitness_scores}")
-    print(f"Errors: {err_plus}, {err_minus}")
+    #print(f"Fitness scores: {fitness_scores}")
+    #print(f"Errors: {err_plus}, {err_minus}")
     combined_fitness, combined_err_plus, combined_err_minus = combine_measurements(fitness_scores, err_plus, err_minus)
-    print("Combined fitness score: ", combined_fitness)
+    #print("Combined fitness score: ", combined_fitness)
     return combined_fitness, combined_err_plus, combined_err_minus
         
     
 for key in identical_dict.keys():
     combined_fitness, combined_err_plus, combined_err_minus = calculateCombinations(identical_dict[key])
-    print(f"Combined fitness score of {key}: {combined_fitness} +{combined_err_plus} -{combined_err_minus}")
+    #print(f"Combined fitness score of {key}: {combined_fitness} +{combined_err_plus} -{combined_err_minus}")
     
     #Now write the combined fitness score and errors to the fitness and error files
     

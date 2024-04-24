@@ -21,7 +21,7 @@ df0 = pd.read_csv(g.location / "runData.csv", skiprows=1,
 #This adds the Generation column to the file
 i = 0
 j= 0
-print(df0)
+#print(df0)
 while i < df0.shape[0]:
     if pd.isna(df0.iloc[i,3]) == True:
         j += 1

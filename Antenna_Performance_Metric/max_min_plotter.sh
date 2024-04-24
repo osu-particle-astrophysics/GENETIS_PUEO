@@ -33,9 +33,9 @@ worst=$(echo $indices | cut -d' ' -f3)
 
 ### Makes directory for this generation's photos, then moves the indicated photos into it
 echo "copying best detector photos"
-cp ${photoSourceDir}/${max_index}_detector.png ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos/${gen}_${max_index}_detector_max.png
-cp ${photoSourceDir}/${mid_index}_detector.png ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos/${gen}_${mid_index}_detector_mid.png
-cp ${photoSourceDir}/${min_index}_detector.png ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos/${gen}_${min_index}_detector_min.png
+cp ${photoSourceDir}/${best}_detector.png ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos/${gen}_${best}_detector_max.png
+cp ${photoSourceDir}/${mid}_detector.png ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos/${gen}_${mid}_detector_mid.png
+cp ${photoSourceDir}/${worst}_detector.png ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos/${gen}_${worst}_detector_min.png
 
 
 # gainNum corresponds to the frequency in which we want to see the gain pattern

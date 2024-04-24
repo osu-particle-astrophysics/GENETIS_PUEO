@@ -88,7 +88,6 @@ def callFunctions(indiv, args, freq_list, file_header):
     ## We're treating vv and hh as the same and vh and hv as the same
     ## So for the _0 files, it's pretty simple:
     
-    ## THIS SEEMS WRONG, DO WE STILL WANT TO COPY CROSS POL?
     writeGains(vpol_gain_t[0], vpol_phase_t[0],
                freq_list, file_header / f'vv_0_{args.gen}_{indiv}')
     writeGains(vpol_gain_t[0], vpol_phase_t[0],

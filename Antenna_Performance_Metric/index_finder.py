@@ -17,9 +17,9 @@ def main(args):
     
     # Get the indices of the best, middle, and worst detectors
     sorted_indices = np.argsort(fitness_scores)
-    max_index = sorted_indices[-1]+1
-    mid_index = sorted_indices[round(len(fitness_scores)/2)]+1
-    min_index = sorted_indices[0]+1
+    max_index = sorted_indices[-1]
+    mid_index = sorted_indices[round(len(fitness_scores)/2)]
+    min_index = sorted_indices[0]
 
     # Print the indices for bash to parse
     print(f"{max_index} {mid_index} {min_index}")

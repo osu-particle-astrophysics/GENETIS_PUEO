@@ -4,17 +4,17 @@ import argparse
 import re
 
 def expand_array_job(job_id):
-    '''expand 28178971_[3-50] to 28178971_3, 28178971_4, ..., 28178971_50'''
-    if re.match(r'\d+_\[\d+-\d+\]$', job_id):
-        prefix, range_str = job_id.split('_')
-        start, end = map(int, range_str[1:-1].split('-'))
+    '''Expand 28178971_[3-50] to 28178971_3, 28178971_4, ..., 28178971_50'''
+    match = re.match(r'(\d+)_\[(\d+)-(\d+)\]$', job_id)
+    if match:
+        prefix, start, end = match.groups()
         return [f"{prefix}_{i}" for i in range(start, end + 1)]
     else:
         return [job_id]
 
 
 def count_expanded_jobs(job_id):
-    ''' count the number of jobs from the job_ids'''
+    '''Count the number of jobs from the job_ids'''
     match = re.match(r'(\d+)_\[(\d+)-(\d+)\]$', job_id)
     if match:
         prefix, start, end = match.groups()

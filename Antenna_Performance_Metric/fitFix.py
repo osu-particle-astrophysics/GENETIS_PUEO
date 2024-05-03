@@ -27,8 +27,8 @@ for i in range(g.npop):
     
 
 # write the fitnesses and errors to csv files
-np.savetxt(g.temp_file_dir / '..' / f'{g.gen}_fitnessScores.csv', 
+np.savetxt(g.temp_file_dir.parent / f'{g.gen}_fitnessScores.csv', 
            fitnesses, delimiter=",")
-np.savetxt(g.temp_file_dir / '..' / f'{g.gen}_errorBars.csv', 
+np.savetxt(g.temp_file_dir.parent / f'{g.gen}_errorBars.csv', 
            np.column_stack((error_plusses, error_minuses)), delimiter=",")
     

@@ -6,8 +6,8 @@
 #SBATCH -t 01:00:00
 #SBATCH -N 1
 #SBATCH -n 40
-#SBATCH --output=Run_Outputs/%x/PUEO_Outputs/PUEOsim_%a.output
-#SBATCH --error=Run_Outputs/%x/PUEO_Errors/PUEOsim_%a.error
+#SBATCH --output=Run_Outputs/%x/Errs_And_Outs/PUEO_Outputs/PUEOsim_%a.output
+#SBATCH --error=Run_Outputs/%x/Errs_And_Outs/PUEO_Errors/PUEOsim_%a.error
 
 #variables
 #gen=$1
@@ -61,14 +61,14 @@ echo "started PSIMs"
 wait
 echo "PSIMS finished"
 
-mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/$num
-mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/PUEOFlags/$num
+mkdir -p -m775 $RunDir/Root_Files/${gen}_Root_Files/$num
+mkdir -p -m775 $RunDir/Flags/PUEOFlags/$num
 # move the root files
 for ((i=run_num; i<$((threads + run_num)); i++))
 do
-    mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/$num/IceFinal_skimmed_${gen}_${num}_${i}.root
-    #mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/$num/IceFinal_allTree_${gen}_${num}_${i}.root
-    #mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${i}_0.root
+    mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $RunDir/Root_Files/${gen}_Root_Files/$num/IceFinal_skimmed_${gen}_${num}_${i}.root
+    #mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $RunDir/Root_Files/${gen}_Root_Files/$num/IceFinal_allTree_${gen}_${num}_${i}.root
+    #mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $RunDir/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${i}_0.root
     #mkdir -p -m775 $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
     #mv peuoout${i}.txt $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
 done
@@ -78,9 +78,9 @@ echo $num >> $TMPDIR/${run_num}.txt
 echo $seed >> $TMPDIR/${run_num}.txt
 
 # move the flag file
-mv $TMPDIR/${run_num}.txt $WorkingDir/Run_Outputs/$RunName/PUEOFlags/$num
+mv $TMPDIR/${run_num}.txt $RunDir/Flags/PUEOFlags/$num
 
-cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags/$num
+cd $RunDir/Flags/PUEOFlags/$num
 
 cp ${run_num}.txt.* ${run_num}.txt
 rm ${run_num}.txt.*
@@ -98,10 +98,10 @@ then
     module unload python/3.6-conda5.2
     source $PSIMDIR/set_env.sh
     cd $WorkingDir/Antenna_Performance_Metric
-    mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/Generation_Data/temp_gen_files/$num
+    mkdir -p -m775 $RunDir/Generation_Data/temp_gen_files/$num
     python rootAnalysis.py $gen $num $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data/temp_gen_files/$num $RunName $WorkingDir $NNT
-    touch $WorkingDir/Run_Outputs/$RunName/ROOTFlags/${num}.txt
-    echo "finished rootAnalysis" >> $WorkingDir/Run_Outputs/$RunName/ROOTFlags/${num}.txt
+    touch $RunDir/Flags/ROOTFlags/${num}.txt
+    echo "finished rootAnalysis" >> $RunDir/Flags/ROOTFlags/${num}.txt
 
 else 
     echo "Not all flags are present"

@@ -22,7 +22,7 @@ gen=$3
 indiv=$4
 source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
-mkdir -m777 $WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
+mkdir -m777 $RunDir/Antenna_Images/${gen}
 
 # Delete Simulation directories if they exist
 for i in $(seq 1 $XFCOUNT)
@@ -71,7 +71,7 @@ echo "//Factor of $GeoFactor frequency" >> $RunXMacrosDir/simulation_PEC.xmacro
 if [[ $gen -eq 0 && $indiv -eq 1 ]]
 then
 	echo "if(indiv==1){" >> $RunXMacrosDir/simulation_PEC.xmacro
-	echo "App.saveCurrentProjectAs(\"$WorkingDir/Run_Outputs/$RunName/$RunName\");" >> $RunXMacrosDir/simulation_PEC.xmacro
+	echo "App.saveCurrentProjectAs(\"$RunDir/$RunName\");" >> $RunXMacrosDir/simulation_PEC.xmacro
 	echo "}" >> $RunXMacrosDir/simulation_PEC.xmacro
 fi
 
@@ -110,7 +110,7 @@ echo '3. Close XF'
 
 module load xfdtd/7.10.2.3
 
-xfdtd $XFProj --execute-macro-script=$RunXMacrosDir//simulation_PEC.xmacro || true
+xfdtd $XFProj --execute-macro-script=$RunXMacrosDir/simulation_PEC.xmacro || true
 
 chmod -R 775 $WorkingDir/../Xmacros 2> /dev/null
 
@@ -132,10 +132,10 @@ job_file=$WorkingDir/Batch_Jobs/GPU_XF_Job.sh
 if [ $ParallelXFPUEO -eq 1 ]
 then
 	job_file=$WorkingDir/Batch_Jobs/GPU_XF_Job_Parallel.sh
-	cd $WorkingDir/Run_Outputs/$RunName
-	rm GPUFlags/* 2> /dev/null
-	rm -Rf PUEOFlags/* 2> /dev/null
-	rm ROOTFlags/* 2> /dev/null
+	cd $RunDir
+	rm Flags/GPUFlags/* 2> /dev/null
+	rm -Rf Flags/PUEOFlags/* 2> /dev/null
+	rm Flags/ROOTFlags/* 2> /dev/null
 	cd $WorkingDir
 fi
 

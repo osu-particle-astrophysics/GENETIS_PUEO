@@ -31,7 +31,7 @@ identical_indivs = []
 
 # Load in the DNA files from the previous and current generation
 # variables are S, H, Xi, Yi, Zf, Yf, beta 
-intro_rows = 9
+intro_rows = 0
 
 def read_DNA(DNA_file):
     '''Return a list of tuples containing the DNA of each individual in the population'''

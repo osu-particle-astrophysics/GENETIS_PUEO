@@ -10,11 +10,11 @@ gen=$3
 source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 # Make Plotting Directories
-mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/Plots/Generation_${gen}
+mkdir -p -m775 $RunDir/Plots/Generation_${gen}
 
 # Define variables
-gendir=$WorkingDir/Run_Outputs/$RunName/Generation_Data
-plotdir=$WorkingDir/Run_Outputs/$RunName/Plots/Generation_${gen}
+gendir=$RunDir/Generation_Data
+plotdir=$RunDir/Plots/Generation_${gen}
 next_gen=$(($gen+1))
 
 # Make the physics/polar plots. Organize the best antenna pictures
@@ -35,6 +35,6 @@ module load python/3.9-2022.05
 python DataConverter.py $gendir
 python Rainbow_Plotter.py $gendir $plotdir
 
-chmod -R 775 $WorkingDir/Run_Outputs/$RunName/Generation_Data
+chmod -R 775 $RunDir/Generation_Data
 
 echo 'Congrats on getting some nice plots!'

@@ -24,7 +24,8 @@ def main(args):
     else:
         # If we're able to run more jobs for the last set of simulations,
         # we want to run as many as possible
-        case1 = (args.max_jobs - args.jobs_running) / args.gpu_jobs_left
+        #case1 = (args.max_jobs - args.jobs_running) / args.gpu_jobs_left
+        case1 = 0
         case2 = (args.max_jobs - args.xfkeys) / args.xfkeys
         
         num_jobs = int(max(case1, case2))

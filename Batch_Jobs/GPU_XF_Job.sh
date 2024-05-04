@@ -8,14 +8,14 @@
 #SBATCH -N 1
 #SBATCH -n 40
 #SBATCH -G 2
-#SBATCH --output=Run_Outputs/%x/XF_Outputs/XF_%a.output
-#SBATCH --error=Run_Outputs/%x/XF_Errors/XF_%a.error
+#SBATCH --output=Run_Outputs/%x/Errs_And_Outs/XF_Outputs/XF_%a.output
+#SBATCH --error=Run_Outputs/%x/Errs_And_Outs/XF_Errors/XF_%a.error
 #SBATCH --mem-per-gpu=178gb
 
 ## make sure we're in the right directory
 source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
-cd Run_Outputs/$RunName/GPUFlags
+cd Run_Outputs/$RunName/Flags/GPUFlags
 
 module load xfdtd/7.10.2.3 #7.9.2.2
 module load cuda
@@ -37,5 +37,5 @@ cd $indiv_dir
 xfsolver --use-xstream=true --xstream-use-number=2 --num-threads=2 -v
 
 # Create the flag file
-cd $WorkingDir/Run_Outputs/$RunName/GPUFlags
+cd $RunDir/Flags/GPUFlags
 echo "The GPU job is done!" >> Part_B_GPU_Flag_${individual_number}.txt 

@@ -9,7 +9,7 @@ gen=$4
 source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 cd $XmacrosDir
-mkdir -p -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/$indiv_in_pop
+mkdir -p -m775 $RunDir/uan_files/${gen}_uan_files/$indiv_in_pop
 
 # Remove the output xmacro if it already exists
 rm -f $RunXMacrosDir/output.xmacro
@@ -45,9 +45,9 @@ echo "individual_number: $individual_number"
 
 module load python/3.6-conda5.2
 
-python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $WorkingDir/Run_Outputs/$RunName/Gain_Files --single=$indiv_in_pop
+python XFintoPUEO_Symmetric.py $NPOP $WorkingDir $RunName $gen $RunDir/Gain_Files --single=$indiv_in_pop
 
-cd $WorkingDir/Run_Outputs/$RunName/Gain_Files
+cd $RunDir/Gain_Files
 
 # Copy gain files into pueosim directory
 run_num=$((NPOP * gen + indiv_in_pop))

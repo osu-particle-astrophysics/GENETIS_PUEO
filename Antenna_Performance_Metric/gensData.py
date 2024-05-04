@@ -26,7 +26,7 @@ g = parser.parse_args()
 
 # We use loadtxt when we need to skip over the useless text
 genDNA = np.loadtxt(g.location / f'{g.gen_num}_generationDNA.csv', 
-                    delimiter=',', skiprows=9)
+                    delimiter=',', skiprows=0)
 fScores = np.loadtxt(g.location / f'{g.gen_num}_fitnessScores.csv', 
                      delimiter=',', skiprows=0)
 

@@ -18,8 +18,7 @@ for (var i = 0; i < freqCoefficients; i++) {
 }
 
 /******************************************** Read in Data *****************************************************/
-var headerLines = 7 // This is how many lines come before the frequency data in the file
-var antennaLines = 9 // This is how many lines come before the antenna data
+var antennaLines = 0 // This is how many lines come before the antenna data
 var file = new File(path);
 file.open(1);
 var generationDNA = file.readAll();

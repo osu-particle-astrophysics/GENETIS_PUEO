@@ -16,7 +16,7 @@ function printProgressBar () {
 	#This function will create a progress bar based
 	#on an inputted name and target file count
 
-	cd $WorkingDir/Run_Outputs/$RunName/${1}Flags
+	cd $RunDir/Flags/${1}Flags
 	flags=$(find . -type f | wc -l)
 	percent=$(bc <<< "scale=2; $flags/$2")
 	percent=$(bc <<< "scale=2; $percent*100")
@@ -58,9 +58,9 @@ mkdir -m775 ${PSIMDIR}/outputs/${RunName}/${gen}_outputs 2> /dev/null
 # We need to count how many XF and pueoSim jobs are finished
 # We'll do this by counting the number of files in the GPUFlags and PUEOFlags directory
 
-cd $WorkingDir/Run_Outputs/$RunName/GPUFlags
+cd $RunDir/Flags/GPUFlags
 gpu_flags=$(find . -type f | wc -l)
-cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
+cd $RunDir/Flags/ROOTFlags
 root_flags=$(find . -type f | wc -l)
 
 
@@ -89,17 +89,18 @@ do
 	squeue_string=$(squeue -h -u $USER | cut -d' ' -f9)
 	jobs_submitted=$(python $WorkingDir/Antenna_Performance_Metric/count_jobs.py "$squeue_string")
 
-	temp_flags=$(find Run_Outputs/$RunName/TMPGPUFlags/*.txt -type f | wc -l)
+	temp_flags=$(find Run_Outputs/$RunName/Flags/TMPGPUFlags/*.txt -type f | wc -l)
 
 	if [[ $temp_flags -eq 0 || $jobs_submitted -gt $max_jobs ]]
 	then
 		tput cuu 1
 		sleep 10
 	else
-		for file in Run_Outputs/$RunName/TMPGPUFlags/*.txt
+		for file in Run_Outputs/$RunName/Flags/TMPGPUFlags/*.txt
 		do	
-
-			filename=$(echo "$file" | cut -d'/' -f4)
+			echo $file
+			filename=$(echo "$file" | cut -d'/' -f5)
+			echo $filename
 			indiv=$(echo "$filename" | cut -d'_' -f5)
 			indiv=$(echo "$indiv" | cut -d'.' -f1)
 
@@ -108,8 +109,8 @@ do
 
 			# run the xmacro output script
 			cd $WorkingDir/Batch_Jobs
-			mkdir -m775 $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files/${indiv_in_pop} 2> /dev/null
-			./single_XF_output_PUEO.sh $indiv $WorkingDir $RunName $gen 1> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.output" 2> "$WorkingDir/Run_Outputs/$RunName/XFintoPUEOOuts/PUEOsim_${indiv}.error"
+			mkdir -m775 $RunDir/uan_files/${gen}_uan_files/${indiv_in_pop} 2> /dev/null
+			./single_XF_output_PUEO.sh $indiv $WorkingDir $RunName $gen 1> "$RunDir/Errs_And_Outs/XFintoPUEOOuts/PUEOsim_${indiv}.output" 2> "$RunDir/Errs_And_Outs/XFintoPUEOOuts/PUEOsim_${indiv}.error"
 
 
 			cd $WorkingDir
@@ -138,19 +139,19 @@ do
 			# set the output file to Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_$indiv_$SLURM_ARRAY_TASK_ID.output
 			sbatch --array=1-$num_jobs \
 				--export=ALL,gen=$gen,WorkingDir=$WorkingDir,RunName=$RunName,NNT_per_sim=$NNT_per_sim,indiv=$indiv_in_pop,num_jobs=$num_jobs \
-				--job-name=${RunName} --output=$WorkingDir/Run_Outputs/$RunName/PUEO_Outputs/PUEOsim_${indiv_in_pop}_%a.output  \
-				--error=$WorkingDir/Run_Outputs/$RunName/PUEO_Errors/PUEOsim_${indiv_in_pop}_%a.error $WorkingDir/Batch_Jobs/PueoCall_Array_Indiv.sh
+				--job-name=${RunName} --output=$RunDir/Errs_And_Outs/PUEO_Outputs/PUEOsim_${indiv_in_pop}_%a.output  \
+				--error=$RunDir/Errs_And_Outs/PUEO_Errors/PUEOsim_${indiv_in_pop}_%a.error $WorkingDir/Batch_Jobs/PueoCall_Array_Indiv.sh
 			# move the cursor up 1 line
 			tput cuu 1
 			# move the file to the GPUFlags directory
 			cd $WorkingDir
-			mv $file Run_Outputs/$RunName/GPUFlags
+			mv $file Run_Outputs/$RunName/Flags/GPUFlags
 		done
 	fi
-	cd $WorkingDir/Run_Outputs/$RunName/GPUFlags
+	cd $RunDir/Flags/GPUFlags
 	gpu_flags=$(ls | wc -l)
 
-	cd $WorkingDir/Run_Outputs/$RunName/ROOTFlags
+	cd $RunDir/Flags/ROOTFlags
 	root_flags=$(find . -type f | wc -l)
 
 	if [ $gpu_flags -eq $XFCOUNT ]
@@ -175,7 +176,7 @@ pueo_finish_time=$(date +%s)
 
 echo "Done!"
 
-cd $WorkingDir/Run_Outputs/$RunName
+cd $RunDir
 
 xf_total_time=$((xf_finish_time - start_time))
 pueo_total_time=$((pueo_finish_time - pueosim_start_time))

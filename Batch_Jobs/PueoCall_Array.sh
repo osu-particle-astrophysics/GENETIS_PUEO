@@ -6,8 +6,8 @@
 #SBATCH -t 03:00:00
 #SBATCH -N 1
 #SBATCH -n 40
-#SBATCH --output=Run_Outputs/%x/PUEO_Outputs/PUEOsim_%a.output
-#SBATCH --error=Run_Outputs/%x/PUEO_Errors/PUEOsim_%a.error
+#SBATCH --output=Run_Outputs/%x/Errs_And_Outs/PUEO_Outputs/PUEOsim_%a.output
+#SBATCH --error=Run_Outputs/%x/Errs_And_Outs/PUEO_Errors/PUEOsim_%a.error
 
 #variables
 #gen=$1
@@ -19,7 +19,7 @@
 #NNT=$7
 #Exp=$8
 
-source $WorkingDir/Run_Outputs/$RunName/setup.sh
+source $RunDir/setup.sh
 
 threads=40
 
@@ -58,9 +58,9 @@ echo "PSIMS finished"
 # move the root files
 for ((i=$run_num; i<$((threads + run_num)); i++))
 do
-    mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_skimmed_${gen}_${num}_${i}.root
-    mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_allTree_${gen}_${num}_${i}.root
-    mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${i}_0.root
+    mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $RunDir/Root_Files/${gen}_Root_Files/IceFinal_skimmed_${gen}_${num}_${i}.root
+    mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $RunDir/Root_Files/${gen}_Root_Files/IceFinal_allTree_${gen}_${num}_${i}.root
+    mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $RunDir/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${i}_0.root
     mkdir -p -m775 $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
     mv peuoout${i}.txt $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
 done
@@ -70,9 +70,9 @@ echo $num >> $TMPDIR/${num}_${seed}.txt
 echo $seed >> $TMPDIR/${num}_${seed}.txt
 
 # move the flag file
-mv $TMPDIR/${num}_${seed}.txt $WorkingDir/Run_Outputs/$RunName/PUEOFlags
+mv $TMPDIR/${num}_${seed}.txt $RunDir/Flags/PUEOFlags
 
-cd $WorkingDir/Run_Outputs/$RunName/PUEOFlags
+cd $RunDir/Flags/PUEOFlags
 
 cp ${num}_${seed}.txt.* ${num}_${seed}.txt
 rm ${num}_${seed}.txt.*

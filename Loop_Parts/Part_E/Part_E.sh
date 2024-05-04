@@ -30,13 +30,28 @@ then
 	for i in $(seq 0 $((NPOP-1)))
 	do
 		python rootAnalysis.py $gen $i $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data $RunName $WorkingDir
+
+		if [ $? -ne 0 ]
+		then
+			echo "Error in rootAnalysis.py"
+			exit 1
+		fi
+
 	done
 
 else
-	# Conglomerate the output files into one csv file
+	# Accumulate the output files into one csv file
 	cd $WorkingDir/Antenna_Performance_Metric
-	python fitFix.py $WorkingDir/Run_Outputs/$RunName/Generation_Data/temp_gen_files $NPOP $gen
-	cd $WorkingDir/Run_Outputs/$RunName/Generation_Data
+	python fitFix.py $RunDir/Generation_Data/temp_gen_files $NPOP $gen
+
+	# check if fitfix exited correctly
+	if [ $? -ne 0 ]
+	then
+		echo "Error in fitFix.py"
+		exit 1
+	fi
+
+	cd $RunDir/Generation_Data
 	
 	# Remove temporary directories
 	for i in $(seq 0 $((NPOP-1)))
@@ -50,7 +65,7 @@ cd $WorkingDir/Antenna_Performance_Metric
 # Combine psim errors if necessary
 if [ $gen -gt 0 ]
 then
-	python combineErrors.py $WorkingDir/Run_Outputs/$RunName/Generation_Data $gen $NPOP
+	python combineErrors.py $RunDir/Generation_Data $gen $NPOP
 fi
 
-python gensData.py $gen $WorkingDir/Run_Outputs/$RunName/Generation_Data  
+python gensData.py $gen $RunDir/Generation_Data  

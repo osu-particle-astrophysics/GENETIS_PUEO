@@ -17,10 +17,10 @@ source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 
 # Define and Make Directories
-fitnessSourceDir=$WorkingDir/Run_Outputs/$RunName/Generation_Data
-photoSourceDir=$WorkingDir/Run_Outputs/$RunName/Antenna_Images/${gen}
-destinationDir=$WorkingDir/Run_Outputs/$RunName
-mkdir -m775 $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots
+fitnessSourceDir=$RunDir/Generation_Data
+photoSourceDir=$RunDir/Antenna_Images/${gen}
+destinationDir=$RunDir
+mkdir -m775 $RunDir/Plots/Gain_Plots/${gen}_Gain_Plots
 mkdir -p ${destinationDir}/LabelledDetectorPhotos/${gen}_labelled_photos
 
 cd $WorkingDir/Antenna_Performance_Metric
@@ -44,10 +44,10 @@ freqNum=11
 
 echo "starting gain plots"
 
-#python polar_plotter_v2.py $WorkingDir/Run_Outputs/$RunName/uan_files/${gen}_uan_files $WorkingDir/Run_Outputs/$RunName/Gain_Plots/${gen}_Gain_Plots $freqNum $NPOP $gen $SYMMETRY
+#python polar_plotter_v2.py $RunDir/uan_files/${gen}_uan_files $RunDir/Plots/Gain_Plots/${gen}_Gain_Plots $freqNum $NPOP $gen $SYMMETRY
 
 echo "finished gain plots"
-#
+
 
 
 module unload python/3.7-2019.10
@@ -55,6 +55,6 @@ source $PSIMDIR/set_env.sh
 
 echo "starting Physics of Results Plots"
 
-#python physicsOfResultsPUEO.py $WorkingDir/Run_Outputs/$RunName/Root_Files/${gen}_Root_Files $WorkingDir/Run_Outputs/$RunName/Generation_Data $max_index $exp
+#python physicsOfResultsPUEO.py $RunDir/Root_Files/${gen}_Root_Files $RunDir/Plots/Generation_${gen} $max_index $exp
 
 echo "finished Physics of Results Plots"

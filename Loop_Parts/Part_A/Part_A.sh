@@ -13,8 +13,18 @@ source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
 cd $WorkingDir
 
-# Make GA take in a run directory to source the data from
-g++ -std=c++11 GA/Shared-Code/GA/SourceFiles/New_GA.cpp -o GA/New_GA.exe
-./GA/New_GA.exe PUEO $gen $NPOP $RANK $ROULETTE $TOURNAMENT $REPRODUCTION $CROSSOVER $MUTATION $SIGMA $WorkingDir/Run_Outputs/$RunName
+if [ $gen -eq 0 ]
+then
+    ./Loop_Parts/Part_A/MakeSettings.sh $WorkingDir $RunName
+fi
 
-#chmod -R 775 Generation_Data/
+python GA/Run_GA.py $RunName $WorkingDir $gen
+
+# check the exit status
+if [ $? -eq 0 ]
+then
+    echo "GA ran successfully"
+else
+    echo "GA failed"
+    exit 1
+fi

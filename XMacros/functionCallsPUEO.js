@@ -1,6 +1,4 @@
 /********************************************* Function Calls **************************************************/
-
-
 var file = new File(path);
 file.open(1);
 var generationDNA = file.readAll();
@@ -19,65 +17,48 @@ var Beta=[];	// curvature of ridges
 var L=[];	// (half) width of minor length of trapezoid extrude
 var h=[];	// "height" of trapezoid extrude (in x-y plane; must be < x0)
 
-
 var lines = generationDNA.split('\n');
 
+// Loop over reading in the gene values
+for(var i = 0;i < lines.length - 1;i++){
+	if(i>=antennaLines){
+		var params = lines[i].split(",");
+		Output.println("Individual "+ i);
+		Output.println("Side length 1: "+params[0]);
+		Output.println("Height 1: "+params[1]);
+		Output.println("x0 1: "+params[2]);
+		Output.println("y0 1: "+params[3]);
+		Output.println("yf 1: "+params[4]);
+		Output.println("zf 1: "+params[5]);
+		Output.println("Beta 1: "+params[6]);
+		Output.println("Trapezoid height 1: "+params[7]/100);
+		Output.println("Trapezoid length 1: "+params[8]/100+"\n");
 
-//for(var counter = indiv;counter<=NPOP;counter++)
-//{
-	
-//	j = 1;
-//	Output.println(counter);
-
-	
-	// Loop over reading in the gene values
-	for(var i = 0;i < lines.length - 1;i++)
-	{
-		//Output.println(i);
-		if(i==headerLines)
-		{
-			var frequencies = lines[i].split(",");
-		}
-    	if(i>=antennaLines)
-      {
-      var params = lines[i].split(",");
-			Output.println("Individual "+ i - headerLines);
-			Output.println("Side length 1: "+params[0]);
-			Output.println("Height 1: "+params[1]);
-			Output.println("x0 1: "+params[2]);
-			Output.println("y0 1: "+params[3]);
-			Output.println("yf 1: "+params[4]);
-			Output.println("zf 1: "+params[5]);
-			Output.println("Beta 1: "+params[6]);
-			Output.println("Trapezoid height 1: "+params[7]/100);
-			Output.println("Trapezoid length 1: "+params[8]/100+"\n");
-
-			S[i-antennaLines]=params[0]/100;
-			H[i-antennaLines]=params[1]/100;
-			//m[i-antennaLines]=params[0];
-			X0[i-antennaLines]=params[2]/100; // previously 0.04
-			Y0[i-antennaLines]=params[3]/100; // previously 0.04
-			Z0[i-antennaLines]=0;
-			//xf[i-antennaLines]=params[0];
-			Yf[i-antennaLines]=params[4]/100; // Preferably swap this order in the GA!!
-			Zf[i-antennaLines]=params[5]/100;
-			Beta[i-antennaLines]=params[6];
-			h[i-antennaLines]=params[7]/100;
-			L[i-antennaLines]=params[8]/100;
+		S[i-antennaLines]=params[0]/100;
+		H[i-antennaLines]=params[1]/100;
+		//m[i-antennaLines]=params[0];
+		X0[i-antennaLines]=params[2]/100; // previously 0.04
+		Y0[i-antennaLines]=params[3]/100; // previously 0.04
+		Z0[i-antennaLines]=0;
+		//xf[i-antennaLines]=params[0];
+		Yf[i-antennaLines]=params[4]/100; // Preferably swap this order in the GA!!
+		Zf[i-antennaLines]=params[5]/100;
+		Beta[i-antennaLines]=params[6];
+		h[i-antennaLines]=params[7]/100;
+		L[i-antennaLines]=params[8]/100;
 /*
-			Output.println("Side length: ", S[i-antennaLines]);
-			Output.println("Height: ", H[i-antennaLines]);
-			Output.println("x0: ", X0[i-antennaLines]);
-			Output.println("y0: ", Y0[i-antennaLines]);
-			Output.println("yf: ", Yf[i-antennaLines]);
-			Output.println("zf: ", Zf[i-antennaLines]);
-			Output.println("beta: ", Beta[i-antennaLines]);
-			Output.println("Trapezoid length: ", L[i-antennaLines]);
-			Output.println("Trapezoid height: ", h[i-antennaLines]);
+		Output.println("Side length: ", S[i-antennaLines]);
+		Output.println("Height: ", H[i-antennaLines]);
+		Output.println("x0: ", X0[i-antennaLines]);
+		Output.println("y0: ", Y0[i-antennaLines]);
+		Output.println("yf: ", Yf[i-antennaLines]);
+		Output.println("zf: ", Zf[i-antennaLines]);
+		Output.println("beta: ", Beta[i-antennaLines]);
+		Output.println("Trapezoid length: ", L[i-antennaLines]);
+		Output.println("Trapezoid height: ", h[i-antennaLines]);
 */
-		}
 	}
-//}
+}
 
 for(var i = indiv - 1; i < NPOP; i++)
 {

@@ -8,11 +8,7 @@ The GENETIS PUEO software utilizes Genetic Algorithms to automatically design Qu
 
 * Go into the GENETIS_PUEO directory `cd GENETIS_PUEO`
 
-* Make and enter a new directory for the GA `mkdir GA` 
-
-* `cd GA`
-
-* install the GA from the Shared-Code repository `git clone git@github.com:osu-particle-astrophysics/Shared-Code.git`
+* install the Shared-Code repository `git clone git@github.com:osu-particle-astrophysics/Shared-Code.git`
 
 ## Installing PueoSim
 

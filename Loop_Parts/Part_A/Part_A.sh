@@ -18,7 +18,7 @@ then
     ./Loop_Parts/Part_A/MakeSettings.sh $WorkingDir $RunName
 fi
 
-python GA/Run_GA.py $RunName $WorkingDir $gen
+python Shared-Code/PyGA/Run_GA.py $RunName $WorkingDir $gen
 
 # check the exit status
 if [ $? -eq 0 ]

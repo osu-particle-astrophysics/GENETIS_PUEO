@@ -94,6 +94,7 @@ do
 		mkdir -m777 $RunDir/Errs_And_Outs
 		mkdir -m777 $RunDir/Errs_And_Outs/XFGPUOutputs
 		mkdir -m777 $RunDir/Errs_And_Outs/PUEO_Outputs
+		mkdir -m777 $RunDir/Errs_And_Outs/psimouts
 		mkdir -m777 $RunDir/Errs_And_Outs/PUEO_Errors
 		mkdir -m775 $RunDir/Errs_And_Outs/XF_Outputs
 		mkdir -m775 $RunDir/Errs_And_Outs/XF_Errors
@@ -112,7 +113,6 @@ do
 		mkdir -m775 $RunDir/Plots
 		mkdir -m775 $RunDir/Plots/Gain_Plots
 		mkdir -m775 $RunDir/XMacros
-		mkdir -m775 $PSIMDIR/outputs/${RunName}
 		touch $RunDir/time.txt
 		date > $RunDir/date.txt
 

@@ -140,13 +140,7 @@ def EffectiveVolume2(thisColor,thisLabel):
     #all_events = []
     #all_weights_squared = []
 
-    #print('E_EV: ', E_EV)
-    #print('PassingWeights: ', PassingWeights)
-    #print('PassingEvents: ', PassingEvents)
-    #print('TotalEvents: ', TotalEvents)
-
     for en in E_EV:
-
         total_weighted = np.sum(PassingWeights[en])
         #total_passed = np.sum(PassingEvents[en])
         total_events = np.sum(TotalEvents[en])
@@ -197,6 +191,11 @@ def EffectiveVolume2(thisColor,thisLabel):
 
 def AddErrors(all_weights):
     bin_num = 10
+    
+    # If no events pass, just return 0's
+    if len(all_weights) == 0:
+        return(0,0)
+    
     max_weight = np.max(all_weights)
     min_weight = np.min(all_weights)
 

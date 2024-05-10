@@ -53,7 +53,6 @@ cd $WorkingDir
 mkdir -m775 ${XFProj}/XF_models_${gen} 2> /dev/null
 mkdir -m775 Run_Outputs/${RunName}/Root_Files/${gen}_Root_Files 2> /dev/null
 mkdir -m775 Run_Outputs/${RunName}/uan_files/${gen}_uan_files 2> /dev/null
-mkdir -m775 ${PSIMDIR}/outputs/${RunName}/${gen}_outputs 2> /dev/null
 
 # We need to count how many XF and pueoSim jobs are finished
 # We'll do this by counting the number of files in the GPUFlags and PUEOFlags directory

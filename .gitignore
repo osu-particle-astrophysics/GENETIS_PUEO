@@ -19,6 +19,8 @@
 
 *~
 
+.vscode/
+
 slurm*
 
 core.*
@@ -49,6 +51,8 @@ core.*
 /anitaBuildTool
 
 /Run_Outputs/
+
+/Shared-Code/
 
 /saveStates/
 

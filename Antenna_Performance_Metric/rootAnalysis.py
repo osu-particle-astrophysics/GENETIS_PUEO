@@ -194,7 +194,7 @@ def AddErrors(all_weights):
     
     # If no events pass, just return 0's
     if len(all_weights) == 0:
-        return(0,0)
+        return 0, 0
     
     max_weight = np.max(all_weights)
     min_weight = np.min(all_weights)

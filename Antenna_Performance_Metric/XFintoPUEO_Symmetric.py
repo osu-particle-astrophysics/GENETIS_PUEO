@@ -89,22 +89,22 @@ def callFunctions(indiv, args, freq_list, file_header):
     ## So for the _0 files, it's pretty simple:
     
     writeGains(vpol_gain_t[0], vpol_phase_t[0],
-               freq_list, file_header / f'impr_vv_0_Toyon')
+               freq_list, file_header / 'impr_vv_0_Toyon')
     writeGains(vpol_gain_t[0], vpol_phase_t[0],
-               freq_list, file_header / f'impr_hh_0_Toyon')
+               freq_list, file_header / 'impr_hh_0_Toyon')
     writeGains(hpol_gain_t[0], hpol_phase_t[0],
-               freq_list, file_header / f'impr_vh_0_Toyon')
+               freq_list, file_header / 'impr_vh_0_Toyon')
     writeGains(hpol_gain_t[0], hpol_phase_t[0],
-               freq_list, file_header / f'impr_hv_0_Toyon')
+               freq_list, file_header / 'impr_hv_0_Toyon')
     ## Now we need to be more careful for the az and el files
     ## We want the angles 5, 10, 20, 30, 45, 90
     ## For the azimuth, this is just counting through the phi at 0 theta
     ## We just pick out the 2nd, 3rd, 5th, 7th, 10th, and 19th sublists
     ## So we call the writeGains function for each of those lists
-    v_az_file = file_header / f'impr_vv_az_Toyon'
-    h_az_file = file_header / f'impr_hh_az_Toyon'
-    v_el_file = file_header / f'impr_vv_el_Toyon'
-    h_el_file = file_header / f'impr_hh_el_Toyon'
+    v_az_file = file_header / 'impr_vv_az_Toyon'
+    h_az_file = file_header / 'impr_hh_az_Toyon'
+    v_el_file = file_header / 'impr_vv_el_Toyon'
+    h_el_file = file_header / 'impr_hh_el_Toyon'
     reference_angles = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90]
     indices = [int(angle/5)*73 for angle in reference_angles]
     for i in indices:

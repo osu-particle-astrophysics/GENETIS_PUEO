@@ -13,18 +13,16 @@
 #gen=$1
 #WorkingDir=$2
 #RunName=$3
-#Seeds=$4
-#PSIMDIR=$5
-#NPOP=$6
-#NNT=$7
-#Exp=$8
+#NNT_per_sim=$4
+#indiv=$5
+#max_jobs=$6
 
 source $WorkingDir/Run_Outputs/$RunName/setup.sh
 
-echo $num_jobs
-echo $indiv
-echo $NNT_per_sim
-echo $exp
+echo "Num jobs: ${num_jobs}"
+echo "NNT: ${NNT}"
+echo "NNT per sim: ${NNT_per_sim}"
+echo "indiv: ${indiv}"
 
 
 threads=40
@@ -43,8 +41,8 @@ cd $PSIMDIR
 source set_env.sh
 
 # copy simulation exe to TMPDIR
-cp pueoBuilder/build/components/pueoSim/simulatePueo $TMPDIR/simulatePueo
-cp pueoBuilder/components/pueoSim/config/pueo.conf $TMPDIR/pueo.conf
+cp build/components/pueoSim/simulatePueo $TMPDIR/simulatePueo
+cp components/pueoSim/config/pueo.conf $TMPDIR/pueo.conf
 
 cd $TMPDIR
 
@@ -54,7 +52,7 @@ do
     # Run 40 processes of pueoSim 
     echo "starting pueoSim ${i}"
     touch pueoout${i}.txt
-    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT_per_sim -e $exp > pueoout${i}.txt &
+    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT_per_sim -e $exp -g "$gen" -d "$RunDir" -m "$num" > pueoout${i}.txt &
 done
 
 echo "started PSIMs"
@@ -63,15 +61,13 @@ echo "PSIMS finished"
 
 mkdir -p -m775 $RunDir/Root_Files/${gen}_Root_Files/$num
 mkdir -p -m775 $RunDir/Flags/PUEOFlags/$num
+
 # move the root files
-for ((i=run_num; i<$((threads + run_num)); i++))
+for ((i=$run_num; i<$((threads + run_num)); i++))
 do
     mv $TMPDIR/run${i}/IceFinal_${i}_skimmed.root $RunDir/Root_Files/${gen}_Root_Files/$num/IceFinal_skimmed_${gen}_${num}_${i}.root
-    #mv $TMPDIR/run${i}/IceFinal_${i}_allTree.root $RunDir/Root_Files/${gen}_Root_Files/$num/IceFinal_allTree_${gen}_${num}_${i}.root
-    #mv $TMPDIR/run${i}/IceFinal_${i}_passTree0.root $RunDir/Root_Files/${gen}_Root_Files/IceFinal_passTree_${gen}_${num}_${i}_0.root
-    #mkdir -p -m775 $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
-    #mv peuoout${i}.txt $PSIMDIR/outputs/${RunName}/${gen}_outputs/${SLURM_ARRAY_TASK_ID}/run${run_num}
 done
+mv *.txt $RunDir/Errs_And_Outs/psimouts
 
 echo $gen > $TMPDIR/${run_num}.txt
 echo $num >> $TMPDIR/${run_num}.txt
@@ -82,10 +78,7 @@ mv $TMPDIR/${run_num}.txt $RunDir/Flags/PUEOFlags/$num
 
 cd $RunDir/Flags/PUEOFlags/$num
 
-cp ${run_num}.txt.* ${run_num}.txt
-rm ${run_num}.txt.*
-
-#if there are 49 flags in the PUEOFlags/$num directory, run the root analysis
+# if there are $num_jobs flags in the PUEOFlags/$num directory, run the root analysis
 flag_count=$(ls | wc -l)
 echo $flag_count
 echo $num_jobs
@@ -98,11 +91,10 @@ then
     module unload python/3.6-conda5.2
     source $PSIMDIR/set_env.sh
     cd $WorkingDir/Antenna_Performance_Metric
-    mkdir -p -m775 $RunDir/Generation_Data/temp_gen_files/$num
-    python rootAnalysis.py $gen $num $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data/temp_gen_files/$num $RunName $WorkingDir $NNT
+    mkdir -p -m775 $RunDir/Generation_Data/temp_gen_files/$num 2> /dev/null
+    python rootAnalysis.py $gen $num $exp $WorkingDir/Run_Outputs/${RunName}/Generation_Data/temp_gen_files/$num $RunName $WorkingDir $NNT_per_sim
     touch $RunDir/Flags/ROOTFlags/${num}.txt
     echo "finished rootAnalysis" >> $RunDir/Flags/ROOTFlags/${num}.txt
-
 else 
     echo "Not all flags are present"
 fi

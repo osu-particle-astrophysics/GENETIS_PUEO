@@ -136,6 +136,7 @@ then
 	rm Flags/GPUFlags/* 2> /dev/null
 	rm -Rf Flags/PUEOFlags/* 2> /dev/null
 	rm Flags/ROOTFlags/* 2> /dev/null
+	rm $RunDir/Errs_And_Outs/psimouts/* 2> /dev/null
 	cd $WorkingDir
 fi
 

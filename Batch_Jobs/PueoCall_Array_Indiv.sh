@@ -52,7 +52,7 @@ do
     # Run 40 processes of pueoSim 
     echo "starting pueoSim ${i}"
     touch pueoout${i}.txt
-    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT_per_sim -e $exp -g "$gen" -d "$RunDir" -m "$num" > pueoout${i}.txt &
+    ./simulatePueo -i pueo.conf -o $TMPDIR -r $i -n $NNT_per_sim -e $exp -d "$RunDir/Gain_Files/$gen/$num" > pueoout${i}.txt &
 done
 
 echo "started PSIMs"

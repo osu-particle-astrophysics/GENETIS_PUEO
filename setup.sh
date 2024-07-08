@@ -1,10 +1,10 @@
 ############### GENERAL PARAMS ####################################
-TotalGens=100			## number of generations (after initial) to run through
-NPOP=4 					## number of individuals per generation
+TotalGens=0			## number of generations (after initial) to run through
+NPOP=20 					## number of individuals per generation
 FREQS=131				## the number frequencies being iterated over in XF (Currectly only affects the output.xmacro loop)
 FreqStart=200.00
 FreqStep=10.0
-NNT=400000				## Number of Neutrinos Thrown in peuosim   
+NNT=1000000				## Number of Neutrinos Thrown in peuosim   
 exp=19					## exponent of the energy for the neutrinos in AraSim
 num_keys=10				## how many XF keys we are letting this run use
 database_flag=0			## 0 if not using the database, 1 if using the database      @TODO: Implement database

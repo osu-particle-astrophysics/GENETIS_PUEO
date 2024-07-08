@@ -27,11 +27,12 @@ g = parser.parse_args()
 
 
 
-lib_dir = '/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/'
-# lib_dir = '/users/PAS1960/dylanwells1629/buildingPueoSim/pueoBuilder/lib/'
+#lib_dir = '/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/'
+lib_dir = '/users/PAS1960/dylanwells1629/buildingPueoSim/may13pueo/lib/'
 ROOT.gSystem.Load(lib_dir + 'libNiceMC.so')
 ROOT.gSystem.Load(lib_dir + 'libAntarcticaRoot.so')
-ROOT.gSystem.Load(lib_dir + 'libAnitaEvent.so')
+ROOT.gSystem.Load(lib_dir + 'libpueoEvent.so')
+ROOT.gSystem.Load(lib_dir + 'libpueoAnalysis.so')
 ROOT.gSystem.Load(lib_dir + 'libPueoSim.so')
 ROOT.gInterpreter.Declare('#include "Geoid.h"')
 
@@ -86,7 +87,7 @@ def EffectiveVolume2(thisColor,thisLabel):
                 
 
             if fnmatch(name,passTreePattern):
-                #print(os.path.join(path,name))
+                print(os.path.join(path,name))
                 
                 try: 
                     fileName = os.path.join(path,name)
@@ -103,6 +104,7 @@ def EffectiveVolume2(thisColor,thisLabel):
                 except Exception as e:
                     print('error! skipping run', e)
                     continue
+                print('passEvents is ',passEvents)
                 
                 for i in range(passEvents):
                     skimTree.GetEvent(i)
@@ -113,7 +115,8 @@ def EffectiveVolume2(thisColor,thisLabel):
                 
                 PassingEvents[this_energy].append(passEvents)
                 PassingWeights[this_energy].append(np.sum(nuWeights))
-                
+            else:
+                print("file not matching passtree: ", name) 
 
     E_EV = np.sort(np.asarray(list(PassingEvents.keys())))
 

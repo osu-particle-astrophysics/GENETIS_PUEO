@@ -10,7 +10,7 @@ if [ -z "$RunName" ]; then
     exit 1
 fi
 
-# Open permissions in the Run directory
+# Open permissions for the Run directory
 chmod 777 Run_Outputs/$RunName
 
 # Loop through child directories (for echo purposes)

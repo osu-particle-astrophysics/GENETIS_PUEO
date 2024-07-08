@@ -28,7 +28,7 @@ g = parser.parse_args()
 
 
 #lib_dir = '/fs/ess/PAS1960/buildingPueoSim/pueoBuilder/lib/'
-lib_dir = '/users/PAS1960/dylanwells1629/buildingPueoSim/may13pueo/lib/'
+lib_dir = '/users/PAS1960/dylanwells1629/buildingPueoSim/may13pueo/lib/' #updated pueoSim path as of July 8th
 ROOT.gSystem.Load(lib_dir + 'libNiceMC.so')
 ROOT.gSystem.Load(lib_dir + 'libAntarcticaRoot.so')
 ROOT.gSystem.Load(lib_dir + 'libpueoEvent.so')
